@@ -51,6 +51,6 @@
 
  
  # 6. DB 설계
-  ![image](https://user-images.githubusercontent.com/100547902/175885402-61c90580-4c33-4a85-b6de-a989a5a2f918.png)
+![image](https://user-images.githubusercontent.com/100547902/175894830-74671c1c-6280-45df-84ff-f6c8f9ca26d8.png)
 
   
