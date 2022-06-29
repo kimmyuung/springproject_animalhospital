@@ -9,6 +9,22 @@ var mapContainer = document.getElementById('map'), // 지도를 표시할 div
 // 지도를 생성한다
 var map = new kakao.maps.Map(mapContainer, mapOption);
 
+$.ajax({
+        url : "https://openapi.gg.go.kr/Animalhosptl?" ,
+        data :{"KEY" :"47d367a4e715424e8c25f17ff85a81ea","type":"json" },
+        dataType : "json",
+        success: function(re) {
+
+//        let x = re["X_CRDNT_VL"]
+//        for(let i = 0  i<re.length; i++) {
+//
+//        }
+        console.log(typeof re);
+        console.log( re );
+
+        }
+    })
+
 //클러스터[ 마커 집합 ]  변수
 var clusterer = new kakao.maps.MarkerClusterer({
     map: map, // 마커들을 클러스터로 관리하고 표시할 지도 객체
