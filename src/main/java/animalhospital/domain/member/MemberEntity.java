@@ -1,6 +1,7 @@
 package animalhospital.domain.member;
 
 
+import animalhospital.domain.BaseTime;
 import lombok.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
