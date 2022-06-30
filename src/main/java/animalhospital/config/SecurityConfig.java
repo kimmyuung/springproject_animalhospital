@@ -32,7 +32,7 @@ public class SecurityConfig {
                 .authorizeRequests()
                 .antMatchers("/admin/**").hasRole("ADMIN")
                 .antMatchers("/member/info").hasRole("MEMBER")
-                .antMatchers("/board/write").hasRole("MEMBER")
+//                .antMatchers("/board/write").hasRole("MEMBER")
                 .antMatchers("/**").permitAll()
                 .and()
                 .formLogin()
