@@ -48,6 +48,7 @@ public class SecurityConfig {
                 .csrf()
                 .ignoringAntMatchers("/member/logincontroller")
                 .ignoringAntMatchers("/board/write")
+                .ignoringAntMatchers("/board/blist")
                 .and()
                 .exceptionHandling()
                 .accessDeniedPage("/error")

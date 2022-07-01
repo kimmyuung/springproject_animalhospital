@@ -18,7 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import java.io.File;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class BoardService {
@@ -71,38 +71,35 @@ public class BoardService {
     }
 
 
-    public JSONObject boardlist(int page){
-        int cno=2;
-        JSONObject object = new JSONObject();
-        System.out.println(page);
+    public Map< String , List<Map<String , String >>> boardlist(int page ) // 인수
+    {
         Page<BoardEntity> boardEntities = null ;
-        Pageable pageable = PageRequest.of( page , 5 , Sort.by( Sort.Direction.DESC , "bno")    ); // SQL : limit 와 동일 한 기능처리
+        Pageable pageable = PageRequest.of( page , 5 , Sort.by( Sort.Direction.DESC , "bno")    );
+        int cno=2;
+        List<  Map<String , String >  > Maplist = new ArrayList<>();
+//        int btncount = 5;
+//        int startbtn  = ( page / btncount ) * btncount + 1;
+//        int endhtn = startbtn + btncount -1;
+//        if( endhtn > boardEntities.getTotalPages() ) endhtn = boardEntities.getTotalPages();
 
-        boardEntities = boardRepository.findByblist( cno ,  pageable );
-        System.out.println(boardEntities);
-
-        int btncount = 5;
-        int startbtn  = ( page / btncount ) * btncount + 1;
-        int endhtn = startbtn + btncount -1;
-        if( endhtn > boardEntities.getTotalPages() ) endhtn = boardEntities.getTotalPages();
-
-
-        JSONArray jsonArray = new JSONArray();
-        for( BoardEntity entity : boardEntities ){
-            JSONObject jsonObject = new JSONObject();
-            jsonObject.put("bno", entity.getBno());
-            jsonObject.put("btitle", entity.getBtitle());
-            jsonObject.put("modifiedate", entity.getModifiedate());
-            jsonObject.put("mno", entity.getMno());
-            jsonArray.put(jsonObject);
+        Page<BoardEntity> boardEntitylist =boardRepository.findByblist(cno, pageable);
+        for( BoardEntity entity : boardEntitylist ){
+                // 3. map 객체 생성
+                Map<String, String> map = new HashMap<>();
+                map.put("bno", entity.getBno()+"" );
+                map.put("btitle", entity.getBtitle());
+                map.put("bimg", entity.getBoardimgEntities().get(0).getBimg());
+                // 4. 리스트 넣기
+                Maplist.add(map);
         }
+        Map< String , List<  Map<String , String >  > > object = new HashMap<>();
 
-        object.put( "startbtn" , startbtn );
-        object.put( "endhtn" , endhtn );
-        object.put( "totalpages" , boardEntities.getTotalPages() );
-        object.put( "data" , jsonArray );
+//        object.put( "startbtn" , startbtn );
+//        object.put( "endhtn" , endhtn );
+//        object.put( "totalpages" , boardEntities.getTotalPages() );
+        object.put( "blists" , Maplist );
 
-        return object;
+        return  object;
     }
 
 

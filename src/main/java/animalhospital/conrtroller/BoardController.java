@@ -7,15 +7,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/board")
 public class BoardController {
-
-    @Autowired
-    private HttpServletRequest request;
 
     @Autowired
     private BoardService boardService;
@@ -34,15 +32,9 @@ public class BoardController {
 
     @PostMapping("/blist")
     @ResponseBody
-    public boolean list(HttpServletResponse response, @RequestParam("page") int page ){
-        System.out.println("asss");
-//        JSONObject json = boardService.boardlist(page);
-//        try {
-//            response.setContentType("application/json");
-//            response.setCharacterEncoding("UTF-8");
-//            response.getWriter().print(json);
-//        }catch( Exception e ){ System.out.println( e );}
-        return false;
+    public Map< String , List<Map<String , String >>>
+    blist(HttpServletResponse response, @RequestParam("page") int page ){
+        return boardService.boardlist(page);
     }
 
 }

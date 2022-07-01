@@ -14,7 +14,7 @@ function save(){
 }
 
 let current_page = 0;
-boardlist(current_page);
+boardlist(0);
 
 
 function boardlist( page){
@@ -24,25 +24,25 @@ function boardlist( page){
     		url: "/board/blist",
     		 method: "POST",
     		 data: {"page":this.current_page},
-    		success: function(re){
-    		alert("dd");
-//    		console.log(boardlist);
-//    		    html = ' <tr> <th>번호</th><th>제목</th> </tr>';
-//                if( boardlist.data.length == 0 ){ // 검색 결과가 존재하지 않으면
-//                                          html +=
-//                                                '<tr>'+
-//                                                        '<td colspan="5">검색 결과가 존재하지 않습니다.</td> '+
-//                                                 '</tr>';
-//                                }else{
-//                                        for( let i = 0 ; i<boardlist.data.length ; i++ ){
-//                                            html +=
-//                                                    '<tr>'+
-//                                                            '<td>'+boardlist.data[i].bno+'</td> '+
-//                                                            '<td><a href="/board/view/'+boardlist.data[i].bno+'">'+boardlist.data[i].btitle+'<a></td> '+
-//                                                     '</tr>';
-//                                        }
-//                    }
-//                     let pagehtml = "";
+    		success: function(boardlist){
+    		console.log(boardlist);
+    		    html = ' <tr> <th>번호</th><th>제목</th> </tr>';
+                if( boardlist.blists.length == 0 ){ // 검색 결과가 존재하지 않으면
+                                          html +=
+                                                '<tr>'+
+                                                        '<td colspan="5">검색 결과가 존재하지 않습니다.</td> '+
+                                                 '</tr>';
+                                }else{
+                                        for( let i = 0 ; i<boardlist.blists.length ; i++ ){
+                                            html +=
+                                                    '<tr>'+
+                                                            '<td>'+boardlist.blists[i].bno+'</td> '+
+                                                            '<td>'+boardlist.blists[i].btitle+'</td> '+
+                                                            '<td><img src="/upload/'+boardlist.blists[i].bimg+'"></td> '+
+                                                     '</tr>';
+                                        }
+                    }
+                     let pagehtml = "";
 //                     if( page == 0 ){
 //                            pagehtml +=
 //                             '<li class="page-item"> '+
@@ -73,8 +73,8 @@ function boardlist( page){
 //                                        '<button class="page-link" onclick="boardlist('+ (page+1)  +')"> 다음 </button>'+
 //                             '</li>';
 //                    }
-//                $("#table").html(html);
-//                $("#pagebtnbox").html( pagehtml);
+                $("#table").html(html);
+                $("#pagebtnbox").html( pagehtml);
     		}
     	});
 
