@@ -5,7 +5,13 @@ import animalhospital.domain.board.BoardRepository;
 import animalhospital.domain.board.BoardimgEntity;
 import animalhospital.domain.board.BoardimgRespository;
 import animalhospital.dto.BoardDto;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -64,6 +70,40 @@ public class BoardService {
         return true;
     }
 
+
+    public JSONObject boardlist(int page){
+        int cno=2;
+        JSONObject object = new JSONObject();
+        System.out.println(page);
+        Page<BoardEntity> boardEntities = null ;
+        Pageable pageable = PageRequest.of( page , 5 , Sort.by( Sort.Direction.DESC , "bno")    ); // SQL : limit 와 동일 한 기능처리
+
+        boardEntities = boardRepository.findByblist( cno ,  pageable );
+        System.out.println(boardEntities);
+
+        int btncount = 5;
+        int startbtn  = ( page / btncount ) * btncount + 1;
+        int endhtn = startbtn + btncount -1;
+        if( endhtn > boardEntities.getTotalPages() ) endhtn = boardEntities.getTotalPages();
+
+
+        JSONArray jsonArray = new JSONArray();
+        for( BoardEntity entity : boardEntities ){
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("bno", entity.getBno());
+            jsonObject.put("btitle", entity.getBtitle());
+            jsonObject.put("modifiedate", entity.getModifiedate());
+            jsonObject.put("mno", entity.getMno());
+            jsonArray.put(jsonObject);
+        }
+
+        object.put( "startbtn" , startbtn );
+        object.put( "endhtn" , endhtn );
+        object.put( "totalpages" , boardEntities.getTotalPages() );
+        object.put( "data" , jsonArray );
+
+        return object;
+    }
 
 
 }

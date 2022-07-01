@@ -11,10 +11,12 @@
 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal">
     사진올리기
 </button>
-<table>
+<table id="table">
 
 </table>
+<ul id="pagebtnbox" class="pagination justify-content-center">
 
+</ul>
 
 
 <div class="modal" id="myModal">
@@ -38,7 +40,7 @@
                                 <input type="text" placeholder="제목을 입력하세요" name="btitle">
                             </div>
                             <div>
-                                <textarea placeholder="내용을 입력하세요" name="bcontent"></textarea>
+                                <textarea rows="20" cols="60" placeholder="내용을 입력하세요" name="bcontent"></textarea>
                             </div>
                             <div>
                                 <button type="button" onclick="save()">등록하기</button>
