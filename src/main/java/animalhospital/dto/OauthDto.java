@@ -28,10 +28,6 @@ public class OauthDto { // oauth 회원 정보 담고 있는 dto
         }
         else if(registrationId.equals("github")) {
             return ofgithub( registrationId ,   nameAttributeKey , attributes   );
-        }else if(registrationId.equals("facebook")) {
-            return offacebook(registrationId ,   nameAttributeKey , attributes );
-        }else if(registrationId.equals("apple")) {
-            return ofapple(registrationId ,   nameAttributeKey , attributes );
         }
         return null; // 만약에 없으면
     }
@@ -86,32 +82,7 @@ public class OauthDto { // oauth 회원 정보 담고 있는 dto
                 .nameAttributeKey( nameAttributeKey )
                 .build();
     }
-    public static OauthDto offacebook( String registrationId , String nameAttributeKey , Map<String, Object> attributes  ) {
-        Map<String, Object> kakao_account = (Map<String, Object>) attributes.get( nameAttributeKey );
-        Map<String, Object> profile = (Map<String, Object>) kakao_account.get("profile");
-        String mid = ( (String) kakao_account.get("email") ).split("@")[0];
-        return OauthDto.builder()
-                .mid( mid )
-                .mname((String) profile.get("profile"))        // 요청변수 이름은 카카오 로그인 문서참고
-                .memail((String) kakao_account.get("email"))
-                .registrationId( registrationId )
-                .attributes( attributes)
-                .nameAttributeKey( nameAttributeKey )
-                .build();
-    }
-    public static OauthDto ofapple( String registrationId , String nameAttributeKey , Map<String, Object> attributes  ) {
-        Map<String, Object> kakao_account = (Map<String, Object>) attributes.get( nameAttributeKey );
-        Map<String, Object> profile = (Map<String, Object>) kakao_account.get("profile");
-        String mid = ( (String) kakao_account.get("email") ).split("@")[0];
-        return OauthDto.builder()
-                .mid( mid )
-                .mname((String) profile.get("nickname"))        // 요청변수 이름은 카카오 로그인 문서참고
-                .memail((String) kakao_account.get("email"))
-                .registrationId( registrationId )
-                .attributes( attributes)
-                .nameAttributeKey( nameAttributeKey )
-                .build();
-    }
+
     // oauth 정보 -> entity 변경
     public MemberEntity toentity() {
         return MemberEntity.builder()
