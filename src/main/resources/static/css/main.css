@@ -85,7 +85,8 @@ ul li {
 }
 .right{
     width: 20%;
-    border: 30px solid midnightblue;
+    height: 700px;
+    overflow: scroll;
 }
 #serachbar{
     width: 400px;
@@ -94,4 +95,9 @@ ul li {
 
 .btn_area button {
     height: 45px;
+}
+.hospital-box {
+    height: 150px;
+    border : 1px solid black;
+
 }
