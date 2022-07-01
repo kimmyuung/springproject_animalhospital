@@ -1,3 +1,4 @@
+let list;
 
 var mapContainer = document.getElementById('map'), // 지도를 표시할 div
     mapOption = {
@@ -7,6 +8,10 @@ var mapContainer = document.getElementById('map'), // 지도를 표시할 div
     };
 // 지도를 생성한다
 var map = new kakao.maps.Map(mapContainer, mapOption);
+function ctest(){
+       console.log("자ㅣ바라라라라라라라라라라라라라"+JSON.stringify(list));
+    }
+
 
 let html ="";
 var markers = [];
@@ -18,7 +23,7 @@ var markers = [];
                 data :{"KEY" :"47d367a4e715424e8c25f17ff85a81ea","type":"json","pIndex":i,"pSize": "1000" },
                 dataType : "json",
                 success: function(re) {
-
+                        list = re
                     for(let i = 0; i < re.Animalhosptl[1].row.length; i++){
                         if(re.Animalhosptl[1].row[i]["BSN_STATE_NM"] == "정상") {
                             let hname = re.Animalhosptl[1].row[i]["BIZPLC_NM"];
@@ -45,6 +50,7 @@ var markers = [];
                     }//for end
                     //사이드바에 html 추가
                     $("#sidebar").html( html );
+                    ctest();
                 }//success end
             }); //ajax end
     }//for end
@@ -62,7 +68,4 @@ var clusterer = new kakao.maps.MarkerClusterer({
         textAlign: 'center',
         lineHeight: '54px'
     }]
-});
-kakao.maps.event.addListener(map, 'idle', function() {
-
 });
