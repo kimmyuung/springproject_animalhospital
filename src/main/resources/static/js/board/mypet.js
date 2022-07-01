@@ -13,6 +13,21 @@ function save(){
         });
 }
 
+
+
+function boardlist(){
+     let current_page = 0;
+
+     $.ajax({
+    		url: "/board/blist",
+    		method: "POST",
+    		data: {"page": current_page },
+    		success: function(re){
+    		alert("dd");
+    		}
+    	});
+
+}
 $(function() {
     // Multiple images preview in browser
     var imagesPreview = function(input, placeToInsertImagePreview) {

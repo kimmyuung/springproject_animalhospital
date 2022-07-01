@@ -75,3 +75,20 @@ var marker = new kakao.maps.Marker({
 kakao.maps.event.addListener(marker, 'click', function() {
     alert('마커를 클릭했습니다!');
 });
+
+function mdelete() {
+if(confirm('회원탈퇴를 정말 하시겠습니까?')){
+
+    $.ajax({
+        url : '/member/delete',
+        method : 'DELETE',
+        success : function(re) {
+                if(re == true) {
+                    alert("회원 탈퇴가 완료되었습니다.")
+                    location.href = '/member/logout';
+                }
+                else { alert("오류 발생"); }
+            }
+        });
+    }
+}
