@@ -50,6 +50,7 @@ public class SecurityConfig {
                 .ignoringAntMatchers("/board/write")
                 .ignoringAntMatchers("/board/blist")
                 .ignoringAntMatchers("/member/delete")
+                .ignoringAntMatchers("/board/getnotice")
                 .and()
                 .exceptionHandling()
                 .accessDeniedPage("/error")

@@ -5,6 +5,44 @@
     <title>Title</title>
 </head>
 <body>
-
+<h1>공지사항</h1>
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal">
+    공지사항 올리기
+</button>
+<table class="table" id="noticebox"></table>
+<div class="modal" id="myModal">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">자랑하기</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="saveform">
+                    <div class="row">
+                        <div class="col-md-6 modal_left">
+                            <div class="preview"><img id="img_preview" src="/img/no-image.png" ></div>
+                            <div>
+                                <input type="file" id="bimg" multiple="multiple" name="bimg">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div>
+                                <input type="text" placeholder="제목을 입력하세요" name="btitle">
+                            </div>
+                            <div>
+                                <textarea placeholder="내용을 입력하세요" name="bcontent"></textarea>
+                            </div>
+                            <div>
+                                <button type="button" onclick="notice_save()">등록하기</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="/js/board/notice.js"></script>
 </body>
 </html>

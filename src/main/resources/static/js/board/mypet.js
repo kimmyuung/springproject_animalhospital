@@ -15,19 +15,39 @@ function save(){
 
 
 
-function boardlist(){
-     let current_page = 0;
-
-     $.ajax({
-    		url: "/board/blist",
-    		method: "POST",
-    		data: {"page": current_page },
-    		success: function(re){
-    		alert("dd");
+function boardlist( page){
+             $.ajax({
+    		 url: "/board/blist",
+    		 method: "POST",
+    		 data: {"page":this.current_page},
+    		 success: function(boardlist){
+                 	console.log(boardlist);
+                 		 html = ' <tr> <th>번호</th><th>제목</th> </tr>';
+                           if( boardlist.blists.length == 0 ){ // 검색 결과가 존재하지 않으면
+                                    html +=
+                                     '<tr>'+
+                                     '<td colspan="5">검색 결과가 존재하지 않습니다.</td> '+
+                                      '</tr>';
+                                       }else{
+                                       for( let i = 0 ; i<boardlist.blists.length ; i++ ){
+                                       html +=
+                                      '<tr>'+
+                                      '<td>'+boardlist.blists[i].bno+'</td> '+
+                                      '<td>'+boardlist.blists[i].btitle+'</td> '+
+                                      '<td><img src="/upload/'+boardlist.blists[i].bimg+'"></td> '+
+                                      '</tr>';
+                                        }
+                                 }
+                                  let pagehtml = "";
+ $("#table").html(html);
+                $("#pagebtnbox").html( pagehtml);
     		}
     	});
-
 }
+
+
+
+
 $(function() {
     // Multiple images preview in browser
     var imagesPreview = function(input, placeToInsertImagePreview) {
