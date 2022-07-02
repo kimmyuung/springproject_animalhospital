@@ -2,6 +2,7 @@ package animalhospital.service;
 
 import animalhospital.domain.member.MemberEntity;
 import animalhospital.domain.member.MemberRepository;
+import animalhospital.domain.member.Role;
 import animalhospital.dto.OauthDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -115,6 +116,18 @@ public class MemberService implements OAuth2UserService<OAuth2UserRequest ,OAuth
         if(optional.isPresent()) {
             MemberEntity memberEntity = optional.get();
             memberRepository.delete(memberEntity);
+            return true;
+        }
+        return false;
+    }
+
+    public boolean adminlogin(String mid, String mpassword) {
+        if (mid.equals("admin") && mpassword.equals("asdqwe123")) {
+           MemberEntity memberEntity = MemberEntity.builder()
+                           .mid(mid)
+                                   .role(Role.ADMIN)
+                                           .build();
+            httpSession.setAttribute("admin", memberEntity);
             return true;
         }
         return false;

@@ -22,8 +22,7 @@ public class BoardController {
     @GetMapping("/list")
     public String list(){ return "board/mypetlist";}
 
-    @GetMapping("/notice")
-    public String notice(){ return "board/adminnotice";}
+
 
     @PostMapping("/write")
     @ResponseBody
@@ -41,23 +40,6 @@ public class BoardController {
         return boardService.boardlist(page);
     }
 
-    @PostMapping("/getnotice")
-    @ResponseBody
-    public JSONArray getnoticelist(HttpServletResponse response, @RequestParam("page") int page ) {
-        return boardService.getnoticelist(page);
-    }
-    @PostMapping("/noticesave")
-    @ResponseBody
-    public JSONArray noticesave(HttpServletResponse response, @RequestParam("page") int page ) {
-        return boardService.getnoticelist(page);
-    }
-    @DeleteMapping("/deletenotice")
-    @ResponseBody
-    public boolean noticedelete(@RequestParam("bno") int bno) {return boardService.noticedelete(bno);}
-
-    @PutMapping("/updatenotice")
-    @ResponseBody
-    public boolean noticeupdate(@RequestParam("bno") int bno, BoardDto boardDto) {return boardService.noticeupdate(bno, boardDto);}
 
 
 }
