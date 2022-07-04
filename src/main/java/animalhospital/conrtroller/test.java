@@ -61,10 +61,13 @@ public class test { // 인덱스 컨트롤러 및 관리자 컨트롤러로 사�
     @ResponseBody
     public JSONArray getnoticelist(@RequestParam("page") int page ) {
         JSONArray js = boardService.getnoticelist(page);
-        response.setCharacterEncoding("UTF-8");
-        response.setContentType("application/json");
-        System.out.println(js.toString());
-        return js;
+        try {
+            response.setCharacterEncoding("UTF-8");
+            response.setContentType("application/json");
+            System.out.println(js.toString());
+            return js;
+        }catch(Exception e){e.printStackTrace();}
+        return null;
     }
     @PostMapping("/admin/noticesave")
     @ResponseBody
