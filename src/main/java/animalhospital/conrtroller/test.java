@@ -29,6 +29,9 @@ public class test { // 인덱스 컨트롤러 및 관리자 컨트롤러로 사�
     @Autowired
     HttpServletRequest request;
 
+    @Autowired
+    HttpServletResponse response;
+
     @GetMapping("/")
     public String main( Model model ){
         return "main";
@@ -56,18 +59,16 @@ public class test { // 인덱스 컨트롤러 및 관리자 컨트롤러로 사�
 
     @PostMapping("/board/getnotice")
     @ResponseBody
-    public JSONArray getnoticelist(HttpServletResponse response, @RequestParam("page") int page ) {
+    public JSONArray getnoticelist(@RequestParam("page") int page ) {
         JSONArray js = boardService.getnoticelist(page);
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json");
+        System.out.println(js.toString());
         return js;
     }
     @PostMapping("/admin/noticesave")
     @ResponseBody
     public boolean noticesave(@RequestParam("btitle") String btitle, @RequestParam("bcontent") String bcontent ) {
-        System.out.println( btitle);
-        System.out.println( bcontent );
-
         return boardService.noticesave(btitle, bcontent);
     }
     @DeleteMapping("/admin/deletenotice")

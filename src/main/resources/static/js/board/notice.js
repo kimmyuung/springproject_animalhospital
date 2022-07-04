@@ -1,20 +1,20 @@
-getnotice();
-
 let page;
 
+getnotice();
+
 function getnotice() {
-if(page == "") {
+if(page == null) {
 page = 0;
 }
-
+page = 0;
 $.ajax({
     url : '/board/getnotice',
     type : 'post',
     data : {"page" : page},
-    dataType : "json",
     success : function(json) {
     let html = "<tr> <th> 제목 </th> <th> 내용 </th><th>비고</th> </tr>";
     console.log(json);
+    alert(json);
        for(let i = 0; i < json.length; i++) {
             html += '<tr>' +
             '<td>'+ json[i]["btitle"] +'</td>' +
@@ -44,8 +44,8 @@ $.ajax({
     });
 }
 
-function noticeupdate() {
-
+function noticeupdate(bno) {
+alert(bno);
 }
 
-function noticedelete() {}
+function noticedelete(bno) {alert(bno);}

@@ -146,7 +146,6 @@ public class BoardService {
             jo.put("bno", temp.getBno());
             jo.put("btitle", temp.getBtitle());
             jo.put("bcontent", temp.getBcontent());
-            jo.put("createdate", temp.getCreatedate());
             array.put(jo);
         }
         return array;
