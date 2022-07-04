@@ -34,13 +34,8 @@ public class BoardService {
     @Transactional
     public boolean save(BoardDto boardDto) {
 
-//        LoginDto loginDto  = (LoginDto) request.getSession().getAttribute("login");
-
-//        MemberEntity memberEntity =  memberRepository.findById( loginDto.getMno() ).get();
-
         BoardEntity boardEntity = boardDto.toentity();
         boardRepository.save( boardEntity );
-
         String uuidfile = null;
         if( boardDto.getBimg().size() != 0 ){
             for(MultipartFile file : boardDto.getBimg() ){
@@ -114,17 +109,39 @@ public class BoardService {
             map.put("bno", entity.getBno()+"" );
             map.put("btitle", entity.getBtitle());
             map.put("bimg", entity.getBoardimgEntities().get(0).getBimg());
+//                    object.put( "startbtn" , startbtn );
+//        object.put( "endhtn" , endhtn );
+//        object.put( "totalpages" , boardEntities.getTotalPages() );
             // 4. 리스트 넣기
             Maplist.add(map);
         }
-        Map< String , List<  Map<String , String >  >> object = new HashMap<>();
-        //        object.put( "startbtn" , startbtn );
-//        object.put( "endhtn" , endhtn );
-//        object.put( "totalpages" , boardEntities.getTotalPages() );
+        Map< String , List<  Map<String , String >  > > object = new HashMap<>();
+
         object.put( "blists" , Maplist );
 
-
         return  object;
+    }
+
+    public JSONObject getboard( int bno ){
+
+        Optional<BoardEntity> optionalRoomEntity =  boardRepository.findById(bno );
+        BoardEntity boardEntity =  optionalRoomEntity.get();
+        // 2.  해당 엔티티 -> json 객체 변환
+        JSONObject object = new JSONObject();
+        // 1. json에 엔티티 필드 값 넣기
+        object.put("bno" ,boardEntity.getBno());
+        object.put("btitle" , boardEntity.getBtitle());
+        object.put("bcontent" , boardEntity.getBcontent());
+        object.put("mid" , boardEntity.getMemberEntity().getMid());
+
+        JSONArray jsonArray = new JSONArray();
+        for(  BoardimgEntity boardimgEntity : boardEntity.getBoardimgEntities() ) { //  룸별로 이미지 여러개
+            jsonArray.put( boardimgEntity.getBimg());
+        }
+        // 3. jsonarray를 json객체 포함
+        object.put("bimglist" , jsonArray) ;
+        // 3. 반한
+        return object;
     }
 
     public JSONArray getnoticelist(int page) {
@@ -144,35 +161,16 @@ public class BoardService {
         return array;
     }
 
-    public Map< String , List<Map<String , String >>> boardlist(int page ) // 인수
-    {
-        Page<BoardEntity> boardEntities = null ;
-        Pageable pageable = PageRequest.of( page , 5 , Sort.by( Sort.Direction.DESC , "bno")    );
-        int cno=2;
-        List<  Map<String , String >  > Maplist = new ArrayList<>();
-//        int btncount = 5;
-//        int startbtn  = ( page / btncount ) * btncount + 1;
-//        int endhtn = startbtn + btncount -1;
-//        if( endhtn > boardEntities.getTotalPages() ) endhtn = boardEntities.getTotalPages();
-
-        Page<BoardEntity> boardEntitylist =boardRepository.findByblist(cno, pageable);
-        for( BoardEntity entity : boardEntitylist ){
-                // 3. map 객체 생성
-                Map<String, String> map = new HashMap<>();
-                map.put("bno", entity.getBno()+"" );
-                map.put("btitle", entity.getBtitle());
-                map.put("bimg", entity.getBoardimgEntities().get(0).getBimg());
-                // 4. 리스트 넣기
-                Maplist.add(map);
+    @Transactional
+    public boolean delete( int bno ){
+        BoardEntity boardEntity =  boardRepository.findById( bno ).get();
+        if( boardEntity != null ){
+            // 해당 엔티티를 삭제
+            boardRepository.delete( boardEntity );
+            return true;
+        }else{
+            return false;
         }
-        Map< String , List<  Map<String , String >  > > object = new HashMap<>();
-
-//        object.put( "startbtn" , startbtn );
-//        object.put( "endhtn" , endhtn );
-//        object.put( "totalpages" , boardEntities.getTotalPages() );
-        object.put( "blists" , Maplist );
-
-        return  object;
     }
 
 
