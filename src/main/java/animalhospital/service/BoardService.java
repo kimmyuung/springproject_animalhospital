@@ -70,6 +70,79 @@ public class BoardService {
         return true;
     }
 
+    @Transactional
+    public boolean noticesave(BoardDto boardDto) { BoardEntity boardEntity = boardDto.toentity();
+        boardRepository.save(boardEntity); return true; }
+
+    @Transactional
+    public boolean noticeupdate(int bno, BoardDto boardDto) {
+                        Optional<BoardEntity> optional = boardRepository.findById(bno);
+                        if(optional.isPresent()) {
+                            BoardEntity boardEntity = optional.get();
+                            boardEntity.setBtitle(boardDto.getBtitle());
+                            boardEntity.setBcontent(boardDto.getBcontent());
+                            return true;
+        }
+        return false;
+    }
+
+
+    @Transactional
+    public boolean noticedelete(int bno) {
+        Optional<BoardEntity> optional = boardRepository.findById(bno);
+        if(optional.isPresent()) {
+            BoardEntity boardEntity = optional.get(); boardRepository.delete(boardEntity); return true;
+        }
+        return false;
+        }
+
+    public Map< String , List<Map<String , String >>> boardlist(int page ) // 인수
+    {
+        Page<BoardEntity> boardEntities = null ;
+        Pageable pageable = PageRequest.of( page , 5 , Sort.by( Sort.Direction.DESC , "bno")    );
+        int cno=2;
+        List<  Map<String , String >  > Maplist = new ArrayList<>();
+//        int btncount = 5;
+//        int startbtn  = ( page / btncount ) * btncount + 1;
+//        int endhtn = startbtn + btncount -1;
+//        if( endhtn > boardEntities.getTotalPages() ) endhtn = boardEntities.getTotalPages();
+
+        Page<BoardEntity> boardEntitylist =boardRepository.findByblist(cno, pageable);
+        for( BoardEntity entity : boardEntitylist ){
+            // 3. map 객체 생성
+            Map<String, String> map = new HashMap<>();
+            map.put("bno", entity.getBno()+"" );
+            map.put("btitle", entity.getBtitle());
+            map.put("bimg", entity.getBoardimgEntities().get(0).getBimg());
+            // 4. 리스트 넣기
+            Maplist.add(map);
+        }
+        Map< String , List<  Map<String , String >  >> object = new HashMap<>();
+        //        object.put( "startbtn" , startbtn );
+//        object.put( "endhtn" , endhtn );
+//        object.put( "totalpages" , boardEntities.getTotalPages() );
+        object.put( "blists" , Maplist );
+
+
+        return  object;
+    }
+
+    public JSONArray getnoticelist(int page) {
+        JSONArray array = new JSONArray();
+        Page<BoardEntity> boardEntities = null;
+        Pageable pageable = PageRequest.of(page, 5, Sort.by(Sort.Direction.DESC, "cno")  );
+        int cno = 1;
+        List<BoardEntity> boardEntityList = boardRepository.findbynoticelist(cno, pageable);
+        for(BoardEntity temp : boardEntityList) {
+            JSONObject jo = new JSONObject();
+            jo.put("bno", temp.getBno());
+            jo.put("btitle", temp.getBtitle());
+            jo.put("bcontent", temp.getBcontent());
+            jo.put("createdate", temp.getCreatedate());
+            array.put(jo);
+        }
+        return array;
+    }
 
     public Map< String , List<Map<String , String >>> boardlist(int page ) // 인수
     {

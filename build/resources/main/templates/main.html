@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
@@ -10,10 +10,10 @@
 <div class="main_wrap">
     <div class="header_menu">
         <ul class="header_ul">
-            <li class="header_li"><a href="/member/login">로그인 </a>
-            </li>
-            <li class="header_li">
-            <a href="/member/login">    회원가입   </a></li>
+            <li th:if="${ session.login == null }"class="header_li"><a href="/member/login">로그인 </a>  </li>
+            <li th:if="${ session.login == null }"class="header_li"><a href="/member/login">회원가입</a></li>
+            <li th:if="${ session.login != null }" class="header_li"><a href="/member/logout">로그아웃</a></li>
+            <li th:if="${ session.login != null }" class="header_li"><button onclick="mdelete()">회원탈퇴</button> </li>
         </ul>
     </div>
     <div class="header_wrap">
@@ -38,7 +38,7 @@
                 </li>
                 <li id="menu_li">
                     <div class="menu b">
-                        게시판
+                        <a href="/board/list">게시판</a>
                     </div>
                 </li>
                 <li id="menu_li">

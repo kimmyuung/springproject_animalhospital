@@ -13,74 +13,21 @@ function save(){
         });
 }
 
-let current_page = 0;
-boardlist(0);
 
 
-function boardlist( page){
-     this.current_page = page;
-     console.log(this.current_page);
-    $.ajax({
+function boardlist(){
+     let current_page = 0;
+
+     $.ajax({
     		url: "/board/blist",
-    		 method: "POST",
-    		 data: {"page":this.current_page},
-    		success: function(boardlist){
-    		console.log(boardlist);
-    		    html = ' <tr> <th>번호</th><th>제목</th> </tr>';
-                if( boardlist.blists.length == 0 ){ // 검색 결과가 존재하지 않으면
-                                          html +=
-                                                '<tr>'+
-                                                        '<td colspan="5">검색 결과가 존재하지 않습니다.</td> '+
-                                                 '</tr>';
-                                }else{
-                                        for( let i = 0 ; i<boardlist.blists.length ; i++ ){
-                                            html +=
-                                                    '<tr>'+
-                                                            '<td>'+boardlist.blists[i].bno+'</td> '+
-                                                            '<td>'+boardlist.blists[i].btitle+'</td> '+
-                                                            '<td><img src="/upload/'+boardlist.blists[i].bimg+'"></td> '+
-                                                     '</tr>';
-                                        }
-                    }
-                     let pagehtml = "";
-//                     if( page == 0 ){
-//                            pagehtml +=
-//                             '<li class="page-item"> '+
-//                                         '<button class="page-link" onclick="boardlist('+ (page)  +')"> 이전 </button>'+
-//                              '</li>';
-//                     }else{
-//                         pagehtml +=
-//                            '<li class="page-item"> '+
-//                                        '<button class="page-link" onclick="boardlist('+ (page-1)  +')"> 이전 </button>'+
-//                             '</li>';
-//                      }
-//
-//                     for( let i = boardlist.startbtn ; i<=boardlist.endhtn ; i++ ){
-//                        pagehtml +=
-//                              '<li class="page-item"> '+
-//                                '<button class="page-link" onclick="boardlist('+(i-1)+')"> '+i+' </button>'+
-//                              '</li>';
-//                     }
-//
-//                    if( page == boardlist.totalpages -1 ){
-//                         pagehtml +=
-//                                '<li class="page-item"> '+
-//                                            '<button class="page-link" onclick="boardlist('+ (page)  +')"> 다음 </button>'+
-//                                 '</li>';
-//                    }else{
-//                         pagehtml +=
-//                            '<li class="page-item"> '+
-//                                        '<button class="page-link" onclick="boardlist('+ (page+1)  +')"> 다음 </button>'+
-//                             '</li>';
-//                    }
-                $("#table").html(html);
-                $("#pagebtnbox").html( pagehtml);
+    		method: "POST",
+    		data: {"page": current_page },
+    		success: function(re){
+    		alert("dd");
     		}
     	});
 
 }
-
-
 $(function() {
     // Multiple images preview in browser
     var imagesPreview = function(input, placeToInsertImagePreview) {

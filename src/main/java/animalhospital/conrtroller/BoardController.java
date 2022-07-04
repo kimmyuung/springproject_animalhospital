@@ -2,6 +2,7 @@ package animalhospital.conrtroller;
 
 import animalhospital.dto.BoardDto;
 import animalhospital.service.BoardService;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -21,6 +22,8 @@ public class BoardController {
     @GetMapping("/list")
     public String list(){ return "board/mypetlist";}
 
+
+
     @PostMapping("/write")
     @ResponseBody
     public boolean write_save( BoardDto boardDto ){
@@ -36,5 +39,7 @@ public class BoardController {
     blist(HttpServletResponse response, @RequestParam("page") int page ){
         return boardService.boardlist(page);
     }
+
+
 
 }
