@@ -36,7 +36,7 @@ dependencies {
     testImplementation 'org.springframework.security:spring-security-test' //  스프링 시큐리티 테스트
     implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5' // 스프링 시큐리티 타임리프
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-client' // oath2 인증 라이크버리
-
+    implementation 'org.jsoup:jsoup:1.15.1' // jsoup 크롤링
 }
 
 tasks.named('test') {

@@ -1,4 +1,6 @@
 let list;
+let list2 = new Array();
+
 
 var mapContainer = document.getElementById('map'), // 지도를 표시할 div
     mapOption = {
@@ -8,9 +10,7 @@ var mapContainer = document.getElementById('map'), // 지도를 표시할 div
     };
 // 지도를 생성한다
 var map = new kakao.maps.Map(mapContainer, mapOption);
-function ctest(){
-       console.log("자ㅣ바라라라라라라라라라라라라라"+JSON.stringify(list));
-    }
+
 
 
 let html ="";
@@ -22,14 +22,28 @@ var markers = [];
                 url : "https://openapi.gg.go.kr/Animalhosptl?" ,
                 data :{"KEY" :"47d367a4e715424e8c25f17ff85a81ea","type":"json","pIndex":i,"pSize": "1000" },
                 dataType : "json",
+                async : false,
                 success: function(re) {
                         list = re
+                        console.log(list)
                     for(let i = 0; i < re.Animalhosptl[1].row.length; i++){
-                        if(re.Animalhosptl[1].row[i]["BSN_STATE_NM"] == "정상") {
+                        if(re.Animalhosptl[1].row[i]["BSN_STATE_NM"] == '정상') {
                             let hname = re.Animalhosptl[1].row[i]["BIZPLC_NM"];
-
+                            let hcode = re.Animalhosptl[1].row[i]["SIGUN_NM"];
                             let lat = re.Animalhosptl[1].row[i]["REFINE_WGS84_LAT"];
                             let logt = re.Animalhosptl[1].row[i]["REFINE_WGS84_LOGT"];
+
+//                            let cjson = {
+//                            name : re.Animalhosptl[1].row[i]["BIZPLC_NM"],
+//                            ccode : re.Animalhosptl[1].row[i]["SIGUN_NM"]
+//
+//                            } // 이거 밖으로 빼서  아래 아작스에 태워서 보내야됨
+                                let data = new Object();
+                                 data.code =  re.Animalhosptl[1].row[i]["SIGUN_NM"]
+                                data.name = re.Animalhosptl[1].row[i]["BIZPLC_NM"]
+
+                                list2.push(data);
+
 
                                 // 지도에 마커를 생성하고 표시한다
                                 var marker = new kakao.maps.Marker({
@@ -48,12 +62,17 @@ var markers = [];
                                     '</div>';
                         }//if end
                     }//for end
+
                     //사이드바에 html 추가
                     $("#sidebar").html( html );
-                    ctest();
+
                 }//success end
             }); //ajax end
+
     }//for end
+    console.log(list2);
+
+
 var clusterer = new kakao.maps.MarkerClusterer({
     map: map,
     markers: markers,
@@ -69,6 +88,17 @@ var clusterer = new kakao.maps.MarkerClusterer({
         lineHeight: '54px'
     }]
 });
+
+                              $.ajax({
+                                url : "/getlist",
+                                data : {"codenamelist" : JSON.stringify(list2)},
+                               async : false,
+                                success: function(res) {
+                                    //alert("데이터보내기")
+
+                                    console.log(typeof(res))
+                                }
+                            })
 
 function mdelete() {
 if(confirm('회원탈퇴를 정말 하시겠습니까?')){

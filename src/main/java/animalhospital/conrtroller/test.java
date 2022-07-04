@@ -2,8 +2,10 @@ package animalhospital.conrtroller;
 
 import animalhospital.dto.BoardDto;
 import animalhospital.service.BoardService;
+import animalhospital.service.MapService;
 import animalhospital.service.MemberService;
 import org.json.JSONArray;
+import org.jsoup.Jsoup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,6 +17,8 @@ import javax.servlet.http.HttpServletResponse;
 public class test { // 인덱스 컨트롤러 및 관리자 컨트롤러로 사용
     @Autowired
     BoardService boardService;
+    @Autowired
+    MapService mapService;
 
     @Autowired
     MemberService memberService;
@@ -54,6 +58,32 @@ public class test { // 인덱스 컨트롤러 및 관리자 컨트롤러로 사�
     @ResponseBody
     public boolean noticeupdate(@RequestParam("bno") int bno, BoardDto boardDto) {return boardService.noticeupdate(bno, boardDto);}
 
+
+
+    @GetMapping("/getlist")
+    @ResponseBody
+
+    public void getlist(@RequestParam("codenamelist") JSONArray codenamelist){
+       //  String result = code +" "+ name;
+        System.out.println(  "json : " + codenamelist.length() );
+
+
+        //String codename[] = new String[count];
+        //System.out.println(count);
+         //  codename[0] = result;
+         //  System.out.println(result);
+
+
+
+
+
+
+
+
+
+
+
+    }
 
 
 }
