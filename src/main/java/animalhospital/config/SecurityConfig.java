@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
@@ -30,27 +31,34 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                .antMatchers("/admin/**").hasRole("ADMIN")
+               /* .antMatchers("/admin/**").hasRole("ADMIN") */
                 .antMatchers("/member/info").hasRole("MEMBER")
                 .antMatchers("/board/write").hasRole("MEMBER")
                 .antMatchers("/**").permitAll()
+                .antMatchers("member/login").permitAll()
                 .and()
-                .formLogin()
-                .loginProcessingUrl("/admin/adminlogin")
+               /* .formLogin()
+                .loginProcessingUrl("/member/adminlogincontroller")
+                .usernameParameter("mid")
+                .passwordParameter("mpassword")
                 .defaultSuccessUrl("/")
                 .failureUrl("/member/login/error")
-                .and()
+                .and() */
                 .logout()
                 .logoutRequestMatcher(new AntPathRequestMatcher(("/member/logout") ) )
                 .logoutSuccessUrl("/")
                 .invalidateHttpSession(true)
                 .and()
                 .csrf()
-                .ignoringAntMatchers("/admin/adminlogin")
+                .ignoringAntMatchers("/member/login")
+                .ignoringAntMatchers("/member/adminlogincontroller")
                 .ignoringAntMatchers("/board/write")
                 .ignoringAntMatchers("/board/blist")
                 .ignoringAntMatchers("/member/delete")
                 .ignoringAntMatchers("/board/getnotice")
+                .ignoringAntMatchers("/admin/noticesave")
+                .ignoringAntMatchers("/admin/updatenotice")
+                .ignoringAntMatchers("/admin/deletenotice")
                 .and()
                 .exceptionHandling()
                 .accessDeniedPage("/error")
@@ -61,6 +69,9 @@ public class SecurityConfig {
 
         return http.build();
     }
+
+
+
 
 
 }

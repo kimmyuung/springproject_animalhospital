@@ -10,10 +10,10 @@
 <div class="main_wrap">
     <div class="header_menu">
         <ul class="header_ul">
-            <li th:if="${ session.login == null }"class="header_li"><a href="/admin/adminlogin">관리자모드 접속 </a>  </li>
-            <li th:if="${ session.login == null }"class="header_li"><a href="/member/login">로그인 </a>  </li>
-            <li th:if="${ session.login == null }"class="header_li"><a href="/member/login">회원가입</a></li>
-            <li th:if="${ session.login != null }" class="header_li"><a href="/member/logout">로그아웃</a></li>
+            <li th:if= "${session.admin != null}" th:text="${session.admin.role}" class="header_li"></li>
+            <li th:if="${ session.login == null && session.admin == null}"class="header_li"><a href="/member/login">로그인 </a>  </li>
+            <li th:if="${ session.login == null && session.admin == null}"class="header_li"><a href="/member/login">회원가입</a></li>
+            <li th:if="${ session.login != null || session.admin != null}" class="header_li"><a href="/member/logout">로그아웃</a></li>
             <li th:if="${ session.login != null }" class="header_li"><button onclick="mdelete()">회원탈퇴</button> </li>
         </ul>
     </div>
@@ -34,7 +34,7 @@
 
                 <li id="menu_li">
                     <div class="menu b">
-                        <a href="/board/notice">고객센터</a>고객센터
+                        <a href="/board/notice">고객센터</a>
                     </div>
                 </li>
                 <li id="menu_li">

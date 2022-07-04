@@ -3,11 +3,16 @@ package animalhospital.service;
 import animalhospital.domain.member.MemberEntity;
 import animalhospital.domain.member.MemberRepository;
 import animalhospital.domain.member.Role;
+import animalhospital.dto.LoginDto;
 import animalhospital.dto.OauthDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
@@ -18,12 +23,10 @@ import org.springframework.stereotype.Service;
 
 
 import javax.servlet.http.HttpSession;
-import java.util.Collections;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Service
-public class MemberService implements OAuth2UserService<OAuth2UserRequest ,OAuth2User> {
+public class MemberService implements OAuth2UserService<OAuth2UserRequest ,OAuth2User>, UserDetailsService {
     // UserDetailsService 인터페이스 [ 추상메소드 존재~~ ] : 일반 회원
     // -----> loadUserByUsername 메소드 구현
     // OAuth2UserService<OAuth2UserRequest , OAuth2User> : Oauth2 회원
@@ -122,15 +125,46 @@ public class MemberService implements OAuth2UserService<OAuth2UserRequest ,OAuth
     }
 
     public boolean adminlogin(String mid, String mpassword) {
-        if (mid.equals("admin") && mpassword.equals("asdqwe123")) {
+        if (mid.equals("admin") && mpassword.equals("1234")) {
            MemberEntity memberEntity = MemberEntity.builder()
                            .mid(mid)
+                   .mname("관리자")
+                   .oauth("admin")
+                   .mpassword(mpassword)
+                   .memail("admin@gmail.com")
                                    .role(Role.ADMIN)
                                            .build();
             httpSession.setAttribute("admin", memberEntity);
-            return true;
+            Optional<MemberEntity> optional = memberRepository.findBymid(mid);
+            if(! optional.isPresent()) {
+                memberRepository.save(memberEntity);
+            }
+            return  true;
         }
         return false;
     }
 
+
+    // 1. 로그인 서비스 제공 메소드
+    // 2. 패스워드 검증 X [ 시큐리티 제공 ]
+    // 3. 아이디만 검증 처리
+    @Override
+    public UserDetails loadUserByUsername(String mid) throws UsernameNotFoundException {
+
+        // 1. 회원 아이디를 찾기
+        Optional<MemberEntity> entitiy =  memberRepository.findBymid(mid); // 회원 아이디로 엔티티 찾기
+
+        MemberEntity memberEntity = entitiy.orElse(null);
+        // optional.isPresent() : null이 아니면
+        // optional.orElse() : 만약에 optional 객체가 비어있으면 반환할 데이터
+
+        // 2. 찾은 회원 엔티티의 권한[키]을 리스트에 담기
+        List<GrantedAuthority> authorityList = new ArrayList<>(); // 부여된 인증들을 모아두기
+        // GrantedAuthority : 부여된 인증의 클래스
+
+        authorityList.add(new SimpleGrantedAuthority(memberEntity.getrolekey()));
+        // 리스트에 인증된 엔티티의 키를 보관
+
+        return new LoginDto(memberEntity, authorityList); // 회원엔티티, 인증된 리스트를 인증세션 부여
+    }
 }
