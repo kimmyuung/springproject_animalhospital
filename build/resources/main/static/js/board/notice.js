@@ -1,11 +1,8 @@
 getnotice();
 
-let page;
-
 function getnotice() {
-if(page == "") {
-page = 0;
-}
+
+let page = 0;
 
 $.ajax({
     url : '/board/getnotice',
@@ -13,17 +10,8 @@ $.ajax({
     data : {"page" : page},
     dataType : "json",
     success : function(json) {
-    let html = "<tr> <th> 제목 </th> <th> 내용 </th><th>비고</th> </tr>";
     console.log(json);
-       for(let i = 0; i < json.length; i++) {
-            html += '<tr>' +
-            '<td>'+ json[i]["btitle"] +'</td>' +
-            '<td>'+ json[i]["bcontent"] + '</td>' +
-            '<td> <button type="button" onclick="noticeupdate('+json[i]["bno"]+')">공지사항 수정</button>' +
-                 '<button type="button" onclick="noticedelete('+json[i]["bno"]+')">공지사항 삭제</button>' +
-             + '</td></tr>';
-        }
-        $("#noticetable").html(html);
+
     }
 });
 
@@ -44,8 +32,3 @@ $.ajax({
     });
 }
 
-function noticeupdate() {
-
-}
-
-function noticedelete() {}

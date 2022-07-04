@@ -2,7 +2,6 @@ package animalhospital.service;
 
 import animalhospital.domain.member.MemberEntity;
 import animalhospital.domain.member.MemberRepository;
-import animalhospital.domain.member.Role;
 import animalhospital.dto.LoginDto;
 import animalhospital.dto.OauthDto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -124,6 +123,7 @@ public class MemberService implements OAuth2UserService<OAuth2UserRequest ,OAuth
         return false;
     }
 
+    /* 관리자 로그인을 userDetailService에서 처리
     public boolean adminlogin(String mid, String mpassword) {
         if (mid.equals("admin") && mpassword.equals("1234")) {
            MemberEntity memberEntity = MemberEntity.builder()
@@ -142,7 +142,7 @@ public class MemberService implements OAuth2UserService<OAuth2UserRequest ,OAuth
             return  true;
         }
         return false;
-    }
+    }*/
 
 
     // 1. 로그인 서비스 제공 메소드
@@ -150,8 +150,9 @@ public class MemberService implements OAuth2UserService<OAuth2UserRequest ,OAuth
     // 3. 아이디만 검증 처리
     @Override
     public UserDetails loadUserByUsername(String mid) throws UsernameNotFoundException {
-
+            // 관리자 아이디는 미리 DB에 등록해 놓음
         // 1. 회원 아이디를 찾기
+
         Optional<MemberEntity> entitiy =  memberRepository.findBymid(mid); // 회원 아이디로 엔티티 찾기
 
         MemberEntity memberEntity = entitiy.orElse(null);

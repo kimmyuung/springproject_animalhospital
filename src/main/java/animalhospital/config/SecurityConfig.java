@@ -31,19 +31,20 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-               /* .antMatchers("/admin/**").hasRole("ADMIN") */
+                .antMatchers("/admin/**").hasRole("ADMIN")
                 .antMatchers("/member/info").hasRole("MEMBER")
                 .antMatchers("/board/write").hasRole("MEMBER")
                 .antMatchers("/**").permitAll()
                 .antMatchers("member/login").permitAll()
                 .and()
-               /* .formLogin()
-                .loginProcessingUrl("/member/adminlogincontroller")
-                .usernameParameter("mid")
-                .passwordParameter("mpassword")
-                .defaultSuccessUrl("/")
+                .formLogin() // 로그인페이지 보안 설정
+                .loginPage("/member/login") // 아이디 / 비밀번호를 입력받을 페이지 URL
+                .loginProcessingUrl("/member/adminlogincontroller") // 로그일 처리할 URL 정의 -> loadUserByUsername
+                .defaultSuccessUrl("/")// 로그인 성공시 이동할 URL
+                .usernameParameter("mid") // 로그인시 아이디로 입력받을 변수명 [ 기본값 : user -> mid ]
+                .passwordParameter("mpassword")// 로그인시 비밀번호로 입력받을 변수명[ 기본값 : password -> mpassword ]
                 .failureUrl("/member/login/error")
-                .and() */
+                .and()
                 .logout()
                 .logoutRequestMatcher(new AntPathRequestMatcher(("/member/logout") ) )
                 .logoutSuccessUrl("/")

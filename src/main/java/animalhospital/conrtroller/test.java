@@ -37,6 +37,7 @@ public class test { // 인덱스 컨트롤러 및 관리자 컨트롤러로 사�
     @GetMapping("/board/notice")
     public String notice(){ return "admin/adminnotice";}
 
+    /* 관리자 로그인을 UserDetailService에서 처리 예정
     @PostMapping("/member/adminlogincontroller")
     @ResponseBody
     public ResponseEntity adminlogin(@RequestParam("mid") String mid, @RequestParam("mpassword") String mpassword) {
@@ -51,6 +52,7 @@ public class test { // 인덱스 컨트롤러 및 관리자 컨트롤러로 사�
         }
 
     }
+    */
 
     @PostMapping("/board/getnotice")
     @ResponseBody
