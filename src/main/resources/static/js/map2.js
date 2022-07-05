@@ -13,7 +13,6 @@ let html ="";
 var markers = [];
 kakao.maps.event.addListener(map, 'idle', function() {
     html = "";
-        console.log(list2);
         // 지도 영역정보를 얻어옵니다
         var bounds = map.getBounds();
 
@@ -37,7 +36,7 @@ kakao.maps.event.addListener(map, 'idle', function() {
                     });
                      // 마커에 클릭 이벤트를 등록한다 (우클릭 : rightclick)
                     kakao.maps.event.addListener(marker, 'click', function() {
-                        markerclick(list2[i].name);
+                        alert(list2[i].name);
                     });
                     html +=
                         '<div class="hospital-box">'+
@@ -55,13 +54,14 @@ kakao.maps.event.addListener(map, 'idle', function() {
             $.ajax({
                 url : "https://openapi.gg.go.kr/Animalhosptl?" ,
                 data :{"KEY" :"47d367a4e715424e8c25f17ff85a81ea","type":"json","pIndex":i,"pSize": "1000" },
+                async : false,
                 dataType : "json",
                 success: function(re) {
                         list = re
                     for(let i = 0; i < re.Animalhosptl[1].row.length; i++){
                         if(re.Animalhosptl[1].row[i]["BSN_STATE_NM"] == '정상') {
                                 let data = new Object();
-                                 data.code =  re.Animalhosptl[1].row[i]["SIGUN_NM"]
+                                data.code =  re.Animalhosptl[1].row[i]["SIGUN_NM"]
                                 data.name = re.Animalhosptl[1].row[i]["BIZPLC_NM"]
                                 data.lat  = re.Animalhosptl[1].row[i]["REFINE_WGS84_LAT"];
                                 data.logt = re.Animalhosptl[1].row[i]["REFINE_WGS84_LOGT"];
@@ -97,3 +97,20 @@ function panTo(lat, logt) {
     // 만약 이동할 거리가 지도 화면보다 크면 부드러운 효과 없이 이동합니다
     map.panTo(moveLatLon);
 }
+  $.ajax({
+    url : "/getlist",
+    data : {"codenamelist" : JSON.stringify(list2)},
+   async : false,
+    success: function(res) {
+        //alert("데이터보내기")
+
+        console.log(typeof(res))
+    }
+})
+
+$.ajax({
+    url : "/map",
+    success: function(result) {
+        console.log(result);
+    }
+})
