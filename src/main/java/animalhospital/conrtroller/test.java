@@ -62,7 +62,6 @@ public class test { // 인덱스 컨트롤러 및 관리자 컨트롤러로 사�
 
     @GetMapping("/getlist")
     @ResponseBody
-
     public void getlist(@RequestParam("codenamelist") JSONArray codenamelist){
        //  String result = code +" "+ name;
         System.out.println(  "json : " + codenamelist.length() );
