@@ -64,8 +64,7 @@ public class test { // 인덱스 컨트롤러 및 관리자 컨트롤러로 사�
         try {
             response.setCharacterEncoding("UTF-8");
             response.setContentType("application/json");
-            System.out.println(js.toString());
-            return js;
+            response.getWriter().print(js);
         }catch(Exception e){e.printStackTrace();}
         return null;
     }
@@ -80,7 +79,10 @@ public class test { // 인덱스 컨트롤러 및 관리자 컨트롤러로 사�
 
     @PutMapping("/admin/updatenotice")
     @ResponseBody
-    public boolean noticeupdate(@RequestParam("bno") int bno, BoardDto boardDto) {return boardService.noticeupdate(bno, boardDto);}
+    public boolean noticeupdate(@RequestParam("bno") int bno, @RequestParam("btitle") String btitle
+            , @RequestParam("bcontent") String bcontent)
+    {return boardService.noticeupdate(bno, btitle, bcontent);
+    }
 
 
 

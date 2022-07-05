@@ -83,12 +83,12 @@ public class BoardService {
     }
 
     @Transactional
-    public boolean noticeupdate(int bno, BoardDto boardDto) {
+    public boolean noticeupdate(int bno, String btitle, String bcontent) {
                         Optional<BoardEntity> optional = boardRepository.findById(bno);
                         if(optional.isPresent()) {
                             BoardEntity boardEntity = optional.get();
-                            boardEntity.setBtitle(boardDto.getBtitle());
-                            boardEntity.setBcontent(boardDto.getBcontent());
+                            boardEntity.setBtitle(btitle);
+                            boardEntity.setBcontent(bcontent);
                             return true;
         }
         return false;
