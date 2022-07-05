@@ -34,15 +34,18 @@ public class MapService {
                 JSONObject row = (JSONObject) Animalhosptl.get(1);
                 hospital = (JSONArray) row.get("row");
 
-                    System.out.println(hospital.length());
                 for (int j = 0; j < hospital.length(); j++) {
                     JSONObject hospitalobject = new JSONObject();
                     JSONObject hospitalinfo = (JSONObject) hospital.get(j);
                     String open = (String) hospitalinfo.get("BSN_STATE_NM");
                     if (open.equals("정상")) {
-                        System.out.println(hospitalinfo);
                         hospitalobject.put("name", hospitalinfo.get("BIZPLC_NM"));
+                        hospitalobject.put("city", hospitalinfo.get("SIGUN_NM"));
+                        hospitalobject.put("opendate", hospitalinfo.get("LICENSG_DE"));
                         hospitalobject.put("addr", hospitalinfo.get("REFINE_ROADNM_ADDR"));
+                        hospitalobject.put("tel", hospitalinfo.get("LOCPLC_FACLT_TELNO"));
+                        hospitalobject.put("lat", hospitalinfo.get("REFINE_WGS84_LAT"));
+                        hospitalobject.put("logt", hospitalinfo.get("REFINE_WGS84_LOGT"));
                         animalhospital.put(hospitalobject);
                     }
                 }
@@ -50,7 +53,6 @@ public class MapService {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        System.out.println(animalhospital);
         return animalhospital;
     }
 

@@ -97,16 +97,7 @@ function panTo(lat, logt) {
     // 만약 이동할 거리가 지도 화면보다 크면 부드러운 효과 없이 이동합니다
     map.panTo(moveLatLon);
 }
-  $.ajax({
-    url : "/getlist",
-    data : {"codenamelist" : JSON.stringify(list2)},
-   async : false,
-    success: function(res) {
-        //alert("데이터보내기")
 
-        console.log(typeof(res))
-    }
-})
 
 $.ajax({
     url : "/map",

@@ -22,7 +22,6 @@ public class test {
 
     @GetMapping("/map")
     public void map( HttpServletResponse response){
-
         try{
             response.setCharacterEncoding("UTF-8");
             response.setContentType("application/json");
@@ -30,7 +29,6 @@ public class test {
         }catch( Exception e){
             System.out.println(e);
         }
-
     }
 
 
