@@ -5,6 +5,7 @@ import animalhospital.dto.BoardDto;
 import animalhospital.service.BoardService;
 import animalhospital.service.MemberService;
 import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -59,11 +60,12 @@ public class test { // 인덱스 컨트롤러 및 관리자 컨트롤러로 사�
 
     @PostMapping("/board/getnotice")
     @ResponseBody
-    public JSONArray getnoticelist(@RequestParam("page") int page ) {
-        JSONArray js = boardService.getnoticelist(page);
+    public JSONObject getnoticelist(@RequestParam("page") int page) {
+
         try {
             response.setCharacterEncoding("UTF-8");
             response.setContentType("application/json");
+            JSONObject js = boardService.getnoticelist(page);
             response.getWriter().print(js);
         }catch(Exception e){e.printStackTrace();}
         return null;

@@ -11,10 +11,12 @@
 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal">
     사진올리기
 </button>
-<table>
+<table id="table">
 
 </table>
+<ul id="pagebtnbox" class="pagination justify-content-center">
 
+</ul>
 
 <div class="modal" id="myModal">
     <div class="modal-dialog modal-xl">
@@ -45,6 +47,50 @@
                         </div>
                     </div>
                 </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="myModal2">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel2">자랑하기</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
+                            <div class="carousel-inner" id="modalimglist">
+
+                                <!-- 이미지가 표시되는 구역 -->
+
+                            </div>
+                            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Previous</span>
+                            </button>
+                            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Next</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div id="viewcontent">
+                            <div><h5>제목: <span id="btitle"></span></h5></div>
+                            <div><h6>작성자: <span id="bwiter"></span></h6></div>
+                            <div>내용</div>
+                            <span id="bcontent"></span>
+                        </div>
+                        <div id="deletebutton">
+
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>

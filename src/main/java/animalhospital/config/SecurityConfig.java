@@ -55,6 +55,7 @@ public class SecurityConfig {
                 .ignoringAntMatchers("/member/adminlogincontroller")
                 .ignoringAntMatchers("/board/write")
                 .ignoringAntMatchers("/board/blist")
+                .ignoringAntMatchers("/board/bdelete")
                 .ignoringAntMatchers("/member/delete")
                 .ignoringAntMatchers("/board/getnotice")
                 .ignoringAntMatchers("/admin/noticesave")
