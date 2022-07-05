@@ -49,36 +49,36 @@ function boardlist( page){
                                         }
                     }
                      let pagehtml = "";
-//                     if( page == 0 ){
-//                            pagehtml +=
-//                             '<li class="page-item"> '+
-//                                         '<button class="page-link" onclick="boardlist('+ (page)  +')"> 이전 </button>'+
-//                              '</li>';
-//                     }else{
-//                         pagehtml +=
-//                            '<li class="page-item"> '+
-//                                        '<button class="page-link" onclick="boardlist('+ (page-1)  +')"> 이전 </button>'+
-//                             '</li>';
-//                      }
-//
-//                     for( let i = boardlist.startbtn ; i<=boardlist.endhtn ; i++ ){
-//                        pagehtml +=
-//                              '<li class="page-item"> '+
-//                                '<button class="page-link" onclick="boardlist('+(i-1)+')"> '+i+' </button>'+
-//                              '</li>';
-//                     }
-//
-//                    if( page == boardlist.totalpages -1 ){
-//                         pagehtml +=
-//                                '<li class="page-item"> '+
-//                                            '<button class="page-link" onclick="boardlist('+ (page)  +')"> 다음 </button>'+
-//                                 '</li>';
-//                    }else{
-//                         pagehtml +=
-//                            '<li class="page-item"> '+
-//                                        '<button class="page-link" onclick="boardlist('+ (page+1)  +')"> 다음 </button>'+
-//                             '</li>';
-//                    }
+                     if( page == 0 ){
+                            pagehtml +=
+                             '<li class="page-item"> '+
+                                         '<button class="page-link" onclick="boardlist('+ (page)  +')"> 이전 </button>'+
+                              '</li>';
+                     }else{
+                         pagehtml +=
+                            '<li class="page-item"> '+
+                                        '<button class="page-link" onclick="boardlist('+ (page-1)  +')"> 이전 </button>'+
+                             '</li>';
+                      }
+                        alert(boardlist.blists[0].endhtn);
+                     for( let i = boardlist.blists[0].startbtn ; i<=boardlist.blists[0].endhtn; i++ ){
+                        pagehtml +=
+                              '<li class="page-item"> '+
+                                '<button class="page-link" onclick="boardlist('+(i-1)+')"> '+i+' </button>'+
+                              '</li>';
+                     }
+
+                    if( page == boardlist.totalpages -1 ){
+                         pagehtml +=
+                                '<li class="page-item"> '+
+                                            '<button class="page-link" onclick="boardlist('+ (page)  +')"> 다음 </button>'+
+                                 '</li>';
+                    }else{
+                         pagehtml +=
+                            '<li class="page-item"> '+
+                                        '<button class="page-link" onclick="boardlist('+ (page+1)  +')"> 다음 </button>'+
+                             '</li>';
+                    }
                 $("#table").html(html);
                 $("#pagebtnbox").html( pagehtml);
     		}
@@ -109,6 +109,11 @@ function bview(bno){
                                 '</div>';
                      }
                 }
+                if(board.same="true"){
+                    $("#deletebutton").html(
+                                        '<button type="button" class="btn btn-primary" onclick="bdelete('+board.bno+')">삭제</button>'
+                                     );
+                }
                 $("#bwiter").html( board.mid );
                  $("#btitl").html( board.btitle );
                  $("#bcontent").html( board.bcontent );
@@ -137,12 +142,13 @@ $(function() {
 
         if (input.files) {
             var filesAmount = input.files.length;
-               $(".preview").html("");
+//               $(".preview").html("");
             for (i = 0; i < 1; i++) {
                 var reader = new FileReader();
 
                 reader.onload = function(event) {
-                    $($.parseHTML('<img>')).attr('src', event.target.result).appendTo(placeToInsertImagePreview);
+                  $($("#img_preview")).attr('src', event.target.result).appendTo(placeToInsertImagePreview);
+//                    $($.parseHTML('<img>')).attr('src', event.target.result).appendTo(placeToInsertImagePreview);
                      $($.parseHTML('<img>')).attr('style', 'width:80%');
                 }
 

@@ -27,7 +27,7 @@ var markers = [];
                     for(let i = 0; i < re.Animalhosptl[1].row.length; i++){
                         if(re.Animalhosptl[1].row[i]["BSN_STATE_NM"] == "정상") {
                             let hname = re.Animalhosptl[1].row[i]["BIZPLC_NM"];
-
+                            let hdate = re.Animalhosptl[1].row[i]["LICENSG_DE"];
                             let lat = re.Animalhosptl[1].row[i]["REFINE_WGS84_LAT"];
                             let logt = re.Animalhosptl[1].row[i]["REFINE_WGS84_LOGT"];
 
@@ -39,7 +39,15 @@ var markers = [];
                                 markers.push(marker);
                                 // 마커에 클릭 이벤트를 등록한다 (우클릭 : rightclick)
                                 kakao.maps.event.addListener(marker, 'click', function() {
-                                    alert(hname);
+                                   $.ajax({
+                                       url: "/map/view",
+                                       method: "GET",
+                                       data: {"hname":hname , "hdate": hdate},
+                                        success: function(re){
+                                             alert(re);
+                                             location.href = "/map/infopage";
+                                        }
+                                   });
                                 });
                                 html +=
                                     '<div class="hospital-box">'+

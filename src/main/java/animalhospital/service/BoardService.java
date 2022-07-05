@@ -8,6 +8,7 @@ import animalhospital.domain.member.MemberEntity;
 import animalhospital.domain.member.MemberRepository;
 import animalhospital.dto.BoardDto;
 import animalhospital.dto.LoginDto;
+import animalhospital.dto.OauthDto;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -141,25 +143,33 @@ public class BoardService {
 
     public Map< String , List<Map<String , String >>> boardlist(int page ) // 인수
     {
-        Page<BoardEntity> boardEntities = null ;
+
+        System.out.println( "페이지 :"+ page );
+
+        Page<BoardEntity> boardEntitylist = null ;
         Pageable pageable = PageRequest.of( page , 5 , Sort.by( Sort.Direction.DESC , "bno")    );
+
         int cno=2;
         List<  Map<String , String >  > Maplist = new ArrayList<>();
-//        int btncount = 5;
-//        int startbtn  = ( page / btncount ) * btncount + 1;
-//        int endhtn = startbtn + btncount -1;
-//        if( endhtn > boardEntities.getTotalPages() ) endhtn = boardEntities.getTotalPages();
 
-        Page<BoardEntity> boardEntitylist =boardRepository.findByblist(cno, pageable);
+        boardEntitylist =boardRepository.findByblist(cno, pageable);
+        System.out.println( boardEntitylist.toString() );
+
+        int btncount = 5;
+        int startbtn  = ( page / btncount ) * btncount + 1;
+        int endhtn = startbtn + btncount -1;
+        if( endhtn > boardEntitylist.getTotalPages() ) endhtn = boardEntitylist.getTotalPages();
+
+
         for( BoardEntity entity : boardEntitylist ){
             // 3. map 객체 생성
             Map<String, String> map = new HashMap<>();
             map.put("bno", entity.getBno()+"" );
             map.put("btitle", entity.getBtitle());
             map.put("bimg", entity.getBoardimgEntities().get(0).getBimg());
-//                    object.put( "startbtn" , startbtn );
-//        object.put( "endhtn" , endhtn );
-//        object.put( "totalpages" , boardEntities.getTotalPages() );
+            map.put( "startbtn" , startbtn+"" );
+            map.put( "endhtn" , endhtn+"" );
+            map.put( "totalpages" , boardEntitylist.getTotalPages()+"" );
             // 4. 리스트 넣기
             Maplist.add(map);
         }
@@ -171,16 +181,15 @@ public class BoardService {
     }
 
     public JSONObject getboard( int bno ){
-//        LoginDto loginDto = (LoginDto) request.getSession().getAttribute("login");
+        OauthDto loginDto = (OauthDto) request.getSession().getAttribute("login");
         Optional<BoardEntity> optionalRoomEntity =  boardRepository.findById(bno );
         BoardEntity boardEntity =  optionalRoomEntity.get();
-//
-//        String same = null;
-//        if(boardEntity.getMemberEntity().getMno()==loginDto.getMno()){
-//            same =  "true";
-//        }else{
-//            same =  "false";
-//        }
+        String same = null;
+        if(boardEntity.getMemberEntity().getMid().equals(loginDto.getMid())){
+            same =  "true";
+        }else{
+            same =  "false";
+        }
         // 2.  해당 엔티티 -> json 객체 변환
         JSONObject object = new JSONObject();
         // 1. json에 엔티티 필드 값 넣기
@@ -188,7 +197,7 @@ public class BoardService {
         object.put("btitle" , boardEntity.getBtitle());
         object.put("bcontent" , boardEntity.getBcontent());
         object.put("mid" , boardEntity.getMemberEntity().getMid());
-//        object.put("same" , same);
+        object.put("same" , same);
 
         JSONArray jsonArray = new JSONArray();
         for(  BoardimgEntity boardimgEntity : boardEntity.getBoardimgEntities() ) { //  룸별로 이미지 여러개

@@ -10,6 +10,7 @@ import java.util.Map;
 @AllArgsConstructor@NoArgsConstructor
 public class OauthDto { // oauth 회원 정보 담고 있는 dto
 
+    private int mno; // 아이디   [  이메일에서 아이디만 추출  vs 문자열 난수 ]
     private String mid; // 아이디   [  이메일에서 아이디만 추출  vs 문자열 난수 ]
     private String mname;// 이름
     private String memail; // 이메일

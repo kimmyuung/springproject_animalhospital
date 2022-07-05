@@ -60,6 +60,7 @@ public class SecurityConfig {
                 .ignoringAntMatchers("/admin/noticesave")
                 .ignoringAntMatchers("/admin/updatenotice")
                 .ignoringAntMatchers("/admin/deletenotice")
+                .ignoringAntMatchers("/map/info")
                 .and()
                 .exceptionHandling()
                 .accessDeniedPage("/error")
