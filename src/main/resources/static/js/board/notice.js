@@ -26,29 +26,29 @@ $.ajax({
             '<td>'+ json.data[i]["bindate"] + '</td>' +
             '<td> <button type="button" onclick="bnosave('+json.data[i]["bno"]+')" data-bs-toggle="modal" data-bs-target="#myModal2")">공지사항 수정</button>' +
                  '<button type="button" onclick="noticedelete('+json.data[i]["bno"]+')">공지사항 삭제</button>' +
-             + '</td></tr>';
+             '</td></tr>';
              }
                ////////////////////////////////////// 이전 /////////////////////////////////////////////
              if( page == 0 )
               {
-              html2 += ' <li class="page-item"><a class="page-link" onclick="getnotice('+ (page)+')">Previous</a></li>' ;
+              html2 += ' <div class="page-item col-md-2"><a class="page-link" onclick="getnotice('+ (page)+')">Previous</a></div>' ;
               } else{
                  html2 +=
-                   ' <li class="page-item"><a class="page-link" onclick="getnotice('+(page-1)+')">Previous</a></li>' ;
+                   ' <div class="page-item col-md-2"><a class="page-link" onclick="getnotice('+(page-1)+')">Previous</a></div>' ;
                     }
                                ////////////////////////////////////// 페이징 ////////////////////////////////////////////
               for( let i = json.startbtn-1 ; i <= json.endbtn - 1; i++) {
-                    html2 += '<li class="page-item"><button class="btn btn-primary mx-1" onclick="getnotice(' + i +')">'
-                    + (i+1) + '</button></li>';
+                    html2 += '<div class="page-item col-md-2"><button class="btn btn-primary mx-1" onclick="getnotice(' + i +')">'
+                    + (i+1) + '</button></div>';
                      }
                              ////////////////////////////////////// 이후 버튼 //////////////////////////////////////////
                              if(page == json.totalpage-1){
                              html2 +=
-                              ' <li class="page-item"><a class="page-link" onclick="getnotice('+ (page) +')">Next</a></li>' ;
+                              ' <div class="page-item col-md-2"><a class="page-link" onclick="getnotice('+ (page) +')">Next</a></div>' ;
                              }
                              else {
                               html2 +=
-                              ' <li class="page-item"><a class="page-link" onclick="getnotice('+(page+1)+')">Next</a></li>' ;
+                              ' <div class="page-item col-md-2"><a class="page-link" onclick="getnotice('+(page+1)+')">Next</a></div>' ;
                               }
 
 
@@ -74,6 +74,8 @@ $.ajax({
            else { alert("등록 실패");}
            }
     });
+    $("#btitle").val() = "";
+    $("#bcontent").val() = "";
 }
 
 
@@ -93,6 +95,8 @@ $.ajax({
            else { alert("수정 실패");}
            }
     });
+        $("#btitle2").val() = "";
+        $("#bcontent2").val() = "";
 }
 
 function noticedelete(bno) {
