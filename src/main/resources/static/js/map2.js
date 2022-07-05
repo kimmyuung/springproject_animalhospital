@@ -37,7 +37,7 @@ kakao.maps.event.addListener(map, 'idle', function() {
                     });
                      // 마커에 클릭 이벤트를 등록한다 (우클릭 : rightclick)
                     kakao.maps.event.addListener(marker, 'click', function() {
-                        markerclick(list2[i].name);
+                        alert(list2[i].name);
                     });
                     html +=
                         '<div class="hospital-box">'+
@@ -55,8 +55,8 @@ kakao.maps.event.addListener(map, 'idle', function() {
             $.ajax({
                 url : "https://openapi.gg.go.kr/Animalhosptl?" ,
                 data :{"KEY" :"47d367a4e715424e8c25f17ff85a81ea","type":"json","pIndex":i,"pSize": "1000" },
-                dataType : "json",
                 async : false,
+                dataType : "json",
                 success: function(re) {
                         list = re
                     for(let i = 0; i < re.Animalhosptl[1].row.length; i++){
@@ -108,6 +108,3 @@ function panTo(lat, logt) {
         console.log(typeof(res))
     }
 })
-
-
-

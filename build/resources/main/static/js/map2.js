@@ -56,7 +56,6 @@ kakao.maps.event.addListener(map, 'idle', function() {
                 url : "https://openapi.gg.go.kr/Animalhosptl?" ,
                 data :{"KEY" :"47d367a4e715424e8c25f17ff85a81ea","type":"json","pIndex":i,"pSize": "1000" },
                 dataType : "json",
-                async : false,
                 success: function(re) {
                         list = re
                     for(let i = 0; i < re.Animalhosptl[1].row.length; i++){
