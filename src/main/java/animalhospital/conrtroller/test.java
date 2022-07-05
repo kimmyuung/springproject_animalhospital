@@ -5,6 +5,7 @@ import animalhospital.service.BoardService;
 import animalhospital.service.MapService;
 import animalhospital.service.MemberService;
 import org.json.JSONArray;
+import org.json.simple.parser.ParseException;
 import org.jsoup.Jsoup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -12,6 +13,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 @Controller
 public class test { // 인덱스 컨트롤러 및 관리자 컨트롤러로 사용
@@ -64,7 +66,7 @@ public class test { // 인덱스 컨트롤러 및 관리자 컨트롤러로 사�
     @ResponseBody
     public void getlist(@RequestParam("codenamelist") JSONArray codenamelist){
        //  String result = code +" "+ name;
-        System.out.println(  "json : " + codenamelist.length() );
+        System.out.println(  "json : " + codenamelist.getJSONObject(0).get("code"));
 
 
         //String codename[] = new String[count];
@@ -72,14 +74,19 @@ public class test { // 인덱스 컨트롤러 및 관리자 컨트롤러로 사�
          //  codename[0] = result;
          //  System.out.println(result);
 
+    }
 
 
+    @GetMapping("/map")
+    @ResponseBody
+    public void gethlist(HttpServletResponse response)  {
+        JSONArray list =  mapService.map();
 
-
-
-
-
-
+               try{
+                   response.setContentType("application/json");
+                   response.setCharacterEncoding("UTF-8");
+                   response.getWriter().print(list);
+               } catch(Exception e) {}
 
 
     }
