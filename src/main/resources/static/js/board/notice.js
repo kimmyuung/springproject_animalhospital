@@ -1,10 +1,10 @@
 let current_page = 0;
+let updatebno = 0;
 getnotice(0);
 
 function getnotice(page) {
 
 this.current_page = page;
-alert(current_page);
 
 $.ajax({
     url : '/board/getnotice',
@@ -24,31 +24,31 @@ $.ajax({
             '<td>'+ json.data[i]["btitle"] +'</td>' +
             '<td>'+ json.data[i]["bcontent"] + '</td>' +
             '<td>'+ json.data[i]["bindate"] + '</td>' +
-            '<td> <button type="button" onclick="noticeupdate('+json.data[i]["bno"]+' data-bs-toggle="modal" data-bs-target="#myModal2")">공지사항 수정</button>' +
+            '<td> <button type="button" onclick="bnosave('+json.data[i]["bno"]+')" data-bs-toggle="modal" data-bs-target="#myModal2")">공지사항 수정</button>' +
                  '<button type="button" onclick="noticedelete('+json.data[i]["bno"]+')">공지사항 삭제</button>' +
              + '</td></tr>';
              }
                ////////////////////////////////////// 이전 /////////////////////////////////////////////
              if( page == 0 )
               {
-              html2 += ' <li class="page-item"><a class="page-link" onclick="board_list('+ (page)+')">Previous</a></li>' ;
+              html2 += ' <li class="page-item"><a class="page-link" onclick="getnotice('+ (page)+')">Previous</a></li>' ;
               } else{
                  html2 +=
-                   ' <li class="page-item"><a class="page-link" onclick="board_list('+(page-1)+')">Previous</a></li>' ;
+                   ' <li class="page-item"><a class="page-link" onclick="getnotice('+(page-1)+')">Previous</a></li>' ;
                     }
                                ////////////////////////////////////// 페이징 ////////////////////////////////////////////
               for( let i = json.startbtn-1 ; i <= json.endbtn - 1; i++) {
-                    html2 += '<li class="page-item"><button class="btn btn-primary mx-1" onclick="board_list(' + i +')">'
+                    html2 += '<li class="page-item"><button class="btn btn-primary mx-1" onclick="getnotice(' + i +')">'
                     + (i+1) + '</button></li>';
                      }
                              ////////////////////////////////////// 이후 버튼 //////////////////////////////////////////
                              if(page == json.totalpage-1){
                              html2 +=
-                              ' <li class="page-item"><a class="page-link" onclick="board_list('+ (page) +')">Next</a></li>' ;
+                              ' <li class="page-item"><a class="page-link" onclick="getnotice('+ (page) +')">Next</a></li>' ;
                              }
                              else {
                               html2 +=
-                              ' <li class="page-item"><a class="page-link" onclick="board_list('+(page+1)+')">Next</a></li>' ;
+                              ' <li class="page-item"><a class="page-link" onclick="getnotice('+(page+1)+')">Next</a></li>' ;
                               }
 
 
@@ -61,6 +61,7 @@ $.ajax({
 }
 
 function noticesave() {
+
 if($("#btitle").val() == "") {alert("공지사항 제목을 입력해주세요"); return;}
 if($("#bcontent").val() == "") {alert("공지사항 내용을 입력해주세요"); return;}
 $.ajax({
@@ -75,11 +76,17 @@ $.ajax({
     });
 }
 
-function noticeupdate(bno) {
+
+function bnosave(bno) {
+updatebno = bno;
+console.log(updatebno);
+}
+function noticeupdate() {
+console.log(updatebno);
 $.ajax({
             url : '/admin/updatenotice',
-            type: "DELETE",
-            data : {"bno" : bno} ,
+            type: "PUT",
+            data : {"bno" : updatebno, "btitle" : $("#btitle2").val(),"bcontent" : $("#bcontent2").val()} ,
             success : function(re) {
             console.log(re);
            if(re == true) {alert("수정 성공"); getnotice(0);}
@@ -89,17 +96,16 @@ $.ajax({
 }
 
 function noticedelete(bno) {
-if($("#btitle2").val() == "") {alert("공지사항 제목을 입력해주세요"); return;}
-if($("#bcontent2").val() == "") {alert("공지사항 내용을 입력해주세요"); return;}
+if(confirm("정말 공지사항을 삭제하시겠습니까?")) {
 $.ajax({
             url : '/admin/deletenotice',
             type: "DELETE",
-            data : {"bno" : bno, "btitle" : $("#btitle2").val(),"bcontent" : $("#bcontent2").val()} ,
+            data : {"bno" : bno } ,
             success : function(re) {
             console.log(re);
            if(re == true) {alert("삭제 성공"); getnotice(0);}
            else { alert("삭제 실패");}
            }
     });
-
+}
 }
