@@ -4,7 +4,10 @@ import animalhospital.domain.board.BoardEntity;
 import animalhospital.domain.board.BoardRepository;
 import animalhospital.domain.board.BoardimgEntity;
 import animalhospital.domain.board.BoardimgRespository;
+import animalhospital.domain.member.MemberEntity;
+import animalhospital.domain.member.MemberRepository;
 import animalhospital.dto.BoardDto;
+import animalhospital.dto.LoginDto;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +15,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -29,40 +36,73 @@ public class BoardService {
     private BoardRepository boardRepository;
 
     @Autowired
+    private MemberRepository memberRepository;
+
+    @Autowired
     private BoardimgRespository boardimgRespository;
 
     @Transactional
     public boolean save(BoardDto boardDto) {
 
-        BoardEntity boardEntity = boardDto.toentity();
-        boardRepository.save( boardEntity );
-        String uuidfile = null;
-        if( boardDto.getBimg().size() != 0 ){
-            for(MultipartFile file : boardDto.getBimg() ){
-                UUID uuid = UUID.randomUUID();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Object principal = authentication.getPrincipal();
+        String mid = null;
+        if( principal instanceof UserDetails){
+            mid = ((UserDetails) principal).getUsername();
+        }else if( principal instanceof DefaultOAuth2User){
+            Map<String , Object>  map =  ((DefaultOAuth2User) principal).getAttributes();
+            if( map.get("response") != null ){
+                Map< String , Object> map2  = (Map<String, Object>) map.get("response");
+                mid = map2.get("email").toString().split("@")[0];
+            }else{
+                Map< String , Object> map2  = (Map<String, Object>) map.get("kakao_account");
+                mid = map2.get("email").toString().split("@")[0];
+            }
+        }else{
+            return false;
+        }
+        if( mid != null  ) {
+            Optional<MemberEntity> optionalMember = memberRepository.findBymid(mid);
+            if (optionalMember.isPresent()) { // null 아니면
+                BoardEntity boardEntity = boardDto.toentity();
+                boardEntity.setMemberEntity( optionalMember.get() );
+                boardRepository.save(boardEntity);
+                String uuidfile = null;
+                if (boardDto.getBimg().size() != 0) {
+                    for (MultipartFile file : boardDto.getBimg()) {
+                        UUID uuid = UUID.randomUUID();
 
-                uuidfile = uuid.toString() +"_"+ file.getOriginalFilename().replaceAll("_","-");
-                String dir  = "C:\\Users\\504\\springproject_animalhospital\\src\\main\\resources\\static\\upload\\";
-                String filepath = dir+uuidfile;
+                        uuidfile = uuid.toString() + "_" + file.getOriginalFilename().replaceAll("_", "-");
+                        String dir = "C:\\Users\\504\\springproject_animalhospital\\src\\main\\resources\\static\\upload\\";
+                        String filepath = dir + uuidfile;
 
-                try {
-                    file.transferTo( new File(filepath) );
+                        try {
+                            file.transferTo(new File(filepath));
 
-                    BoardimgEntity boardimgEntity =  BoardimgEntity.builder()
-                            .bimg( uuidfile )
-                            .boardEntity(  boardEntity )
-                            .build();
+                            BoardimgEntity boardimgEntity = BoardimgEntity.builder()
+                                    .bimg(uuidfile)
+                                    .boardEntity(boardEntity)
+                                    .build();
 
-                    boardimgRespository.save(boardimgEntity );
+                            boardimgRespository.save(boardimgEntity);
 
-                    boardEntity.getBoardimgEntities().add( boardimgEntity );
+                            boardEntity.getBoardimgEntities().add(boardimgEntity);
 
-                }catch( Exception e ){ System.out.println("파일저장실패 : "+ e);}
+                        } catch (Exception e) {
+                            System.out.println("파일저장실패 : " + e);
+                        }
+                    }
+
+                }
+
+                return true;
+
+            } else { // 로그인이 안되어 있는경우
+                return false;
             }
 
         }
-
-        return true;
+        return false;
     }
 
     @Transactional
@@ -131,9 +171,16 @@ public class BoardService {
     }
 
     public JSONObject getboard( int bno ){
-
+//        LoginDto loginDto = (LoginDto) request.getSession().getAttribute("login");
         Optional<BoardEntity> optionalRoomEntity =  boardRepository.findById(bno );
         BoardEntity boardEntity =  optionalRoomEntity.get();
+//
+//        String same = null;
+//        if(boardEntity.getMemberEntity().getMno()==loginDto.getMno()){
+//            same =  "true";
+//        }else{
+//            same =  "false";
+//        }
         // 2.  해당 엔티티 -> json 객체 변환
         JSONObject object = new JSONObject();
         // 1. json에 엔티티 필드 값 넣기
@@ -141,6 +188,7 @@ public class BoardService {
         object.put("btitle" , boardEntity.getBtitle());
         object.put("bcontent" , boardEntity.getBcontent());
         object.put("mid" , boardEntity.getMemberEntity().getMid());
+//        object.put("same" , same);
 
         JSONArray jsonArray = new JSONArray();
         for(  BoardimgEntity boardimgEntity : boardEntity.getBoardimgEntities() ) { //  룸별로 이미지 여러개
