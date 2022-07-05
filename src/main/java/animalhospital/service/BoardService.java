@@ -66,8 +66,16 @@ public class BoardService {
     }
 
     @Transactional
-    public boolean noticesave(BoardDto boardDto) { BoardEntity boardEntity = boardDto.toentity();
-        boardRepository.save(boardEntity); return true; }
+    public boolean noticesave(String btitle, String bcontent) {
+        BoardEntity boardEntity = BoardEntity.builder()
+                        .cno(1)
+                                .bcontent(bcontent)
+                                        .btitle(btitle)
+                                                        .build();
+
+        boardRepository.save(boardEntity);
+        return true;
+    }
 
     @Transactional
     public boolean noticeupdate(int bno, BoardDto boardDto) {
@@ -155,7 +163,6 @@ public class BoardService {
             jo.put("bno", temp.getBno());
             jo.put("btitle", temp.getBtitle());
             jo.put("bcontent", temp.getBcontent());
-            jo.put("createdate", temp.getCreatedate());
             array.put(jo);
         }
         return array;
