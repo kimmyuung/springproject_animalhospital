@@ -58,4 +58,12 @@ public class BoardController {
         return boardService.delete( bno );
     }
 
+    @PostMapping("/replysave")
+    @ResponseBody
+    public boolean replysave(@RequestParam("bno") int bno, @RequestParam("reply") String reply){
+        System.out.println("bno : " + bno);
+        System.out.println("reply : "+reply);
+        return boardService.replysave( bno, reply );
+    }
+
 }

@@ -13,6 +13,7 @@ import javax.persistence.*;
 @Setter
 @ToString( exclude="boardEntity" )@Builder
 public class BoardimgEntity {
+
     @Id
     @GeneratedValue( strategy = GenerationType.IDENTITY )
     private int bimgno;
@@ -21,4 +22,5 @@ public class BoardimgEntity {
     @ManyToOne
     @JoinColumn( name = "bno")
     private BoardEntity boardEntity;
+
 }

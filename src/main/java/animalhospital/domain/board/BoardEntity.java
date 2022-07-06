@@ -30,4 +30,7 @@ public class BoardEntity extends BaseTime {
 
     @OneToMany( mappedBy = "boardEntity" , cascade = CascadeType.ALL )
     private List<BoardimgEntity> boardimgEntities;
+
+    @OneToMany (mappedBy = "boardEntity", cascade = CascadeType.ALL)
+    private List<ReplyEntity> replyEntities;
 }

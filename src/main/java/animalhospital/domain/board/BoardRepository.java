@@ -13,4 +13,6 @@ public interface BoardRepository extends JpaRepository<BoardEntity,Integer> {
 
     @Query( value = "select * from board where cno = :cno" , nativeQuery = true )
     List<BoardEntity> findbynoticelist(int cno, Pageable pageable);
+
+    BoardEntity findBybno(int bno );
 }

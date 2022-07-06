@@ -11,7 +11,7 @@
 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal">
     사진올리기
 </button>
-<div id="table">
+<div id="table" >
 
 </div>
 <ul id="pagebtnbox" class="pagination justify-content-center">
@@ -84,6 +84,15 @@
                             <div><h6>작성자: <span id="bwiter"></span></h6></div>
                             <div>내용</div>
                             <span id="bcontent"></span>
+                            <hr>
+                            <div id="replydiv">
+                                <table id="replytable"></table>
+
+                            </div>
+                        </div>
+                        <div>
+                            <input type="text" id="reply" placeholder="댓글을 입력해주세요">
+                            <button type="button" onclick="replysave()">등록</button>
                         </div>
                         <div id="deletebutton">
 

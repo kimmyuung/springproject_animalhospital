@@ -1,9 +1,6 @@
 package animalhospital.service;
 
-import animalhospital.domain.board.BoardEntity;
-import animalhospital.domain.board.BoardRepository;
-import animalhospital.domain.board.BoardimgEntity;
-import animalhospital.domain.board.BoardimgRespository;
+import animalhospital.domain.board.*;
 import animalhospital.domain.member.MemberEntity;
 import animalhospital.domain.member.MemberRepository;
 import animalhospital.dto.BoardDto;
@@ -49,6 +46,9 @@ public class BoardService {
     @Autowired
     private MemberRepository memberRepository;
 
+    @Autowired
+    private ReplyRepository replyRepository;
+
     @Transactional
     public boolean save(BoardDto boardDto) {
 
@@ -81,7 +81,7 @@ public class BoardService {
                         UUID uuid = UUID.randomUUID();
 
                         uuidfile = uuid.toString() + "_" + file.getOriginalFilename().replaceAll("_", "-");
-                        String dir = "C:\\Users\\504\\springproject_animalhospital\\src\\main\\resources\\static\\upload\\";
+                        String dir = "C:\\Users\\504\\Desktop\\springproject_animalhospital\\src\\main\\resources\\static\\upload\\";
                         String filepath = dir + uuidfile;
 
                         try {
@@ -165,8 +165,8 @@ public class BoardService {
 
         int btncount = 5;
         int startbtn  = ( page / btncount ) * btncount + 1;
-        int endhtn = startbtn + btncount -1;
-        if( endhtn > boardEntitylist.getTotalPages() ) endhtn = boardEntitylist.getTotalPages();
+        int endbtn = startbtn + btncount -1;
+        if( endbtn > boardEntitylist.getTotalPages() ) endbtn = boardEntitylist.getTotalPages();
 
 
         for( BoardEntity entity : boardEntitylist ){
@@ -176,7 +176,7 @@ public class BoardService {
             map.put("btitle", entity.getBtitle());
             map.put("bimg", entity.getBoardimgEntities().get(0).getBimg());
             map.put( "startbtn" , startbtn+"" );
-            map.put( "endhtn" , endhtn+"" );
+            map.put( "endbtn" , endbtn+"" );
             map.put( "totalpages" , boardEntitylist.getTotalPages()+"" );
             // 4. 리스트 넣기
             Maplist.add(map);
@@ -293,6 +293,45 @@ public class BoardService {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+    @Transactional
+    public boolean replysave(int bno, String reply) {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Object principal = authentication.getPrincipal();
+        String mid = null;
+        if( principal instanceof UserDetails){
+            mid = ((UserDetails) principal).getUsername();
+        }else if( principal instanceof DefaultOAuth2User){
+            Map<String , Object>  map =  ((DefaultOAuth2User) principal).getAttributes();
+            if( map.get("response") != null ){
+                Map< String , Object> map2  = (Map<String, Object>) map.get("response");
+                mid = map2.get("email").toString().split("@")[0];
+            }else{
+                Map< String , Object> map2  = (Map<String, Object>) map.get("kakao_account");
+                mid = map2.get("email").toString().split("@")[0];
+            }
+        }else{
+            return false;
+        }
+        if( mid != null  ) {
+            Optional<MemberEntity> optionalMember = memberRepository.findBymid(mid);
+            if (optionalMember.isPresent()) { // null 아니면
+                MemberEntity memberEntity = memberRepository.findBymid(mid).get();
+                BoardEntity boardEntity = boardRepository.findBybno(bno);
+                ReplyEntity replyEntity = ReplyEntity.builder()
+                        .rcontent(reply)
+                        .boardEntity(boardEntity)
+                        .memberEntity(memberEntity)
+                        .build();
+                System.out.println(replyEntity);
+                replyRepository.save(replyEntity);
+                return true;
+            } else { // 로그인이 안되어 있는경우
+                return false;
+            }
+        }
+        return false;
     }
 
    /* 조회수 증가
