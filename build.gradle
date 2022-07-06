@@ -37,7 +37,6 @@ dependencies {
     implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5' // 스프링 시큐리티 타임리프
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-client' // oath2 인증 라이크버리
     implementation 'org.jsoup:jsoup:1.15.1' // jsoup 크롤링
-    implementation group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1.1'
 }
 
 tasks.named('test') {
