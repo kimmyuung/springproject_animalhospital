@@ -79,7 +79,8 @@ public class BoardService {
                         UUID uuid = UUID.randomUUID();
 
                         uuidfile = uuid.toString() + "_" + file.getOriginalFilename().replaceAll("_", "-");
-                        String dir = "C:\\Users\\504\\Desktop\\springproject_animalhospital\\src\\main\\resources\\static\\upload\\";
+//                        String dir = "C:\\Users\\504\\Desktop\\springproject_animalhospital\\src\\main\\resources\\static\\upload\\";
+                        String dir = "C:\\Users\\user\\IdeaProjects\\springproject_animalhospital\\src\\main\\resources\\static\\upload\\";
                         String filepath = dir + uuidfile;
 
                         try {
@@ -322,7 +323,6 @@ public class BoardService {
                         .boardEntity(boardEntity)
                         .memberEntity(memberEntity)
                         .build();
-                System.out.println(replyEntity);
                 replyRepository.save(replyEntity);
                 return true;
             } else { // 로그인이 안되어 있는경우
@@ -330,6 +330,23 @@ public class BoardService {
             }
         }
         return false;
+    }
+
+    public JSONArray getreply(int bno){
+        JSONArray jsonArray = new JSONArray();
+        System.out.println("getreply : "+bno);
+        BoardEntity boardEntity = boardRepository.findBybno(bno);
+        List<ReplyEntity> replyEntities = replyRepository.findbybno(bno);
+        for(ReplyEntity replyEntity : replyEntities){
+            JSONObject object = new JSONObject();
+            object.put("mid",replyEntity.getMemberEntity().getMid());
+            object.put("rcontent",replyEntity.getRcontent());
+            object.put("createdate",replyEntity.getCreatedate());
+            jsonArray.put(object);
+        }
+
+        System.out.println("getreply : "+jsonArray);
+        return jsonArray;
     }
 
    /* 조회수 증가

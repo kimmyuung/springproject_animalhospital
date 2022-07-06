@@ -2,12 +2,14 @@ package animalhospital.conrtroller;
 
 import animalhospital.dto.BoardDto;
 import animalhospital.service.BoardService;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -45,9 +47,11 @@ public class BoardController {
                           HttpServletResponse response  ){
         try{
             JSONObject object =  boardService.getboard( bno );
+//            JSONObject reply = boardService.getreply(bno);
             response.setCharacterEncoding("UTF-8");
             response.setContentType("application/json");
             response.getWriter().print( object );
+//            response.getWriter().print( reply );
         }catch( Exception e ){ System.out.println( e ); }
 
     }
@@ -62,9 +66,21 @@ public class BoardController {
     @PostMapping("/replysave")
     @ResponseBody
     public boolean replysave(@RequestParam("bno") int bno, @RequestParam("reply") String reply){
-        System.out.println("bno : " + bno);
-        System.out.println("reply : "+reply);
         return boardService.replysave( bno, reply );
+    }
+
+    @GetMapping("/getreply")
+    @ResponseBody
+    public void getreply(@RequestParam("bno")int bno, HttpServletResponse response){
+            System.out.println("replybno : "+bno);
+        try {
+            JSONArray jsonArray = boardService.getreply(bno);
+            response.setCharacterEncoding("UTF-8");
+            response.setContentType("application/json");
+            response.getWriter().print(jsonArray);
+        } catch (IOException e) {
+            System.out.println(e);
+        }
     }
 
 }

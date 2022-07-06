@@ -110,7 +110,7 @@ function bview(bno){
                 let imgtag = "";
                 // 응답받은 데이터를 모달에 데이터 넣기
                 console.log( board );
-
+                getreply();
                 for( let i = 0 ; i<board.bimglist.length ; i++ ){
                      if( i == 0 ){  // 첫번째 이미지만 active 속성 추가
                         imgtag +=
@@ -129,6 +129,7 @@ function bview(bno){
                                         '<button type="button" class="btn btn-primary" onclick="bdelete('+board.bno+')">삭제</button>'
                                      );
                 }
+
                 $("#bwiter").html( board.mid );
                  $("#btitl").html( board.btitle );
                  $("#bcontent").html( board.bcontent );
@@ -188,8 +189,27 @@ function replysave(){
         data : {"reply": reply, "bno": bnum},
         success : function(result){
             console.log(result);
-             $('#viewcontent').load(location.href+' #viewcontent');
+             $('#replydiv').load(location.href+' #replydiv');
         }
     });
 
+}
+function getreply(){
+console.log("getreply");
+    let replyhtml = "";
+    $.ajax({
+            url:"/board/getreply",
+            data : {"bno": bnum},
+            success : function(result){
+                console.log(result);
+                for(let i = 0; i <result.length; i++){
+                replyhtml +=
+                    '<tr>'+
+                        '<td>'+result[i].mid+'</td><td>'+result[i].rcontent+'</td><td>'+result[i].createdate+'</td>'+
+                    '</tr>';
+                }
+
+                 $('#replytable').html(replyhtml);
+            }
+        });
 }
