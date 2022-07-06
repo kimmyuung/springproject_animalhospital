@@ -1,7 +1,6 @@
 package animalhospital.conrtroller;
 
 import animalhospital.service.MapService;
-import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -9,17 +8,17 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 
 @Controller
 @RequestMapping("/map")
 public class MapController {
 
-
     @Autowired
     MapService mapService;
+
     @Autowired
     private HttpServletRequest request;     // 1. 세션 호출을 위한 request 객체 생성
+
 
     @GetMapping("/infopage")
     public String list(){ return "hospitalinfo";}
@@ -51,7 +50,6 @@ public class MapController {
         }
     }
 
-
     @GetMapping("/search")
     public void search(HttpServletResponse response, @RequestParam("keyword") String keyword ){
 
@@ -59,10 +57,9 @@ public class MapController {
             response.setCharacterEncoding("UTF-8");
             response.setContentType("application.json");
             response.getWriter().println(mapService.search(keyword));
-        } catch (IOException e) {
-            System.out.println(e);
+        } catch (Exception e) {
+           e.printStackTrace();
         }
     }
-
 
 }

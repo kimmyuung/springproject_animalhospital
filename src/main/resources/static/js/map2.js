@@ -226,4 +226,5 @@ function infopage(){
            location.href = "/map/infopage";
          }
     });
+
 }
