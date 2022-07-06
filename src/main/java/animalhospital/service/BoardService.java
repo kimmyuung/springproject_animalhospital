@@ -21,6 +21,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -48,40 +52,65 @@ public class BoardService {
     @Transactional
     public boolean save(BoardDto boardDto) {
 
-//        LoginDto loginDto  = (LoginDto) request.getSession().getAttribute("login");
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Object principal = authentication.getPrincipal();
+        String mid = null;
+        if( principal instanceof UserDetails){
+            mid = ((UserDetails) principal).getUsername();
+        }else if( principal instanceof DefaultOAuth2User){
+            Map<String , Object>  map =  ((DefaultOAuth2User) principal).getAttributes();
+            if( map.get("response") != null ){
+                Map< String , Object> map2  = (Map<String, Object>) map.get("response");
+                mid = map2.get("email").toString().split("@")[0];
+            }else{
+                Map< String , Object> map2  = (Map<String, Object>) map.get("kakao_account");
+                mid = map2.get("email").toString().split("@")[0];
+            }
+        }else{
+            return false;
+        }
+        if( mid != null  ) {
+            Optional<MemberEntity> optionalMember = memberRepository.findBymid(mid);
+            if (optionalMember.isPresent()) { // null 아니면
+                BoardEntity boardEntity = boardDto.toentity();
+                boardEntity.setMemberEntity( optionalMember.get() );
+                boardRepository.save(boardEntity);
+                String uuidfile = null;
+                if (boardDto.getBimg().size() != 0) {
+                    for (MultipartFile file : boardDto.getBimg()) {
+                        UUID uuid = UUID.randomUUID();
 
-//        MemberEntity memberEntity =  memberRepository.findById( loginDto.getMno() ).get();
+                        uuidfile = uuid.toString() + "_" + file.getOriginalFilename().replaceAll("_", "-");
+                        String dir = "C:\\Users\\504\\springproject_animalhospital\\src\\main\\resources\\static\\upload\\";
+                        String filepath = dir + uuidfile;
 
-        BoardEntity boardEntity = boardDto.toentity();
-        boardRepository.save( boardEntity );
+                        try {
+                            file.transferTo(new File(filepath));
 
-        String uuidfile = null;
-        if( boardDto.getBimg().size() != 0 ){
-            for(MultipartFile file : boardDto.getBimg() ){
-                UUID uuid = UUID.randomUUID();
+                            BoardimgEntity boardimgEntity = BoardimgEntity.builder()
+                                    .bimg(uuidfile)
+                                    .boardEntity(boardEntity)
+                                    .build();
 
-                uuidfile = uuid.toString() +"_"+ file.getOriginalFilename().replaceAll("_","-");
-                String dir  = "C:\\Users\\504\\springproject_-animalhospital\\src\\main\\resources\\static\\upload\\";
-                String filepath = dir+uuidfile;
+                            boardimgRespository.save(boardimgEntity);
 
-                try {
-                    file.transferTo( new File(filepath) );
+                            boardEntity.getBoardimgEntities().add(boardimgEntity);
 
-                    BoardimgEntity boardimgEntity =  BoardimgEntity.builder()
-                            .bimg( uuidfile )
-                            .boardEntity(  boardEntity )
-                            .build();
+                        } catch (Exception e) {
+                            System.out.println("파일저장실패 : " + e);
+                        }
+                    }
 
-                    boardimgRespository.save(boardimgEntity );
+                }
 
-                    boardEntity.getBoardimgEntities().add( boardimgEntity );
+                return true;
 
-                }catch( Exception e ){ System.out.println("파일저장실패 : "+ e);}
+            } else { // 로그인이 안되어 있는경우
+                return false;
             }
 
         }
-
-        return true;
+        return false;
     }
 
     @Transactional
