@@ -1,6 +1,7 @@
 package animalhospital.domain.board;
 
 import animalhospital.domain.BaseTime;
+import animalhospital.domain.member.MemberEntity;
 import lombok.*;
 
 import javax.persistence.*;
@@ -22,11 +23,10 @@ public class BoardEntity extends BaseTime {
     private String btitle;
     private String bcontent;
     private int cno;
-    private int mno;
 
-//    @ManyToOne
-//    @JoinColumn(name = "mno")
-//    private MemberEntity memberEntity;
+    @ManyToOne
+    @JoinColumn(name = "mno")
+    private MemberEntity memberEntity;
 
     @OneToMany( mappedBy = "boardEntity" , cascade = CascadeType.ALL )
     private List<BoardimgEntity> boardimgEntities;
