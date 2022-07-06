@@ -193,3 +193,37 @@ function panTo(lat, logt) {
     map.panTo(moveLatLon);
 }
 
+let hname;
+let hdate;
+function search(){
+    let keyword = $("#searchbar").val();
+    $.ajax({
+        url: "/map/search",
+        data: {"keyword" : keyword},
+        success: function(result) {
+            let searchlist= "";
+            if(result.length == 0){
+                searchlist = '<div>일치하는 병원이 없습니다.</div>'
+            }else {
+                for (let i = 0; i<result.length; i++){
+                    hname = result[i].name;
+                    hdate = result[i].opendate;
+                    searchlist +=
+                        '<div Onclick="infopage()" style="cursor:pointer" >'+result[i].city+' '+result[i].name+'</div>';
+                }
+            }
+            $("#searchlist").html(searchlist);
+        }
+    });
+}
+function infopage(){
+    console.log(hname+" "+hdate);
+    $.ajax({
+        url: "/map/infopage",
+        method: "GET",
+        data: {"hname":hname , "hdate": hdate},
+         success: function(re){
+           location.href = "/map/infopage";
+         }
+    });
+}

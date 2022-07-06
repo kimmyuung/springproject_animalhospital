@@ -101,8 +101,10 @@ public class test { // 인덱스 컨트롤러 및 관리자 컨트롤러로 사�
             response.setCharacterEncoding("UTF-8");
             response.getWriter().print(list);
         } catch(Exception e) {}
-
-
     }
+
+
+
+
 
 }
