@@ -99,6 +99,7 @@
 //    map.panTo(moveLatLon);
 //}
 let list;
+
 $.ajax({
     url : "/map",
     async : false,
@@ -133,6 +134,7 @@ kakao.maps.event.addListener(map, 'idle', function() {
         var neLatlng = bounds.getNorthEast();
     //    console.log(neLatlng);
          for(let i = 0; i < list.length; i++) {
+
             if(swLatlng.La < list[i].logt
                     && swLatlng.Ma < list[i].lat
                     && neLatlng.La > list[i].logt
@@ -148,8 +150,8 @@ kakao.maps.event.addListener(map, 'idle', function() {
                         alert(list[i].name);
                     });
                     html +=
-                        '<div class="hospital-box">'+
-                            '<div>'+list[i].name+'</div>'+
+                        '<div class="hospital-box" onclick="hsave('+i+')" >'+
+                            '<div >'+list[i].name+'</div>'+
                             '<div>'+list[i].addr+'</div>'+
                         '</div>';
                 }//if end
@@ -164,4 +166,18 @@ function panTo(lat, logt) {
     // 지도 중심을 부드럽게 이동시킵니다
     // 만약 이동할 거리가 지도 화면보다 크면 부드러운 효과 없이 이동합니다
     map.panTo(moveLatLon);
+}
+let city;
+function hsave(i) {
+city = list[i].city;
+name = list[i].name;
+hview(city,name);
+}
+
+function hview(ccity,name){
+
+//location.href = "/board/list";
+    alert(ccity+name);
+
+
 }

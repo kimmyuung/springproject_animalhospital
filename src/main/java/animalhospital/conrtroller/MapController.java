@@ -46,6 +46,11 @@ public class MapController {
         }
     }
 
+@GetMapping("/hinfo")
+public void hinfo() {
+
+}
+
 
 
 }
