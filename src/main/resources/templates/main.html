@@ -53,13 +53,10 @@
 
     <div class="content_wrap">
         <div class="input_area">
-            <div class="serach_area">
-                <input id="serachbar" type="text">
 
-            </div>
-            <div class="btn_area">
-                <button>찾기</button>
-            </div>
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                병원검색
+            </button>
         </div>
 
 
@@ -82,13 +79,38 @@
 
 
 </div>
+<!--모달 영역-->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">병원 검색</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="search_area ">
+                    <input id="searchbar" type="text" placeholder="병원이름을 입력해주세요" onKeypress="javascript:if(event.keyCode==13) {search()}">
 
+                </div>
+                <div class="btn_area">
+                    <button onclick="search()">찾기</button>
+                </div>
+                <div id="searchlist">
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+
+            </div>
+        </div>
+    </div>
+</div>
 
 <script  src="http://code.jquery.com/jquery-latest.min.js"></script>
 <!-- 부트스트랩 js  -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 <script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=8b3a07d8d07edbf4917aee3d63a1b2a7&libraries=clusterer"></script>
 <script type="text/javascript" src="/js/map2.js"></script>
-<script type="text/javascript" src="/js/map3.js"></script>
 </body>
 </html>
