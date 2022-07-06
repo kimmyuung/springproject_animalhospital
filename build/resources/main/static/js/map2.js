@@ -150,7 +150,7 @@ kakao.maps.event.addListener(map, 'idle', function() {
                         alert(list[i].name);
                     });
                     html +=
-                        '<div class="hospital-box" onclick="hsave('+i+')" >'+
+                        '<div class="hospital-box" onclick="hview('+i+')" >'+
                             '<div >'+list[i].name+'</div>'+
                             '<div>'+list[i].addr+'</div>'+
                         '</div>';
@@ -167,17 +167,16 @@ function panTo(lat, logt) {
     // 만약 이동할 거리가 지도 화면보다 크면 부드러운 효과 없이 이동합니다
     map.panTo(moveLatLon);
 }
-let city;
-function hsave(i) {
-city = list[i].city;
-name = list[i].name;
-hview(city,name);
-}
+//let city;
+//function hsave(i) {
+//city = list[i].city;
+//name = list[i].name;
+//hview(city,name);
+//}
 
-function hview(ccity,name){
-
-location.href = "/board/list";
+function hview(i){
+let city = list[i].city;
+let name = list[i].name;
+location.href = "map/infopage/"+city+"/"+name;
     alert(ccity+name);
-
-
 }

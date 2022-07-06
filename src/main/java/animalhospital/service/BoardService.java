@@ -253,9 +253,9 @@ public class BoardService {
             String score2 = score.first().text();
             String link = score.attr("href");
 
-            System.out.println(title2);
-            System.out.println(score2);
-            System.out.println(link);
+//            System.out.println(title2);
+//            System.out.println(score2);
+//            System.out.println(link);
 
 //            Elements imageUrlElements = document.getElementsByClass("total_area");
 //            Elements e = document.getElementsByClass("total_wrap api_ani_send");
@@ -287,14 +287,18 @@ public class BoardService {
         }
     }
 
-    public void crawling(String city, String name) {
+    public String crawling(String city, String name) {
         String code = city+name;
         String inflearnUrl = "https://search.daum.net/search?nil_suggest=btn&w=tot&DA=SBC&q="+code;
         Connection conn = Jsoup.connect(inflearnUrl);
         try {
             Document document = conn.get();
             Elements title = document.getElementsByClass("inner_tit").first().select("b");
+            Elements score = document.getElementsByClass("f_eb");
             String title2 = title.text().replaceAll(" ","");
+            String score2 = score.first().text();
+//            String link = score.attr("href");
+            return  score2;
           //  System.out.println(code);
 
 //            if(name.equals(title2)) {
@@ -309,7 +313,7 @@ public class BoardService {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+    return  null;
     }
 
 

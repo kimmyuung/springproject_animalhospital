@@ -1,5 +1,6 @@
 package animalhospital.conrtroller;
 
+import animalhospital.service.BoardService;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -16,8 +17,15 @@ public class MapController {
     @Autowired
     private HttpServletRequest request;     // 1. 세션 호출을 위한 request 객체 생성
 
-    @GetMapping("/infopage")
-    public String list(){ return "hospitalinfo";}
+    @Autowired
+    BoardService boardService;
+
+    @GetMapping("/infopage/{city}/{name}")
+    public String list(@PathVariable("city") String city, @PathVariable("name") String name){
+        request.getSession().setAttribute("city", city);
+        request.getSession().setAttribute("name", name);
+        return "hospitalinfo";
+    }
 
 
     @GetMapping("/view")
@@ -46,8 +54,18 @@ public class MapController {
         }
     }
 
-@GetMapping("/hinfo")
-public void hinfo() {
+@GetMapping("/infoh")
+@ResponseBody
+public void infoh(HttpServletResponse response) {
+String city = (String)request.getSession().getAttribute("city");
+String name = (String)request.getSession().getAttribute("name");
+    System.out.println("크롤링에서뽑아온이름"+boardService.crawling(city,name));
+try{
+    response.setCharacterEncoding("UTF-8");
+    response.getWriter().print(boardService.crawling(city,name));
+    response.getWriter().print(boardService.crawling(city,name));
+}catch (Exception e) {System.out.println(e);}
+
 
 }
 

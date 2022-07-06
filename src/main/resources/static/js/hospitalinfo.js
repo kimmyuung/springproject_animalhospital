@@ -1,4 +1,15 @@
+infohospital();
+function infohospital() {
+$.ajax({
+    url : "/map/infoh",
+    data : {},
+    success : function(re) {
+    alert(re)
+    }
+})
+}
 info();
+
 function info(){
     $.ajax({
         url: "/map/info",
@@ -222,3 +233,4 @@ function file1(){
 function file2(){
     document.all.file2.click();
 }
+
