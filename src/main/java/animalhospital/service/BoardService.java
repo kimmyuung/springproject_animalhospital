@@ -7,7 +7,6 @@ import animalhospital.domain.board.BoardimgRespository;
 import animalhospital.domain.member.MemberEntity;
 import animalhospital.domain.member.MemberRepository;
 import animalhospital.dto.BoardDto;
-import animalhospital.dto.LoginDto;
 import animalhospital.dto.OauthDto;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -31,7 +30,6 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import java.io.File;
-import java.net.URLEncoder;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 

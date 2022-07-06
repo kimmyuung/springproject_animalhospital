@@ -27,9 +27,10 @@ public class BoardController {
     @ResponseBody
     public boolean write_save( BoardDto boardDto ){
         boardDto.setCno(2);
-        boardService.save( boardDto );
+        System.out.println("컨트롤러"+boardDto);
+        boolean result = boardService.save( boardDto );
 
-        return true;
+        return result;
     }
 
     @PostMapping("/blist")
