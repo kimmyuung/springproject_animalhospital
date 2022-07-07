@@ -14,6 +14,12 @@
 
 <table class="table" id="noticetable"></table>
 
+<div class="col-md-6 offset-3">
+    <div  class="row">
+    <div id="pagebtnbox"></div>
+    </div>
+</div>
+
 <div class="modal" id="myModal">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
@@ -33,6 +39,34 @@
                             </div>
                             <div>
                                 <button type="button" onclick="noticesave()">등록하기</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="myModal2">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel2">공지사항 수정</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="updateform">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div>
+                                <input type="text" placeholder="수정할 공지사항 제목을 입력하세요" name="btitle2" id="btitle2">
+                            </div>
+                            <div>
+                                <textarea placeholder="수정할 공지사항 내용을 입력하세요" name="bcontent2" id="bcontent2"></textarea>
+                            </div>
+                            <div>
+                                <button type="button" onclick="noticeupdate()">수정하기</button>
                             </div>
                         </div>
                     </div>

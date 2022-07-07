@@ -1,16 +1,12 @@
 package animalhospital.conrtroller;
 
 import animalhospital.dto.BoardDto;
-import animalhospital.dto.LoginDto;
-import animalhospital.dto.OauthDto;
 import animalhospital.service.BoardService;
-import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Map;
@@ -46,7 +42,7 @@ public class BoardController {
 
     @GetMapping("/getboard")
     public void getboard( @RequestParam("bno") int bno ,
-                         HttpServletResponse response  ){
+                          HttpServletResponse response  ){
         try{
             JSONObject object =  boardService.getboard( bno );
             response.setCharacterEncoding("UTF-8");

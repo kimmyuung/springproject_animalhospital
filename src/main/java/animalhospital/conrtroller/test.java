@@ -1,22 +1,14 @@
 package animalhospital.conrtroller;
 
-import animalhospital.domain.member.MemberEntity;
-import animalhospital.dto.BoardDto;
 import animalhospital.service.BoardService;
-import animalhospital.service.MemberService;
+import animalhospital.service.MapService;
 import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import java.net.URI;
 
 @Controller
 public class test { // 인덱스 컨트롤러 및 관리자 컨트롤러로 사용
@@ -24,21 +16,23 @@ public class test { // 인덱스 컨트롤러 및 관리자 컨트롤러로 사�
     BoardService boardService;
 
     @Autowired
-    MemberService memberService;
-
-    @Autowired
-    HttpServletRequest request;
-
-    @Autowired
     HttpServletResponse response;
+
+    @Autowired
+    MapService mapService;
 
     @GetMapping("/")
     public String main( Model model ){
+       boardService.크롤링();
+       System.out.println(3);
         return "main";
     }
 
     @GetMapping("/board/notice")
     public String notice(){ return "admin/adminnotice";}
+
+    @GetMapping("/special/specialanimal")
+    public String special(){ return "special/specialanimal";}
 
     /* 관리자 로그인을 UserDetailService에서 처리 예정
     @PostMapping("/member/adminlogincontroller")
@@ -56,16 +50,17 @@ public class test { // 인덱스 컨트롤러 및 관리자 컨트롤러로 사�
 
     }
     */
-
+    @GetMapping("/special/videosearch")
+    public String videosearch(){ return "special/videosearch";}
     @PostMapping("/board/getnotice")
     @ResponseBody
-    public JSONArray getnoticelist(@RequestParam("page") int page ) {
-        JSONArray js = boardService.getnoticelist(page);
+    public JSONObject getnoticelist(@RequestParam("page") int page) {
+
         try {
             response.setCharacterEncoding("UTF-8");
             response.setContentType("application/json");
-            System.out.println(js.toString());
-            return js;
+            JSONObject js = boardService.getnoticelist(page);
+            response.getWriter().print(js);
         }catch(Exception e){e.printStackTrace();}
         return null;
     }
@@ -80,7 +75,36 @@ public class test { // 인덱스 컨트롤러 및 관리자 컨트롤러로 사�
 
     @PutMapping("/admin/updatenotice")
     @ResponseBody
-    public boolean noticeupdate(@RequestParam("bno") int bno, BoardDto boardDto) {return boardService.noticeupdate(bno, boardDto);}
+    public boolean noticeupdate(@RequestParam("bno") int bno, @RequestParam("btitle") String btitle
+            , @RequestParam("bcontent") String bcontent)
+    {return boardService.noticeupdate(bno, btitle, bcontent);
+    }
+    @GetMapping("/getlist")
+    @ResponseBody
+    public void getlist(@RequestParam("codenamelist") JSONArray codenamelist){
+        //  String result = code +" "+ name;
+        System.out.println(  "json : " + codenamelist.getJSONObject(0).get("code"));
+
+
+        //String codename[] = new String[count];
+        //System.out.println(count);
+        //  codename[0] = result;
+        //  System.out.println(result);
+
+    }
+    @GetMapping("/map")
+    @ResponseBody
+    public void gethlist(HttpServletResponse response)  {
+        JSONArray list =  mapService.map();
+
+        try{
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
+            response.getWriter().print(list);
+        } catch(Exception e) {}
+    }
+
+
 
 
 

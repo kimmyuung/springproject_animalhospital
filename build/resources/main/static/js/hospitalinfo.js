@@ -1,4 +1,3 @@
-
 info();
 function info(){
     $.ajax({
@@ -223,4 +222,3 @@ function file1(){
 function file2(){
     document.all.file2.click();
 }
-
