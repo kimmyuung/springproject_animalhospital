@@ -76,10 +76,10 @@ clusterer.clear(); // 클러스터 클리어
                                          }
                                     });
 
-                                         });
+
                     });
                     html +=
-                        '<div class="hospital-box">'+
+                        '<div class="hospital-box" onclick="hview('+i+')" >'+
                             '<div>'+list[i].name+'</div>'+
                             '<div>'+list[i].addr+'</div>'+
                         '</div>';
