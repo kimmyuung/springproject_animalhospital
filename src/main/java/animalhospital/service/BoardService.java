@@ -373,6 +373,7 @@ public class BoardService {
                 MemberEntity memberEntity = memberRepository.findBymid(mid).get();
                 BoardEntity boardEntity = boardRepository.findBybno(bno);
                 ReplyEntity replyEntity = ReplyEntity.builder()
+                        .rindex(0)
                         .rcontent(reply)
                         .boardEntity(boardEntity)
                         .memberEntity(memberEntity)
@@ -433,6 +434,45 @@ public class BoardService {
         ReplyEntity replyEntity = replyRepository.findByrno(rno);
         replyEntity.setRcontent(reply);
         return true;
+    }
+
+    public boolean rereplysave(int bno, int rno, String reply) {
+        System.out.println(rno);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Object principal = authentication.getPrincipal();
+        String mid = null;
+        if( principal instanceof UserDetails){
+            mid = ((UserDetails) principal).getUsername();
+        }else if( principal instanceof DefaultOAuth2User){
+            Map<String , Object>  map =  ((DefaultOAuth2User) principal).getAttributes();
+            if( map.get("response") != null ){
+                Map< String , Object> map2  = (Map<String, Object>) map.get("response");
+                mid = map2.get("email").toString().split("@")[0];
+            }else{
+                Map< String , Object> map2  = (Map<String, Object>) map.get("kakao_account");
+                mid = map2.get("email").toString().split("@")[0];
+            }
+        }else{
+            return false;
+        }
+        if( mid != null  ) {
+            Optional<MemberEntity> optionalMember = memberRepository.findBymid(mid);
+            if (optionalMember.isPresent()) { // null 아니면
+                MemberEntity memberEntity = memberRepository.findBymid(mid).get();
+                BoardEntity boardEntity = boardRepository.findBybno(bno);
+                ReplyEntity replyEntity = ReplyEntity.builder()
+                        .rindex(rno)
+                        .rcontent(reply)
+                        .boardEntity(boardEntity)
+                        .memberEntity(memberEntity)
+                        .build();
+                replyRepository.save(replyEntity);
+                return true;
+            } else { // 로그인이 안되어 있는경우
+                return false;
+            }
+        }
+        return false;
     }
 
    /* 조회수 증가

@@ -106,4 +106,11 @@ public class BoardController {
     public boolean reupdate(@RequestParam("rno") int rno, @RequestParam("reply") String reply){
         return boardService.reupdate( rno, reply );
     }
+
+    @PostMapping("/rereply")
+    @ResponseBody
+    public boolean rereply(@RequestParam("bno") int bno, @RequestParam("rno") int rno, @RequestParam("reply") String reply){
+        return boardService.rereplysave(bno, rno, reply );
+    }
+
 }

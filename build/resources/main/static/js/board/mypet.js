@@ -207,7 +207,7 @@ function getreply(){
                             '</div>'+
                             '<div>'+result[i].rcontent+'</div>'+
                             '<div id="repltbtn">'+
-                                '<button type="button" onclick="replyupdate('+result[i].rno+')">수정</button><button type="button" onclick="replydelete('+result[i].rno+')">삭제</button>'+
+                                '<button type="button" onclick="rereplyinput('+result[i].rno+')">답글</button><button type="button" onclick="replyupdate('+result[i].rno+')">수정</button><button type="button" onclick="replydelete('+result[i].rno+')">삭제</button>'+
                             '</div>'+
                         '</div>';
                 }else{
@@ -218,6 +218,9 @@ function getreply(){
                                 '<div class="col-md-6 d-flex justify-content-end">'+result[i].createdate+'</div>'+
                             '</div>'+
                             '<div>'+result[i].rcontent+'</div>'+
+                            '<div id="repltbtn">'+
+                                '<button type="button" onclick="rereply('+result[i].rno+')">답글</button>'+
+                            '</div>'+
                         '</div>';
                 }
             }
@@ -259,4 +262,12 @@ function reupdate(rno){
                 getreply();
             }
         });
+}
+function rereplyinput(rno){
+
+        let html =
+            '<input type="text" id="reply"">'+
+            '<button type="button" onclick="rereply('+rno+')">답글</button>';
+        $("#replyinput").html(html);
+
 }
