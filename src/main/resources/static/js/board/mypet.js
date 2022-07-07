@@ -207,7 +207,7 @@ function getreply(){
                             '</div>'+
                             '<div>'+result[i].rcontent+'</div>'+
                             '<div id="repltbtn">'+
-                                '<button>수정</button><button type="button" onclick="replydelete('+result[i].rno+')">삭제</button>'+
+                                '<button type="button" onclick="replyupdate('+result[i].rno+')">수정</button><button type="button" onclick="replydelete('+result[i].rno+')">삭제</button>'+
                             '</div>'+
                         '</div>';
                 }else{
@@ -234,4 +234,29 @@ function replydelete(rno) {
             getreply();
         }
     });
+}
+function replyupdate(rno) {
+    $.ajax({
+        url: '/board/replyupdate',
+        data : { "rno": rno },
+        success : function(result){
+            let html =
+                '<input type="text" id="reply" value="'+result.rcontent+'">'+
+                '<button type="button" onclick="reupdate('+rno+')">수정</button>';
+            $("#replyinput").html(html);
+        }
+    });
+}
+
+function reupdate(rno){
+    let reply = $("#reply").val();
+        $.ajax({
+            url:'/board/reupdate',
+            method : "POST",
+            data : {"rno": rno,"reply": reply},
+            success : function(result){
+                $('#reply').val('');
+                getreply();
+            }
+        });
 }

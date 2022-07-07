@@ -88,5 +88,22 @@ public class BoardController {
         System.out.println("replydelete : " + rno);
         return boardService.replydelete(rno);
     }
-
+    @GetMapping("/replyupdate")
+    @ResponseBody
+    public void replyupdate(@RequestParam("rno") int rno,HttpServletResponse response){
+        try {
+            JSONObject object = boardService.replyupdate(rno);
+            response.setCharacterEncoding("UTF-8");
+            response.setContentType("application/json");
+            response.getWriter().print(object);
+//            System.out.println("replyupdate : " + object);
+        } catch (IOException e) {
+            System.out.println("replyupdate error : "+e);
+        }
+    }
+    @PostMapping("/reupdate")
+    @ResponseBody
+    public boolean reupdate(@RequestParam("rno") int rno, @RequestParam("reply") String reply){
+        return boardService.reupdate( rno, reply );
+    }
 }
