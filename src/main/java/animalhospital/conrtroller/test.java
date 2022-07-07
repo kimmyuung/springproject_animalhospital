@@ -21,10 +21,11 @@ public class test { // 인덱스 컨트롤러 및 관리자 컨트롤러로 사�
     @Autowired
     MapService mapService;
 
+
+
     @GetMapping("/")
     public String main( Model model ){
-       boardService.크롤링();
-       System.out.println(3);
+
         return "main";
     }
 
@@ -50,7 +51,8 @@ public class test { // 인덱스 컨트롤러 및 관리자 컨트롤러로 사�
 
     }
     */
-
+    @GetMapping("/special/videosearch")
+    public String videosearch(){ return "special/videosearch";}
     @PostMapping("/board/getnotice")
     @ResponseBody
     public JSONObject getnoticelist(@RequestParam("page") int page) {
@@ -101,9 +103,11 @@ public class test { // 인덱스 컨트롤러 및 관리자 컨트롤러로 사�
             response.setCharacterEncoding("UTF-8");
             response.getWriter().print(list);
         } catch(Exception e) {}
-
-
     }
+
+
+
+
 
     @GetMapping("/crwal")
     @ResponseBody

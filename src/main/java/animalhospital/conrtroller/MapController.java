@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 @Controller
 @RequestMapping("/map")
 public class MapController {
+
     @Autowired
     MapService mapService;
 
@@ -63,21 +64,6 @@ public class MapController {
             System.out.println(  e   );
         }
     }
-
-//@GetMapping("/infoh")
-//@ResponseBody
-//public void infoh(HttpServletResponse response) {
-//String city = (String)request.getSession().getAttribute("city");
-//String name = (String)request.getSession().getAttribute("name");
-//    System.out.println("크롤링에서뽑아온이름"+boardService.crawling(city,name));
-//try{
-//    response.setCharacterEncoding("UTF-8");
-//    response.getWriter().print(boardService.crawling(city,name));
-//    response.getWriter().print(boardService.crawling(city,name));
-//}catch (Exception e) {System.out.println(e);}
-//
-//
-//}
 
     @GetMapping("/search")
     public void search(HttpServletResponse response, @RequestParam("keyword") String keyword ){

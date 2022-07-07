@@ -8,7 +8,6 @@ import animalhospital.domain.member.MemberEntity;
 import animalhospital.domain.member.MemberRepository;
 import animalhospital.dto.BoardDto;
 import animalhospital.dto.CrawlDto;
-import animalhospital.dto.LoginDto;
 import animalhospital.dto.OauthDto;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -22,18 +21,22 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import java.io.File;
-import java.net.URLEncoder;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Service
 public class BoardService {
+
     @Autowired
     private HttpServletRequest request;
 
@@ -46,44 +49,68 @@ public class BoardService {
     @Autowired
     private MemberRepository memberRepository;
 
-
     @Transactional
     public boolean save(BoardDto boardDto) {
 
-//        LoginDto loginDto  = (LoginDto) request.getSession().getAttribute("login");
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Object principal = authentication.getPrincipal();
+        String mid = null;
+        if( principal instanceof UserDetails){
+            mid = ((UserDetails) principal).getUsername();
+        }else if( principal instanceof DefaultOAuth2User){
+            Map<String , Object>  map =  ((DefaultOAuth2User) principal).getAttributes();
+            if( map.get("response") != null ){
+                Map< String , Object> map2  = (Map<String, Object>) map.get("response");
+                mid = map2.get("email").toString().split("@")[0];
+            }else{
+                Map< String , Object> map2  = (Map<String, Object>) map.get("kakao_account");
+                mid = map2.get("email").toString().split("@")[0];
+            }
+        }else{
+            return false;
+        }
+        if( mid != null  ) {
+            Optional<MemberEntity> optionalMember = memberRepository.findBymid(mid);
+            if (optionalMember.isPresent()) { // null 아니면
+                BoardEntity boardEntity = boardDto.toentity();
+                boardEntity.setMemberEntity( optionalMember.get() );
+                boardRepository.save(boardEntity);
+                String uuidfile = null;
+                if (boardDto.getBimg().size() != 0) {
+                    for (MultipartFile file : boardDto.getBimg()) {
+                        UUID uuid = UUID.randomUUID();
 
-//        MemberEntity memberEntity =  memberRepository.findById( loginDto.getMno() ).get();
+                        uuidfile = uuid.toString() + "_" + file.getOriginalFilename().replaceAll("_", "-");
+                        String dir = "C:\\Users\\504\\springproject_animalhospital\\src\\main\\resources\\static\\upload\\";
+                        String filepath = dir + uuidfile;
 
-        BoardEntity boardEntity = boardDto.toentity();
-        boardRepository.save( boardEntity );
+                        try {
+                            file.transferTo(new File(filepath));
 
-        String uuidfile = null;
-        if( boardDto.getBimg().size() != 0 ){
-            for(MultipartFile file : boardDto.getBimg() ){
-                UUID uuid = UUID.randomUUID();
+                            BoardimgEntity boardimgEntity = BoardimgEntity.builder()
+                                    .bimg(uuidfile)
+                                    .boardEntity(boardEntity)
+                                    .build();
 
-                uuidfile = uuid.toString() +"_"+ file.getOriginalFilename().replaceAll("_","-");
-                String dir  = "C:\\Users\\504\\springproject_-animalhospital\\src\\main\\resources\\static\\upload\\";
-                String filepath = dir+uuidfile;
+                            boardimgRespository.save(boardimgEntity);
 
-                try {
-                    file.transferTo( new File(filepath) );
+                            boardEntity.getBoardimgEntities().add(boardimgEntity);
 
-                    BoardimgEntity boardimgEntity =  BoardimgEntity.builder()
-                            .bimg( uuidfile )
-                            .boardEntity(  boardEntity )
-                            .build();
+                        } catch (Exception e) {
+                            System.out.println("파일저장실패 : " + e);
+                        }
+                    }
 
-                    boardimgRespository.save(boardimgEntity );
+                }
 
-                    boardEntity.getBoardimgEntities().add( boardimgEntity );
+                return true;
 
-                }catch( Exception e ){ System.out.println("파일저장실패 : "+ e);}
+            } else { // 로그인이 안되어 있는경우
+                return false;
             }
 
         }
-
-        return true;
+        return false;
     }
 
     @Transactional
@@ -243,7 +270,7 @@ public class BoardService {
     }
 
     public void 크롤링() {
-         String inflearnUrl = "https://search.daum.net/search?nil_suggest=btn&w=tot&DA=SBC&q=%EB%82%A8%EC%96%91%EC%A3%BC%EC%8B%9C+%ED%99%94%EB%8F%84%EB%8F%99%EB%AC%BC%EB%B3%91%EC%9B%90";
+        String inflearnUrl = "https://search.daum.net/search?nil_suggest=btn&w=tot&DA=SBC&q=%EB%82%A8%EC%96%91%EC%A3%BC%EC%8B%9C+%ED%99%94%EB%8F%84%EB%8F%99%EB%AC%BC%EB%B3%91%EC%9B%90";
 
         Connection conn = Jsoup.connect(inflearnUrl);
         try {
@@ -305,7 +332,7 @@ public class BoardService {
             crawlDto.setLink(link);
 //            String link = score.attr("href");
             return  crawlDto;
-          //  System.out.println(code);
+            //  System.out.println(code);
 
 //            if(name.equals(title2)) {
 //                Elements score = document.getElementsByClass("f_eb");
@@ -319,9 +346,36 @@ public class BoardService {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    return  null;
+        return  null;
     }
 
+   /* 조회수 증가
+   @Transactional
+    public JSONObject getboard(int bno) { // 개별조회
+        // 조회수 증가처리
+        String ip = request.getRemoteAddr(); // 사용자의 ip 가져오기
+        Optional<BoardEntity> Optional = boardRepository.findById(bno);
+        BoardEntity entitiy = Optional.get();
+        // ip와 bno를 합쳐서 세션(서버내 저장소) 부여
+        Object com = request.getSession().getAttribute(ip+bno);
+        if(com == null) {
+            request.getSession().setAttribute(ip+bno, 1);
+            request.getSession().setMaxInactiveInterval(60*60*24); // 세션 허용시간 [ 초단위 ]
+            // 조회수 증가
+            entitiy.setBview(entitiy.getBview()+1);
+        }
+        JSONObject jo = new JSONObject();
+        jo.put("bno", entitiy.getBno());
+        jo.put("btitle", entitiy.getBtitle() );
+        jo.put("bcontent", entitiy.getBcontent());
+        jo.put("bview", entitiy.getBview());
+        jo.put("blike", entitiy.getBlike());
+        jo.put("bindate" , entitiy.getCreateDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm") ) );
+        jo.put("bmodate" , entitiy.getUpdateDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm") ) );
+        jo.put("mid", entitiy.getMemberEntity().getMid());
+        return jo;
+    }
+    */
 
    /* 조회수 증가
    @Transactional
@@ -355,4 +409,6 @@ public class BoardService {
         return jo;
     }
     */
+
+
 }

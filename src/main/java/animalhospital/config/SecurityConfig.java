@@ -63,6 +63,7 @@ public class SecurityConfig {
                 .ignoringAntMatchers("/admin/deletenotice")
                 .ignoringAntMatchers("/special/specialanimal")
                 .ignoringAntMatchers("/map/info")
+                .ignoringAntMatchers("/videosearch")
                 .ignoringAntMatchers("/")
                 .and()
                 .exceptionHandling()
