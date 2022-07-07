@@ -354,6 +354,34 @@ public class BoardService {
     public JSONObject getboard(int bno) { // 개별조회
         // 조회수 증가처리
         String ip = request.getRemoteAddr(); // 사용자의 ip 가져오기
+        Optional<BoardEntity> Optional = boardRepository.findById(bno);
+        BoardEntity entitiy = Optional.get();
+        // ip와 bno를 합쳐서 세션(서버내 저장소) 부여
+        Object com = request.getSession().getAttribute(ip+bno);
+        if(com == null) {
+            request.getSession().setAttribute(ip+bno, 1);
+            request.getSession().setMaxInactiveInterval(60*60*24); // 세션 허용시간 [ 초단위 ]
+            // 조회수 증가
+            entitiy.setBview(entitiy.getBview()+1);
+        }
+        JSONObject jo = new JSONObject();
+        jo.put("bno", entitiy.getBno());
+        jo.put("btitle", entitiy.getBtitle() );
+        jo.put("bcontent", entitiy.getBcontent());
+        jo.put("bview", entitiy.getBview());
+        jo.put("blike", entitiy.getBlike());
+        jo.put("bindate" , entitiy.getCreateDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm") ) );
+        jo.put("bmodate" , entitiy.getUpdateDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm") ) );
+        jo.put("mid", entitiy.getMemberEntity().getMid());
+        return jo;
+    }
+    */
+
+   /* 조회수 증가
+   @Transactional
+    public JSONObject getboard(int bno) { // 개별조회
+        // 조회수 증가처리
+        String ip = request.getRemoteAddr(); // 사용자의 ip 가져오기
 
 
         Optional<BoardEntity> Optional = boardRepository.findById(bno);
