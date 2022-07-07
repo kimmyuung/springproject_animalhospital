@@ -1,5 +1,6 @@
 package animalhospital.domain;
 
+import animalhospital.domain.member.MemberEntity;
 import lombok.*;
 
 import javax.persistence.*;
@@ -10,17 +11,21 @@ import javax.persistence.*;
 @Builder@ToString
 @Entity
 @Table(name="review")
-public class ReviewEntity {
+public class ReviewEntity extends BaseTime {
 
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY )
-    private int rno;
-    private int mno;
-    private String rcontent;
-    private String rimg;
-    private String hinfo1;
-    private String hinfo2;
-    private String hinfo3;
-    private String rdate;
-    private int rstar;
+    private int rno;///리뷰평번호
+    @ManyToOne
+    @JoinColumn(name = "mno")
+    private MemberEntity memberEntity;
+    private String rcontent;//리뷰내용
+    private String rimg1;//후기이미지
+    private String rimg2; //영수증이미지
+    private String hname;//병원이름
+    private String hdate;///병원인허가일자
+    private int rkind;
+    private int rfac;
+    private int rprice;
+
 }

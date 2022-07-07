@@ -7,6 +7,7 @@ import animalhospital.domain.board.BoardimgRespository;
 import animalhospital.domain.member.MemberEntity;
 import animalhospital.domain.member.MemberRepository;
 import animalhospital.dto.BoardDto;
+import animalhospital.dto.CrawlDto;
 import animalhospital.dto.OauthDto;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -293,6 +294,38 @@ public class BoardService {
         }
     }
 
+    public CrawlDto crawling(String city, String name) {
+        String code = city+name;
+        String inflearnUrl = "https://search.daum.net/search?nil_suggest=btn&w=tot&DA=SBC&q="+code;
+        Connection conn = Jsoup.connect(inflearnUrl);
+        try {
+            Document document = conn.get();
+            Elements title = document.getElementsByClass("inner_tit").first().select("b");
+            Elements score = document.getElementsByClass("f_eb");
+//            String title2 = title.text().replaceAll(" ","");
+            String score2 = score.first().text();
+            String link = score.attr("href");
+            CrawlDto crawlDto = new CrawlDto();
+            crawlDto.setScroe(score2);
+            crawlDto.setLink(link);
+//            String link = score.attr("href");
+            return  crawlDto;
+            //  System.out.println(code);
+
+//            if(name.equals(title2)) {
+//                Elements score = document.getElementsByClass("f_eb");
+//                String score2 = score.first().text();
+//                String link = score.attr("href");
+//            }
+
+
+//
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return  null;
+    }
    /* 조회수 증가
    @Transactional
     public JSONObject getboard(int bno) { // 개별조회

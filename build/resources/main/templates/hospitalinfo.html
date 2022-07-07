@@ -17,7 +17,15 @@
         리얼후기 등록하기
       </button>
     </div>
-  </div>
+    <div class="row">
+      <div class="col-md-8">
+        <h5><span>작성자</span><span>등록일</span></h5>
+        <div>별</div>
+        <div>내용</div>
+      </div>
+      <div class="col-md-2">이미지</div>
+      <div class="col-md-2">이미지</div>
+    </div>
 </div>
 
 
@@ -52,14 +60,19 @@
         <div>
           <textarea id="rcontent" cols="40" rows="5"></textarea>
         </div>
+        <h3>후기사진등록</h3>
         <div>
-          <input type=file name='file1' style='display: none;'>
+          <input type=file id="file1" name='file1' style='display: none;'>
           <img class="preview" id="preview1" src='/img/plusimg.jpg' onclick='file1()'>
         </div>
-      </div>
-      <div>
-        <input type=file id="file2" name='file2' style='display: none;'>
-        <img id="preview2" src='/img/plusimg.jpg' onclick='file2()'>
+        <h3>영수증사진등록<span>(개인정보유출에 유의해 등록해주세요)</span></h3>
+        <div>
+          <input type=file id="file2" name='file2' style='display: none;'>
+          <img id="preview2" src='/img/plusimg.jpg' onclick='file2()'>
+        </div>
+        <div>
+            <button type="button" onclick="addreview()">등록하기</button>
+        </div>
       </div>
     </div>
 

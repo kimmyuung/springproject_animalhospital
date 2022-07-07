@@ -116,6 +116,7 @@ function fac(i){
     }
     avg();
 }
+
 function price(i){
     cprice=i;
     if(i==1){
@@ -160,35 +161,35 @@ avg();
 function avg(){
     cavg=((ckind+cfac+cprice)/3).toFixed(1);
     $("#avg").html(cavg);
-    if(i==1){
+    if(cavg<=1){
         document.getElementById("avg1").src =  "/img/star2.png";
         document.getElementById("avg2").src = "/img/star1.png";
         document.getElementById("avg3").src =  "/img/star1.png";
         document.getElementById("avg4").src = "/img/star1.png";
         document.getElementById("avg5").src = "/img/star1.png";
         }
-        else if(i==2){
+        else if(cavg<=2){
             document.getElementById("avg1").src =  "/img/star2.png";
             document.getElementById("avg2").src = "/img/star2.png";
            document.getElementById("avg3").src =  "/img/star1.png";
             document.getElementById("avg4").src = "/img/star1.png";
            document.getElementById("avg5").src = "/img/star1.png";
         }
-        else if(i==3){
+        else if(cavg<=3){
             document.getElementById("avg1").src =  "/img/star2.png";
             document.getElementById("avg2").src = "/img/star2.png";
            document.getElementById("avg3").src =  "/img/star2.png";
             document.getElementById("avg4").src = "/img/star1.png";
              document.getElementById("avg5").src = "/img/star1.png";
         }
-        else if(i==4){
+        else if(cavg<=4){
            document.getElementById("avg1").src = "/img/star2.png";
             document.getElementById("avg2").src = "/img/star2.png";
             document.getElementById("avg3").src = "/img/star2.png";
             document.getElementById("avg4").src = "/img/star2.png";
             document.getElementById("avg5").src = "/img/star1.png";
         }
-        else if(i==5){
+        else if(cavg<=5){
             document.getElementById("avg1").src = "/img/star2.png";
             document.getElementById("avg2").src = "/img/star2.png";
             document.getElementById("avg3").src = "/img/star2.png";
@@ -198,27 +199,75 @@ function avg(){
 }
 function file1(){
     document.all.file1.click();
-        var imagesPreview = function(input, placeToInsertImagePreview) {
-            if (input.files) {
-                var filesAmount = input.files.length;
-                for (i = 0; i < 1; i++) {
-                    var reader = new FileReader();
+      $(function() {
+                     $("#file1").on('change', function(){
+                     readURL(this);
+                     });
+                 });
+                 function readURL(input) {
+                     if (input.files && input.files[0]) {
+                         var reader = new FileReader();
+                         reader.onload = function (e) {
+                         $('#preview1').attr('src', e.target.result);
+                         }
+                         reader.readAsDataURL(input.files[0]);
+                     }
+                 }
 
-                    reader.onload = function(event) {
-                      $($("#preview1")).attr('src', event.target.result).appendTo(placeToInsertImagePreview);
-                    }
-
-                    reader.readAsDataURL(input.files[i]);
-                }
-            }
-
-        };
-
-        $('#preview1').on('change', function() {
-            imagesPreview(this, 'preview');
-        });
 
 }
 function file2(){
     document.all.file2.click();
+     $(function() {
+         $("#file2").on('change', function(){
+         readURL(this);
+         });
+     });
+     function readURL(input) {
+         if (input.files && input.files[0]) {
+             var reader = new FileReader();
+             reader.onload = function (e) {
+             $('#preview2').attr('src', e.target.result);
+             }
+             reader.readAsDataURL(input.files[0]);
+         }
+     }
+}
+
+function addreview(){
+
+        let formData = new FormData();
+        formData.append('rcontent',document.getElementById('rcontent').value);
+        if(document.getElementById('file1').files[0]==null){
+
+        }else{
+            formData.append('rimg1',document.getElementById('file1').files[0]);
+        }
+
+        if(document.getElementById('file2').files[0]==null){
+
+        }else{
+            formData.append('rimg2',document.getElementById('file2').files[0]);
+        }
+
+        formData.append('rkind',ckind);
+        formData.append('rfac',cfac);
+        formData.append('rprice',cprice);
+
+       $.ajax({
+               url: "/map/addreview",
+               method: "POST",
+               data : formData ,
+               contentType: false,
+               processData: false ,
+               success: function(re){
+                alert(re);
+             }
+           });
+}
+
+getreviewlist();
+
+function getreviewlist(){
+
 }
