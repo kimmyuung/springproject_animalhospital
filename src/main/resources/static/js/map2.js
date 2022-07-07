@@ -147,7 +147,16 @@ kakao.maps.event.addListener(map, 'idle', function() {
                     });
                      // 마커에 클릭 이벤트를 등록한다 (우클릭 : rightclick)
                     kakao.maps.event.addListener(marker, 'click', function() {
-                        alert(list[i].name);
+                      $.ajax({
+                                                           url: "/map/view",
+                                                           method: "GET",
+                                                           data: {"hname":list[i].name , "hdate": list[i].opendate, "hcity" : list[i].city},
+                                                            success: function(re){
+                                                                 alert(re);
+                                                                 location.href = "/map/infopage";
+                                                            }
+                                                       });
+
                     });
                     html +=
                         '<div class="hospital-box" onclick="hview('+i+')" >'+
@@ -175,8 +184,15 @@ function panTo(lat, logt) {
 //}
 
 function hview(i){
-let city = list[i].city;
-let name = list[i].name;
-location.href = "map/infopage/"+city+"/"+name;
-    alert(ccity+name);
+
+    $.ajax({
+       url: "/map/view",
+       method: "GET",
+       data: {"hname":list[i].name , "hdate": list[i].opendate, "hcity" : list[i].city},
+        success: function(re){
+             alert(re);
+             location.href = "/map/infopage";
+        }
+   });
 }
+

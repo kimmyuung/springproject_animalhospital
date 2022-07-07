@@ -7,6 +7,7 @@ import animalhospital.domain.board.BoardimgRespository;
 import animalhospital.domain.member.MemberEntity;
 import animalhospital.domain.member.MemberRepository;
 import animalhospital.dto.BoardDto;
+import animalhospital.dto.CrawlDto;
 import animalhospital.dto.LoginDto;
 import animalhospital.dto.OauthDto;
 import org.json.JSONArray;
@@ -44,6 +45,7 @@ public class BoardService {
 
     @Autowired
     private MemberRepository memberRepository;
+
 
     @Transactional
     public boolean save(BoardDto boardDto) {
@@ -287,7 +289,7 @@ public class BoardService {
         }
     }
 
-    public String crawling(String city, String name) {
+    public CrawlDto crawling(String city, String name) {
         String code = city+name;
         String inflearnUrl = "https://search.daum.net/search?nil_suggest=btn&w=tot&DA=SBC&q="+code;
         Connection conn = Jsoup.connect(inflearnUrl);
@@ -295,10 +297,14 @@ public class BoardService {
             Document document = conn.get();
             Elements title = document.getElementsByClass("inner_tit").first().select("b");
             Elements score = document.getElementsByClass("f_eb");
-            String title2 = title.text().replaceAll(" ","");
+//            String title2 = title.text().replaceAll(" ","");
             String score2 = score.first().text();
+            String link = score.attr("href");
+            CrawlDto crawlDto = new CrawlDto();
+            crawlDto.setScroe(score2);
+            crawlDto.setLink(link);
 //            String link = score.attr("href");
-            return  score2;
+            return  crawlDto;
           //  System.out.println(code);
 
 //            if(name.equals(title2)) {
