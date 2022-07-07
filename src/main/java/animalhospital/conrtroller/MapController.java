@@ -19,11 +19,6 @@ public class MapController {
     @Autowired
     private HttpServletRequest request;     // 1. 세션 호출을 위한 request 객체 생성
 
-
-    @GetMapping("/infopage")
-    public String list(){ return "hospitalinfo";}
-
-
     @GetMapping("/view")
     @ResponseBody
     public String view(HttpServletResponse response, @RequestParam("hname") String hname, @RequestParam("hdate") String hdate ){

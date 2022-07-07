@@ -72,15 +72,21 @@ public class BoardController {
     @GetMapping("/getreply")
     @ResponseBody
     public void getreply(@RequestParam("bno")int bno, HttpServletResponse response){
-            System.out.println("replybno : "+bno);
         try {
             JSONArray jsonArray = boardService.getreply(bno);
             response.setCharacterEncoding("UTF-8");
             response.setContentType("application/json");
             response.getWriter().print(jsonArray);
         } catch (IOException e) {
-            System.out.println(e);
+            System.out.println("getreply error : "+e);
         }
+    }
+
+    @GetMapping("/replydelete")
+    @ResponseBody
+    public boolean replydelete(@RequestParam("rno") int rno){
+        System.out.println("replydelete : " + rno);
+        return boardService.replydelete(rno);
     }
 
 }

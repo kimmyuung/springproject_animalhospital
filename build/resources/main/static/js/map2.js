@@ -219,7 +219,7 @@ function search(){
 function infopage(){
     console.log(hname+" "+hdate);
     $.ajax({
-        url: "/map/infopage",
+        url: "/map/view",
         method: "GET",
         data: {"hname":hname , "hdate": hdate},
          success: function(re){

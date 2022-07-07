@@ -4,6 +4,7 @@ import animalhospital.domain.board.*;
 import animalhospital.domain.member.MemberEntity;
 import animalhospital.domain.member.MemberRepository;
 import animalhospital.dto.BoardDto;
+import animalhospital.dto.LoginDto;
 import animalhospital.dto.OauthDto;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -79,8 +80,7 @@ public class BoardService {
                         UUID uuid = UUID.randomUUID();
 
                         uuidfile = uuid.toString() + "_" + file.getOriginalFilename().replaceAll("_", "-");
-//                        String dir = "C:\\Users\\504\\Desktop\\springproject_animalhospital\\src\\main\\resources\\static\\upload\\";
-                        String dir = "C:\\Users\\user\\IdeaProjects\\springproject_animalhospital\\src\\main\\resources\\static\\upload\\";
+                        String dir = "C:\\Users\\504\\Desktop\\springproject_animalhospital\\src\\main\\resources\\static\\upload\\";
                         String filepath = dir + uuidfile;
 
                         try {
@@ -272,7 +272,6 @@ public class BoardService {
         final String inflearnUrl = "https://search.naver.com/search.naver?where=news&sm=tab_jum&query=동물병원";
 
         Connection conn = Jsoup.connect(inflearnUrl);
-        System.out.println(  1);
         try {
             Document document = conn.get();
             Elements imageUrlElements = document.getElementsByClass("tit");
@@ -333,20 +332,36 @@ public class BoardService {
     }
 
     public JSONArray getreply(int bno){
+        System.out.println("login : " + request.getSession().getAttribute("login"));
+        OauthDto oauthDto= (OauthDto) request.getSession().getAttribute("login");
+        boolean same;
+
         JSONArray jsonArray = new JSONArray();
-        System.out.println("getreply : "+bno);
         BoardEntity boardEntity = boardRepository.findBybno(bno);
         List<ReplyEntity> replyEntities = replyRepository.findbybno(bno);
         for(ReplyEntity replyEntity : replyEntities){
             JSONObject object = new JSONObject();
+            object.put("rno",replyEntity.getRno());
             object.put("mid",replyEntity.getMemberEntity().getMid());
             object.put("rcontent",replyEntity.getRcontent());
-            object.put("createdate",replyEntity.getCreatedate());
+            object.put("createdate",replyEntity.getCreatedate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+                if(replyEntity.getMemberEntity().getMid().equals(oauthDto.getMid())){
+                    same = true;
+                }else{
+                    same = false;
+                }
+            object.put("same",same);
             jsonArray.put(object);
         }
-
-        System.out.println("getreply : "+jsonArray);
         return jsonArray;
+    }
+    @Transactional
+    public boolean replydelete(int rno) {
+        ReplyEntity replyEntity = replyRepository.findByrno(rno);
+        System.out.println(replyEntity);
+        replyRepository.delete(replyEntity);
+        return true;
+
     }
 
    /* 조회수 증가

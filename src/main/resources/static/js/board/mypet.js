@@ -101,7 +101,6 @@ let bnum;
 function bview(bno){
 
         bnum = bno;
-        console.log(bnum);
         $.ajax({
             url : "/board/getboard" ,
             method : "GET",
@@ -181,35 +180,58 @@ $(function() {
 
 function replysave(){
     let reply = $("#reply").val();
-    console.log("reply : "+reply);
-    console.log("bnum : "+bnum);
     $.ajax({
         url:"/board/replysave",
         method : "POST",
         data : {"reply": reply, "bno": bnum},
         success : function(result){
-            console.log(result);
-             $('#replydiv').load(location.href+' #replydiv');
+            $('#reply').val('');
+            getreply();
         }
     });
 
 }
 function getreply(){
-console.log("getreply");
     let replyhtml = "";
     $.ajax({
-            url:"/board/getreply",
-            data : {"bno": bnum},
-            success : function(result){
-                console.log(result);
-                for(let i = 0; i <result.length; i++){
-                replyhtml +=
-                    '<tr>'+
-                        '<td>'+result[i].mid+'</td><td>'+result[i].rcontent+'</td><td>'+result[i].createdate+'</td>'+
-                    '</tr>';
+        url:"/board/getreply",
+        data : { "bno": bnum },
+        success : function(result){
+            for(let i = 0; i <result.length; i++){
+                if(result[i].same == true){
+                    replyhtml +=
+                        '<div>'+
+                            '<div class="row">'+
+                                '<div class="col-md-6">'+result[i].mid+'</div>'+
+                                '<div class="col-md-6 d-flex justify-content-end">'+result[i].createdate+'</div>'+
+                            '</div>'+
+                            '<div>'+result[i].rcontent+'</div>'+
+                            '<div id="repltbtn">'+
+                                '<button>수정</button><button type="button" onclick="replydelete('+result[i].rno+')">삭제</button>'+
+                            '</div>'+
+                        '</div>';
+                }else{
+                    replyhtml +=
+                        '<div>'+
+                            '<div class="row">'+
+                                '<div class="col-md-6">'+result[i].mid+'</div>'+
+                                '<div class="col-md-6 d-flex justify-content-end">'+result[i].createdate+'</div>'+
+                            '</div>'+
+                            '<div>'+result[i].rcontent+'</div>'+
+                        '</div>';
                 }
-
-                 $('#replytable').html(replyhtml);
             }
-        });
+             $('#replytable').html(replyhtml);
+        }
+    });
+}
+
+function replydelete(rno) {
+    $.ajax({
+        url: '/board/replydelete',
+        data : { "rno": rno },
+        success : function(result){
+            getreply();
+        }
+    });
 }
