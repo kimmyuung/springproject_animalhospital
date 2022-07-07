@@ -31,6 +31,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import java.io.File;
+import java.io.IOException;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
@@ -269,22 +270,22 @@ public class BoardService {
         }
     }
 
-    public void 크롤링() {
-        String inflearnUrl = "https://search.daum.net/search?nil_suggest=btn&w=tot&DA=SBC&q=%EB%82%A8%EC%96%91%EC%A3%BC%EC%8B%9C+%ED%99%94%EB%8F%84%EB%8F%99%EB%AC%BC%EB%B3%91%EC%9B%90";
+    public void 크롤링() { // 테스트 용으로 사용 중 지우지마세요 ㅠ
+        String inflearnUrl = "https://search.daum.net/search?nil_suggest=btn&w=tot&DA=SBC&q=%EC%95%88%EC%82%B0%EC%8B%9C%28%EC%A3%BC%29%EA%B0%80%EB%82%98%EC%9D%B4%EC%8B%AD%EC%82%AC%EC%8B%9C%EB%8F%99%EB%AC%BC%EB%B3%91%EC%9B%90";
 
         Connection conn = Jsoup.connect(inflearnUrl);
         try {
             Document document = conn.get();
             Elements title = document.getElementsByClass("inner_tit").first().select("b");
-            Elements score = document.getElementsByClass("f_eb");
+            Elements score = document.getElementsByClass("txt_info ").first().getElementsByClass("f_eb");
 
             String title2 = title.text().replaceAll(" ","");
             String score2 = score.first().text();
             String link = score.attr("href");
 
-//            System.out.println(title2);
-//            System.out.println(score2);
-//            System.out.println(link);
+            System.out.println(title2);
+            System.out.println(score2);
+            System.out.println(link);
 
 //            Elements imageUrlElements = document.getElementsByClass("total_area");
 //            Elements e = document.getElementsByClass("total_wrap api_ani_send");
@@ -321,41 +322,19 @@ public class BoardService {
         String inflearnUrl = "https://search.daum.net/search?nil_suggest=btn&w=tot&DA=SBC&q="+code;
         Connection conn = Jsoup.connect(inflearnUrl);
         try {
-            try{
+            CrawlDto crawlDto = new CrawlDto();
                 Document document = conn.get();
-                Elements title = document.getElementsByClass("inner_tit").first().select("b");
+                // Elements title = document.getElementsByClass("inner_tit").first().select("b");
+            try{ // try catch 두번 쓴 이유 크롤링 null값 예외처리 위해서
                 Elements score = document.getElementsByClass("txt_info ").first().getElementsByClass("f_eb");
 //            String title2 = title.text().replaceAll(" ","");
-                String score2 = score.first().text();
-                String link = score.attr("href");
-                CrawlDto crawlDto = new CrawlDto();
-
-                if(score2 != null){
+                String  score2 = score.first().text();
+                String  link = score.attr("href");
                     crawlDto.setScroe(score2);
                     crawlDto.setLink(link);
-                } else {
-                    crawlDto.setScroe("#");
-                    crawlDto.setLink("#");
-                }
+            }catch (NullPointerException e){}
                 return  crawlDto;
-            }
-            catch (NullPointerException e) {}
-
-
-//            String link = score.attr("href");
-
-            //  System.out.println(code);
-
-//            if(name.equals(title2)) {
-//                Elements score = document.getElementsByClass("f_eb");
-//                String score2 = score.first().text();
-//                String link = score.attr("href");
-//            }
-
-
-//
-
-        } catch (Exception e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
         return  null;
