@@ -35,6 +35,7 @@ import java.util.*;
 
 @Service
 public class BoardService {
+
     @Autowired
     private HttpServletRequest request;
 
@@ -325,4 +326,6 @@ public class BoardService {
         return jo;
     }
     */
+
+
 }

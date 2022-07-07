@@ -103,7 +103,7 @@ $.ajax({
     url : "/map",
     async : false,
     success: function(result) {
-    console.log(result)
+
         list = result;
     }
 });
