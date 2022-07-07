@@ -183,6 +183,32 @@ function panTo(lat, logt) {
 //hview(city,name);
 //}
 
+let hname;
+let hdate;
+let hcity;
+function search(){
+    let keyword = $("#searchbar").val();
+    $.ajax({
+        url: "/map/search",
+        data: {"keyword" : keyword},
+        success: function(result) {
+            let searchlist= "";
+            if(result.length == 0){
+                searchlist = '<div>일치하는 병원이 없습니다.</div>'
+            }else {
+                for (let i = 0; i<result.length; i++){
+                    hname = result[i].name;
+                    hdate = result[i].opendate;
+                    hcity = result[i].city;
+                    searchlist +=
+                        '<div Onclick="infopage()" style="cursor:pointer" >'+result[i].city+' '+result[i].name+'</div>';
+                }
+            }
+            $("#searchlist").html(searchlist);
+        }
+    });
+}
+
 function hview(i){
 
     $.ajax({
@@ -191,8 +217,20 @@ function hview(i){
        data: {"hname":list[i].name , "hdate": list[i].opendate, "hcity" : list[i].city},
         success: function(re){
              alert(re);
-             location.href = "/map/infopage";
+             location.href = "map/infopage";
         }
    });
 }
 
+function infopage(){
+    console.log(hname+" "+hdate);
+    $.ajax({
+        url: "/map/view",
+        method: "GET",
+        data: {"hname":hname , "hdate": hdate ,"hcity" : hcity},
+         success: function(re){
+           location.href = "/map/infopage";
+         }
+    });
+
+}

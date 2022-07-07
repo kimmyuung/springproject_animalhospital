@@ -56,4 +56,21 @@ public class MapService {
         return animalhospital;
     }
 
+    //병원 검색
+    public JSONArray search (String keyword){
+        JSONArray hospital = map();
+        JSONArray jsonArray = new JSONArray();
+        if(keyword != null) {
+            for(int i = 0; i < hospital.length(); i++){
+                JSONObject object = (JSONObject) hospital.get(i);
+                String name = (String) object.get("name");
+                if( name.contains(keyword) ){
+                    jsonArray.put(object);
+                }
+            }
+        }
+//        System.out.println(jsonArray);
+        return jsonArray;
+    }
+
 }
