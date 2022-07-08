@@ -16,9 +16,7 @@ public class ReviewEntity extends BaseTime {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY )
     private int rno;///리뷰평번호
-    @ManyToOne
-    @JoinColumn(name = "mno")
-    private MemberEntity memberEntity;
+
     private String rcontent;//리뷰내용
     private String rimg1;//후기이미지
     private String rimg2; //영수증이미지
@@ -28,4 +26,7 @@ public class ReviewEntity extends BaseTime {
     private int rfac;
     private int rprice;
 
+    @ManyToOne
+    @JoinColumn(name = "mno")
+    private MemberEntity memberEntity;
 }

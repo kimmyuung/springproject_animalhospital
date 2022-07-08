@@ -117,24 +117,24 @@ public class BoardService {
     public boolean noticesave(String btitle, String bcontent) {
         MemberEntity memberEntity = memberRepository.findBymid("admin").get();
         BoardEntity boardEntity = BoardEntity.builder()
-                        .cno(1)
-                                .bcontent(bcontent)
-                                        .btitle(btitle)
-                                             .memberEntity(memberEntity)
-                                                        .build();
+                .cno(1)
+                .bcontent(bcontent)
+                .btitle(btitle)
+                .memberEntity(memberEntity)
+                .build();
         boardRepository.save(boardEntity);
         return true;
     }
 
     @Transactional
     public boolean noticeupdate(int bno, String btitle, String bcontent) {
-                        MemberEntity memberEntity = memberRepository.findBymid("admin").get();
-                        Optional<BoardEntity> optional = boardRepository.findById(bno);
-                        if(optional.isPresent()) {
-                            BoardEntity boardEntity = optional.get();
-                            boardEntity.setBtitle(btitle);
-                            boardEntity.setBcontent(bcontent);
-                            return true;
+        MemberEntity memberEntity = memberRepository.findBymid("admin").get();
+        Optional<BoardEntity> optional = boardRepository.findById(bno);
+        if(optional.isPresent()) {
+            BoardEntity boardEntity = optional.get();
+            boardEntity.setBtitle(btitle);
+            boardEntity.setBcontent(bcontent);
+            return true;
         }
         return false;
     }
@@ -147,7 +147,7 @@ public class BoardService {
             BoardEntity boardEntity = optional.get(); boardRepository.delete(boardEntity); return true;
         }
         return false;
-        }
+    }
 
     public Map< String , List<Map<String , String >>> boardlist(int page ) // 인수
     {
@@ -202,15 +202,15 @@ public class BoardService {
         Page<BoardEntity> boardEntities = boardRepository.findByblist(cno, pageable);
         JSONArray jsonArray = new JSONArray();
 
-            for (BoardEntity entity : boardEntities ) {
-                JSONObject object = new JSONObject();
-                object.put("bno", entity.getBno());
-                object.put("btitle", entity.getBtitle());
-                object.put("bcontent", entity.getBtitle());
-                object.put("bindate", entity.getCreatedate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss")));
-                object.put("mid", entity.getMemberEntity().getMid());
-                jsonArray.put(object);
-            }
+        for (BoardEntity entity : boardEntities ) {
+            JSONObject object = new JSONObject();
+            object.put("bno", entity.getBno());
+            object.put("btitle", entity.getBtitle());
+            object.put("bcontent", entity.getBtitle());
+            object.put("bindate", entity.getCreatedate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss")));
+            object.put("mid", entity.getMemberEntity().getMid());
+            jsonArray.put(object);
+        }
 
         // 페이지에 표시할 총 버튼 개수
         int btncount = 5;
@@ -377,50 +377,14 @@ public class BoardService {
     }
     */
 
-    public CrawlDto crawling(String city, String name) {
-        String code = city+name;
-        String inflearnUrl = "https://search.daum.net/search?nil_suggest=btn&w=tot&DA=SBC&q="+code;
-        Connection conn = Jsoup.connect(inflearnUrl);
-        try {
-            Document document = conn.get();
-            Elements title = document.getElementsByClass("inner_tit").first().select("b");
-            Elements score = document.getElementsByClass("f_eb");
-//            String title2 = title.text().replaceAll(" ","");
-            String score2 = score.first().text();
-            String link = score.attr("href");
-            CrawlDto crawlDto = new CrawlDto();
-            crawlDto.setScroe(score2);
-            crawlDto.setLink(link);
-//            String link = score.attr("href");
-            return  crawlDto;
-            //  System.out.println(code);
-
-//            if(name.equals(title2)) {
-//                Elements score = document.getElementsByClass("f_eb");
-//                String score2 = score.first().text();
-//                String link = score.attr("href");
-//            }
-
-
-//
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return  null;
-    }
    /* 조회수 증가
    @Transactional
     public JSONObject getboard(int bno) { // 개별조회
         // 조회수 증가처리
         String ip = request.getRemoteAddr(); // 사용자의 ip 가져오기
-
-
         Optional<BoardEntity> Optional = boardRepository.findById(bno);
         BoardEntity entitiy = Optional.get();
-
         // ip와 bno를 합쳐서 세션(서버내 저장소) 부여
-
         Object com = request.getSession().getAttribute(ip+bno);
         if(com == null) {
             request.getSession().setAttribute(ip+bno, 1);
@@ -428,7 +392,6 @@ public class BoardService {
             // 조회수 증가
             entitiy.setBview(entitiy.getBview()+1);
         }
-
         JSONObject jo = new JSONObject();
         jo.put("bno", entitiy.getBno());
         jo.put("btitle", entitiy.getBtitle() );

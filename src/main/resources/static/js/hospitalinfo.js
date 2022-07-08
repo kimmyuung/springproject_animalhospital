@@ -1,5 +1,8 @@
-info();
-function info(){
+info(0);
+let current_page = 0;
+let hname = "";
+let hdate = "";
+function info(page){
     $.ajax({
         url: "/map/info",
         method: "POST",
@@ -7,6 +10,7 @@ function info(){
         success: function(re){
         console.log(re)
             $("#hname").html(re.hname);
+            getreviewlist(re.hname,re.hdate,page);
       }
     });
 }
@@ -267,8 +271,34 @@ function addreview(){
            });
 }
 
-getreviewlist();
 
-function getreviewlist(){
+function getreviewlist(hname,hdate,page){
+        this.hname=hname;
+        this.hdate=hdate;
+           $.ajax({
+           		url: "/map/getreviewlist",
+           		 method: "POST",
+           		 data: {"hname":this.hname,"hdate":this.hdate,"page":this.current_page},
+           		success: function(reviewlist){
+           		console.log(reviewlist);
+           		    html = '<div><div>번호</divh><div>제목</div><div>이미지</div></div>';
+                       if( reviewlist.data.length == 0 ){ // 검색 결과가 존재하지 않으면
+                                                 html +=
+                                                       '<div>'+
+                                                               '<div colspan="5">검색 결과가 존재하지 않습니다.</div> '+
+                                                        '</div>';
+                                       }else{
+                                               for( let i = 0 ; i<reviewlist.data.length ; i++ ){
+                                                   html +=
+                                                           '<div type="button" data-bs-toggle="modal" data-bs-target="#myModal2" onclick="bview('+boardlist.blists[i].bno+')">'+
+                                                                   '<div>'+reviewlist.data[i].rno+'</div> '+
+                                                                   '<div>'+reviewlist.data[i].rcontent+'</div> '+
+                                                                   '<div><img src="/upload/'+reviewlist.data[i].rimg1+'"></div> '+
+                                                            '</div>';
+                                               }
+                           }
 
+                       $("#table").html(html);
+           		}
+           	});
 }

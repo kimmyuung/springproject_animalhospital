@@ -30,7 +30,7 @@ function boardlist( page){
     		url: "/board/blist",
     		 method: "POST",
     		 data: {"page":this.current_page},
-    		success: function(boardlist){
+    		success: function(reviewlist){
     		console.log(boardlist);
     		    html = '<div><div>번호</divh><div>제목</div><div>이미지</div></div>';
                 if( boardlist.blists.length == 0 ){ // 검색 결과가 존재하지 않으면

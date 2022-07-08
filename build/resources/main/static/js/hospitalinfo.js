@@ -267,4 +267,66 @@ function addreview(){
            });
 }
 
+getreviewlist(0);
+let current_page = 0;
+function getreviewlist(page){
+        this.current_page = page;
+            console.log(this.current_page);
+           $.ajax({
+           		url: "/map/getreviewlist",
+           		 method: "POST",
+           		 data: {"page":this.current_page},
+           		success: function(reviewlist){
+           		console.log(reviewlist);
+           		    html = '<div><div>번호</divh><div>제목</div><div>이미지</div></div>';
+                       if( reviewlist.data.length == 0 ){ // 검색 결과가 존재하지 않으면
+                                                 html +=
+                                                       '<div>'+
+                                                               '<div colspan="5">검색 결과가 존재하지 않습니다.</div> '+
+                                                        '</div>';
+                                       }else{
+                                               for( let i = 0 ; i<reviewlist.data.length ; i++ ){
+                                                   html +=
+                                                           '<div type="button" data-bs-toggle="modal" data-bs-target="#myModal2" onclick="bview('+boardlist.blists[i].bno+')">'+
+                                                                   '<div>'+reviewlist.data[i].rno+'</div> '+
+                                                                   '<div>'+reviewlist.data[i].rcontent+'</div> '+
+                                                                   '<div><img src="/upload/'+reviewlist.data[i].rimg1+'"></div> '+
+                                                            '</div>';
+                                               }
+                           }
+                            let pagehtml = "";
+                            if( page == 0 ){
+                                   pagehtml +=
+                                    '<li class="page-item"> '+
+                                                '<button class="page-link" onclick="getreviewlist('+ (page)  +')"> 이전 </button>'+
+                                     '</li>';
+                            }else{
+                                pagehtml +=
+                                   '<li class="page-item"> '+
+                                               '<button class="page-link" onclick="getreviewlist('+ (page-1)  +')"> 이전 </button>'+
+                                    '</li>';
+                             }
+                               alert(reviewlist.blists[0].endhtn);
+                            for( let i = reviewlist.blists[0].startbtn ; i<=reviewlist.blists[0].endhtn; i++ ){
+                               pagehtml +=
+                                     '<li class="page-item"> '+
+                                       '<button class="page-link" onclick="getreviewlist('+(i-1)+')"> '+i+' </button>'+
+                                     '</li>';
+                            }
 
+                           if( page == reviewlist.totalpages -1 ){
+                                pagehtml +=
+                                       '<li class="page-item"> '+
+                                                   '<button class="page-link" onclick="getreviewlist('+ (page)  +')"> 다음 </button>'+
+                                        '</li>';
+                           }else{
+                                pagehtml +=
+                                   '<li class="page-item"> '+
+                                               '<button class="page-link" onclick="getreviewlist('+ (page+1)  +')"> 다음 </button>'+
+                                    '</li>';
+                           }
+                       $("#table").html(html);
+                       $("#pagebtnbox").html( pagehtml);
+           		}
+           	});
+}

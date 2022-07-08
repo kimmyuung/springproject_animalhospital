@@ -6,11 +6,16 @@ import animalhospital.domain.board.BoardEntity;
 import animalhospital.domain.board.BoardimgEntity;
 import animalhospital.domain.member.MemberEntity;
 import animalhospital.domain.member.MemberRepository;
+import animalhospital.dto.OauthDto;
 import animalhospital.dto.ReviewDto;
 import org.apache.tomcat.util.json.JSONParser;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,12 +24,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartRequest;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.time.format.DateTimeFormatter;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
@@ -122,21 +129,21 @@ public class MapService {
             if (optionalMember.isPresent()) { // null 아니면
                 ReviewEntity reviewEntity = reviewDto.toentity();
                 reviewEntity.setMemberEntity( optionalMember.get() );
-                    String uuidfile = null;
-                    String uuidfile2 = null;
-                    if(reviewDto.getRimg1()!=null) {
-                        MultipartFile file = reviewDto.getRimg1();
-                        UUID uuid = UUID.randomUUID();
-                        uuidfile = uuid.toString() + "_" + file.getOriginalFilename().replaceAll("_", "-");
-                        String dir = "C:\\Users\\504\\springproject_animalhospital\\src\\main\\resources\\static\\upload\\";
-                        String filepath = dir + uuidfile;
-                        try {
-                            file.transferTo(new File(filepath));
-                            reviewEntity.setRimg1(uuidfile);
-                        } catch (Exception e) {
-                            System.out.println("파일저장실패 : " + e);
-                        }
+                String uuidfile = null;
+                String uuidfile2 = null;
+                if(reviewDto.getRimg1()!=null) {
+                    MultipartFile file = reviewDto.getRimg1();
+                    UUID uuid = UUID.randomUUID();
+                    uuidfile = uuid.toString() + "_" + file.getOriginalFilename().replaceAll("_", "-");
+                    String dir = "C:\\Users\\504\\springproject_animalhospital\\src\\main\\resources\\static\\upload\\";
+                    String filepath = dir + uuidfile;
+                    try {
+                        file.transferTo(new File(filepath));
+                        reviewEntity.setRimg1(uuidfile);
+                    } catch (Exception e) {
+                        System.out.println("파일저장실패 : " + e);
                     }
+                }
                 if(reviewDto.getRimg2()!=null) {
                     MultipartFile file2 = reviewDto.getRimg2();
                     UUID uuid2 = UUID.randomUUID();
@@ -161,5 +168,40 @@ public class MapService {
         }
         return false;
     }
+
+    @Autowired
+    private HttpServletRequest request;
+
+    public JSONObject getreviewlist( String hname,String hdate,int page  ){
+        JSONObject jo = new JSONObject();
+        Page<ReviewEntity> reviewEntity = null ;
+        Pageable pageable = PageRequest.of( page , 3 , Sort.by( Sort.Direction.DESC , "rno")    ); // SQL : limit 와 동일 한 기능처리
+        JSONArray jsonArray = new JSONArray();
+        for (ReviewEntity entity : reviewEntity ) {
+            JSONObject object = new JSONObject();
+            object.put("rno", entity.getRno());
+            object.put("rcontent", entity.getRcontent());
+            object.put("rmodifiedate", entity.getModifiedate());
+            object.put("rcreatedate", entity.getCreatedate());
+            object.put("rcreatedate", entity.getCreatedate());
+            object.put("rimg1", entity.getRimg1());
+            object.put("rimg2", entity.getRimg2());
+            object.put("mid", entity.getMemberEntity().getMid());
+            jsonArray.put(object);
+        }
+        int btncount = 5;
+        int startbtn  = ( page / btncount ) * btncount + 1;
+        int endbtn = startbtn + btncount -1;
+        if( endbtn > reviewEntity.getTotalPages() ) endbtn = reviewEntity.getTotalPages();
+
+        if(endbtn > reviewEntity.getTotalPages()) endbtn = reviewEntity.getTotalPages();
+        jo.put("startbtn", startbtn);
+        jo.put("endbtn", endbtn);
+        jo.put("data", jsonArray);
+        jo.put("totalpage", reviewEntity.getTotalPages());
+        System.out.println(jo);
+        return jo;
+    }
+
 
 }

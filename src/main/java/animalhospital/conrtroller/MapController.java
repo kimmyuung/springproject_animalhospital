@@ -1,6 +1,7 @@
 package animalhospital.conrtroller;
 
 import animalhospital.dto.CrawlDto;
+import animalhospital.dto.ReviewDto;
 import animalhospital.service.BoardService;
 import animalhospital.service.MapService;
 import org.json.JSONObject;
@@ -55,7 +56,6 @@ public class MapController {
         object.put("score",crawlDto.getScroe());
         object.put("link",crawlDto.getLink());
 
-
         try {
             response.setCharacterEncoding("UTF-8");
             response.setContentType("application/json");
@@ -75,6 +75,28 @@ public class MapController {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+    @PostMapping("/addreview" )
+    @ResponseBody
+    public boolean addreview(HttpServletResponse response, ReviewDto reviewDto){
+        System.out.println("Dddd");
+        String hname =  (String) request.getSession().getAttribute("hname");
+        String hdate =  (String) request.getSession().getAttribute("hdate");
+        reviewDto.setHname(hname);
+        reviewDto.setHdate(hdate);
+        System.out.println("sssss"+reviewDto);
+        boolean result = mapService.addreview(reviewDto);
+        return result;
+    }
+
+    @PostMapping("/getreviewlist")
+    @ResponseBody
+    public void getreviewlist(HttpServletResponse response, @RequestParam("hname") String hname , @RequestParam("hdate") String hdate  , @RequestParam("page") int page  ){
+        try {
+            response.setCharacterEncoding("UTF-8");
+            response.setContentType("application/json");
+            response.getWriter().println(mapService.getreviewlist(hname,hdate, page ));
+        }catch( Exception e ){ System.out.println( e ); }
     }
 
 }
