@@ -1,5 +1,7 @@
 package animalhospital.conrtroller;
 
+import animalhospital.dto.CrawlDto;
+import animalhospital.service.BoardService;
 import animalhospital.service.MapService;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,8 +15,12 @@ import javax.servlet.http.HttpServletResponse;
 @RequestMapping("/map")
 public class MapController {
 
+    @GetMapping("/infopage")
+    public String list(){ return "hospitalinfo";}
     @Autowired
     MapService mapService;
+    @Autowired
+    BoardService boardService;
 
     @Autowired
     private HttpServletRequest request;     // 1. 세션 호출을 위한 request 객체 생성
@@ -32,10 +38,19 @@ public class MapController {
     public void info(HttpServletResponse response ){
         String hname =  (String) request.getSession().getAttribute("hname");
         String hdate =  (String) request.getSession().getAttribute("hdate");
+        String hcity = (String) request.getSession().getAttribute("hcity");
+        System.out.println("크롤링에서뽑아온이름"+boardService.crawling(hcity,hname));
+        CrawlDto crawlDto = boardService.crawling(hcity,hname);
+        //String score = boardService.crawling(hcity,hname);
         System.out.println(hname);
         JSONObject object = new JSONObject();
         object.put("hname",hname);
         object.put("hdate",hdate);
+        object.put("hcity",hcity);
+        object.put("score",crawlDto.getScroe());
+        object.put("link",crawlDto.getLink());
+
+
         try {
             response.setCharacterEncoding("UTF-8");
             response.setContentType("application/json");

@@ -148,14 +148,14 @@ kakao.maps.event.addListener(map, 'idle', function() {
                      // 마커에 클릭 이벤트를 등록한다 (우클릭 : rightclick)
                     kakao.maps.event.addListener(marker, 'click', function() {
                       $.ajax({
-                                                           url: "/map/view",
-                                                           method: "GET",
-                                                           data: {"hname":list[i].name , "hdate": list[i].opendate, "hcity" : list[i].city},
-                                                            success: function(re){
-                                                                 alert(re);
-                                                                 location.href = "/map/infopage";
-                                                            }
-                                                       });
+                           url: "/map/view",
+                           method: "GET",
+                           data: {"hname":list[i].name , "hdate": list[i].opendate, "hcity" : list[i].city},
+                            success: function(re){
+                                 alert(re);
+                                 location.href = "/map/infopage";
+                            }
+                       });
 
                     });
                     html +=
@@ -183,15 +183,14 @@ function panTo(lat, logt) {
 //hview(city,name);
 //}
 
-let hname;
-let hdate;
-let hcity;
+let searchresult;
 function search(){
     let keyword = $("#searchbar").val();
     $.ajax({
         url: "/map/search",
         data: {"keyword" : keyword},
         success: function(result) {
+            searchresult = result;
             let searchlist= "";
             if(result.length == 0){
                 searchlist = '<div>일치하는 병원이 없습니다.</div>'
@@ -201,7 +200,7 @@ function search(){
                     hdate = result[i].opendate;
                     hcity = result[i].city;
                     searchlist +=
-                        '<div Onclick="infopage()" style="cursor:pointer" >'+result[i].city+' '+result[i].name+'</div>';
+                        '<div Onclick="infopage('+i+')" style="cursor:pointer" >'+result[i].city+' '+result[i].name+'</div>';
                 }
             }
             $("#searchlist").html(searchlist);
@@ -222,15 +221,15 @@ function hview(i){
    });
 }
 
-function infopage(){
-    console.log(hname+" "+hdate);
+function infopage(i){
+    alert(searchresult[i].name+"hdate"+searchresult[i].opendate+"hcity"+searchresult[i].city);
     $.ajax({
         url: "/map/view",
         method: "GET",
-        data: {"hname":hname , "hdate": hdate ,"hcity" : hcity},
-         success: function(re){
-           location.href = "/map/infopage";
-         }
+        data: {"hname":searchresult[i].name , "hdate": searchresult[i].opendate, "hcity" : searchresult[i].city},
+        success: function(re){
+        location.href = "/map/infopage";
+        }
     });
 
 }

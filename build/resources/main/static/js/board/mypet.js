@@ -264,10 +264,8 @@ function reupdate(rno){
         });
 }
 function rereplyinput(rno){
-
         let html =
             '<input type="text" id="reply"">'+
             '<button type="button" onclick="rereply('+rno+')">답글</button>';
         $("#replyinput").html(html);
-
 }
