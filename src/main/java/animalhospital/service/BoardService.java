@@ -393,11 +393,11 @@ public class BoardService {
         boolean same;
 
         JSONArray jsonArray = new JSONArray();
-        BoardEntity boardEntity = boardRepository.findBybno(bno);
-        List<ReplyEntity> replyEntities = replyRepository.findbybno(bno);
+        List<ReplyEntity> replyEntities = replyRepository.findreply(bno);
         for(ReplyEntity replyEntity : replyEntities){
             JSONObject object = new JSONObject();
             object.put("rno",replyEntity.getRno());
+            object.put("rindex",replyEntity.getRindex());
             object.put("mid",replyEntity.getMemberEntity().getMid());
             object.put("rcontent",replyEntity.getRcontent());
             object.put("createdate",replyEntity.getCreatedate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
@@ -436,8 +436,8 @@ public class BoardService {
         return true;
     }
 
-    public boolean rereplysave(int bno, int rno, String reply) {
-        System.out.println(rno);
+    public boolean rereplysave(int bno, int rindex, String reply) {
+        System.out.println(rindex);
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Object principal = authentication.getPrincipal();
         String mid = null;
@@ -461,7 +461,7 @@ public class BoardService {
                 MemberEntity memberEntity = memberRepository.findBymid(mid).get();
                 BoardEntity boardEntity = boardRepository.findBybno(bno);
                 ReplyEntity replyEntity = ReplyEntity.builder()
-                        .rindex(rno)
+                        .rindex(rindex)
                         .rcontent(reply)
                         .boardEntity(boardEntity)
                         .memberEntity(memberEntity)
@@ -473,6 +473,32 @@ public class BoardService {
             }
         }
         return false;
+    }
+
+    public JSONArray getrereply(int bno, int rindex) {
+
+        OauthDto oauthDto= (OauthDto) request.getSession().getAttribute("login");
+        boolean same;
+
+        JSONArray jsonArray = new JSONArray();
+        List<ReplyEntity> replyEntities = replyRepository.findrereply(bno, rindex);
+        for(ReplyEntity replyEntity : replyEntities){
+            JSONObject object = new JSONObject();
+            object.put("rno",replyEntity.getRno());
+            object.put("rindex",replyEntity.getRindex());
+            object.put("mid",replyEntity.getMemberEntity().getMid());
+            object.put("rcontent",replyEntity.getRcontent());
+            object.put("createdate",replyEntity.getCreatedate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+            if(replyEntity.getMemberEntity().getMid().equals(oauthDto.getMid())){
+                same = true;
+            }else{
+                same = false;
+            }
+            object.put("same",same);
+            jsonArray.put(object);
+        }
+        return jsonArray;
+
     }
 
    /* 조회수 증가

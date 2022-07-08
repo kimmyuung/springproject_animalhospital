@@ -189,7 +189,6 @@ function replysave(){
             getreply();
         }
     });
-
 }
 function getreply(){
     let replyhtml = "";
@@ -197,32 +196,40 @@ function getreply(){
         url:"/board/getreply",
         data : { "bno": bnum },
         success : function(result){
+                console.log(result);
             for(let i = 0; i <result.length; i++){
-                if(result[i].same == true){
-                    replyhtml +=
-                        '<div>'+
-                            '<div class="row">'+
-                                '<div class="col-md-6">'+result[i].mid+'</div>'+
-                                '<div class="col-md-6 d-flex justify-content-end">'+result[i].createdate+'</div>'+
-                            '</div>'+
-                            '<div>'+result[i].rcontent+'</div>'+
-                            '<div id="repltbtn">'+
-                                '<button type="button" onclick="rereplyinput('+result[i].rno+')">답글</button><button type="button" onclick="replyupdate('+result[i].rno+')">수정</button><button type="button" onclick="replydelete('+result[i].rno+')">삭제</button>'+
-                            '</div>'+
-                        '</div>';
+                if(result[i].rindex == 0){
+                    if(result[i].same == true){
+                        replyhtml +=
+                            '<div>'+
+                                '<div class="row">'+
+                                    '<div class="col-md-6">'+result[i].mid+'</div>'+
+                                    '<div class="col-md-6 d-flex justify-content-end">'+result[i].createdate+'</div>'+
+                                '</div>'+
+                                '<div>'+result[i].rcontent+'</div>'+
+                                '<div id="repltbtn">'+
+                                    '<button type="button" onclick="rereplyinput('+result[i].rno+')">답글</button><button type="button" onclick="replyupdate('+result[i].rno+')">수정</button><button type="button" onclick="replydelete('+result[i].rno+')">삭제</button>'+
+                                '</div>'+
+                                '<div id="'+result[i].rno+'"></div>'+
+                            '</div>';
+                    }else{
+                        replyhtml +=
+                            '<div>'+
+                                '<div class="row">'+
+                                    '<div class="col-md-6">'+result[i].mid+'</div>'+
+                                    '<div class="col-md-6 d-flex justify-content-end">'+result[i].createdate+'</div>'+
+                                '</div>'+
+                                '<div>'+result[i].rcontent+'</div>'+
+                                '<div id="repltbtn">'+
+                                    '<button type="button" onclick="rereply('+result[i].rno+')">답글</button>'+
+                                '</div>'+
+                                '<div id="'+result[i].rno+'"></div>'+
+                            '</div>';
+                    }
                 }else{
-                    replyhtml +=
-                        '<div>'+
-                            '<div class="row">'+
-                                '<div class="col-md-6">'+result[i].mid+'</div>'+
-                                '<div class="col-md-6 d-flex justify-content-end">'+result[i].createdate+'</div>'+
-                            '</div>'+
-                            '<div>'+result[i].rcontent+'</div>'+
-                            '<div id="repltbtn">'+
-                                '<button type="button" onclick="rereply('+result[i].rno+')">답글</button>'+
-                            '</div>'+
-                        '</div>';
+                    getrereply(result[i].rno);
                 }
+
             }
              $('#replytable').html(replyhtml);
         }
@@ -268,4 +275,54 @@ function rereplyinput(rno){
             '<input type="text" id="reply"">'+
             '<button type="button" onclick="rereply('+rno+')">답글</button>';
         $("#replyinput").html(html);
+}
+
+function rereply(rno){
+    let reply = $("#reply").val();
+    let rindex = rno;
+    $.ajax({
+        url:"/board/rereply",
+        method : "POST",
+        data : {"reply": reply, "bno": bnum, "rindex":rindex},
+        success : function(result){
+            $('#reply').val('');
+            getreply();
+        }
+    });
+}
+function getrereply(rno){
+    let rindex = rno;
+    let rereplyhtml = "";
+    $.ajax({
+        url: "/board/getrereply" ,
+        data : { "rindex" : rindex , "bno": bnum } ,
+        success : function(result){
+            console.log(result);
+            for(let i = 0; i <result.length; i++){
+                if(result[i].same == true){
+                    rereplyhtml +=
+                        '<div>'+
+                            '<div class="row">'+
+                                '<div class="col-md-6">'+result[i].mid+'</div>'+
+                                '<div class="col-md-6 d-flex justify-content-end">'+result[i].createdate+'</div>'+
+                            '</div>'+
+                            '<div>'+result[i].rcontent+'</div>'+
+                            '<div id="repltbtn">'+
+                                '<button type="button" onclick="replyupdate('+result[i].rno+')">수정</button><button type="button" onclick="replydelete('+result[i].rno+')">삭제</button>'+
+                            '</div>'+
+                        '</div>';
+                }else{
+                    rereplyhtml +=
+                        '<div>'+
+                            '<div class="row">'+
+                                '<div class="col-md-6">'+result[i].mid+'</div>'+
+                                '<div class="col-md-6 d-flex justify-content-end">'+result[i].createdate+'</div>'+
+                            '</div>'+
+                            '<div>'+result[i].rcontent+'</div>'+
+                        '</div>';
+                }
+            }
+            $('#'+result[i].rno).html(rereplyhtml);
+        }
+    });
 }

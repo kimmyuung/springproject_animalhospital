@@ -9,8 +9,11 @@ public interface ReplyRepository extends JpaRepository<ReplyEntity, Integer> {
 
     ReplyEntity findByboardEntity(BoardEntity boardEntity);
 
-    @Query(value = "select * from reply where bno = :bno", nativeQuery = true)
-    List<ReplyEntity> findbybno(int bno);
+    @Query(value = "select * from reply where bno = :bno and rindex = 0", nativeQuery = true)
+    List<ReplyEntity> findreply(int bno);
+
+    @Query(value = "select * from reply where bno = :bno and rindex = :rindex", nativeQuery = true)
+    List<ReplyEntity> findrereply(int bno, int rindex);
 
     ReplyEntity findByrno(int rno);
 }

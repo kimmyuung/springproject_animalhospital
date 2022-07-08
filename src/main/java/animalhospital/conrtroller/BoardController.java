@@ -109,8 +109,20 @@ public class BoardController {
 
     @PostMapping("/rereply")
     @ResponseBody
-    public boolean rereply(@RequestParam("bno") int bno, @RequestParam("rno") int rno, @RequestParam("reply") String reply){
-        return boardService.rereplysave(bno, rno, reply );
+    public boolean rereply(@RequestParam("bno") int bno, @RequestParam("rindex") int rindex, @RequestParam("reply") String reply){
+        return boardService.rereplysave(bno, rindex, reply );
+    }
+    @GetMapping("/getrereply")
+    @ResponseBody
+    public void getrereply(@RequestParam("bno")int bno,@RequestParam("rindex") int rindex, HttpServletResponse response){
+        try {
+            JSONArray jsonArray = boardService.getrereply(bno,rindex);
+            response.setCharacterEncoding("UTF-8");
+            response.setContentType("application/json");
+            response.getWriter().print(jsonArray);
+        } catch (IOException e) {
+            System.out.println("getrereply error : "+e);
+        }
     }
 
 }

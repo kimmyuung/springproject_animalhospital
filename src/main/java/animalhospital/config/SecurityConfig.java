@@ -66,6 +66,7 @@ public class SecurityConfig {
                 .ignoringAntMatchers("/map/info")
                 .ignoringAntMatchers("/board/replysave")
                 .ignoringAntMatchers("/board/reupdate")
+                .ignoringAntMatchers("/board/rereply")
                 .ignoringAntMatchers("/")
                 .and()
                 .exceptionHandling()
