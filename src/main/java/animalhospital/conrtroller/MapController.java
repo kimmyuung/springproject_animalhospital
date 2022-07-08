@@ -1,14 +1,12 @@
 package animalhospital.conrtroller;
 
 import animalhospital.dto.CrawlDto;
-import animalhospital.dto.ReviewDto;
 import animalhospital.service.BoardService;
 import animalhospital.service.MapService;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -16,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 @Controller
 @RequestMapping("/map")
 public class MapController {
+
     @Autowired
     MapService mapService;
 
@@ -66,21 +65,6 @@ public class MapController {
         }
     }
 
-//@GetMapping("/infoh")
-//@ResponseBody
-//public void infoh(HttpServletResponse response) {
-//String city = (String)request.getSession().getAttribute("city");
-//String name = (String)request.getSession().getAttribute("name");
-//    System.out.println("크롤링에서뽑아온이름"+boardService.crawling(city,name));
-//try{
-//    response.setCharacterEncoding("UTF-8");
-//    response.getWriter().print(boardService.crawling(city,name));
-//    response.getWriter().print(boardService.crawling(city,name));
-//}catch (Exception e) {System.out.println(e);}
-//
-//
-//}
-
     @GetMapping("/search")
     public void search(HttpServletResponse response, @RequestParam("keyword") String keyword ){
 
@@ -93,20 +77,4 @@ public class MapController {
         }
     }
 
-    @PostMapping("/addreview" )
-    @ResponseBody
-    public boolean addreview(HttpServletResponse response,ReviewDto reviewDto){
-       System.out.println("Dddd");
-        String hname =  (String) request.getSession().getAttribute("hname");
-        String hdate =  (String) request.getSession().getAttribute("hdate");
-       reviewDto.setHname(hname);
-        reviewDto.setHname(hdate);
-        System.out.println("sssss"+reviewDto);
-        boolean result = mapService.addreview(reviewDto);
-        return result;
-    }
-
-
-
 }
-

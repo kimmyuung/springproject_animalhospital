@@ -2,6 +2,7 @@ package animalhospital.conrtroller;
 
 import animalhospital.dto.BoardDto;
 import animalhospital.service.BoardService;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -57,6 +58,17 @@ public class BoardController {
     public boolean delete(@RequestParam("bno") int bno ){
         System.out.println(bno);
         return boardService.delete( bno );
+    }
+
+    @PostMapping("/search")
+    @ResponseBody
+    public void videosearch(@RequestParam("search") String search
+                            , HttpServletResponse response )
+    {
+        try{
+
+
+        }catch( Exception e ){ System.out.println( e ); }
     }
 
 }

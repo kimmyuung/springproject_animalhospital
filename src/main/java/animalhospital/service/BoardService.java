@@ -36,6 +36,7 @@ import java.util.*;
 
 @Service
 public class BoardService {
+
     @Autowired
     private HttpServletRequest request;
 
@@ -269,30 +270,112 @@ public class BoardService {
     }
 
     public void 크롤링() {
-        final String inflearnUrl = "https://search.naver.com/search.naver?where=news&sm=tab_jum&query=동물병원";
+        String inflearnUrl = "https://search.daum.net/search?nil_suggest=btn&w=tot&DA=SBC&q=%EB%82%A8%EC%96%91%EC%A3%BC%EC%8B%9C+%ED%99%94%EB%8F%84%EB%8F%99%EB%AC%BC%EB%B3%91%EC%9B%90";
 
         Connection conn = Jsoup.connect(inflearnUrl);
-        System.out.println(  1);
         try {
             Document document = conn.get();
-            Elements imageUrlElements = document.getElementsByClass("tit");
-            Elements imageUrlElements2 = document.getElementsByClass("dsc_wrap");
-           // System.out.println(document);
+            Elements title = document.getElementsByClass("inner_tit").first().select("b");
+            Elements score = document.getElementsByClass("f_eb");
 
-            for (Element element : imageUrlElements) {
+            String title2 = title.text().replaceAll(" ","");
+            String score2 = score.first().text();
+            String link = score.attr("href");
 
-                System.out.println(element);
+//            System.out.println(title2);
+//            System.out.println(score2);
+//            System.out.println(link);
 
-            }
-            for (Element element : imageUrlElements2) {
-                System.out.println(element);
-
-            }
+//            Elements imageUrlElements = document.getElementsByClass("total_area");
+//            Elements e = document.getElementsByClass("total_wrap api_ani_send");
+//           // Elements imageUrlElements2 = document.getElementsByClass("dsc_wrap");
+//           // System.out.println(document);
+//            Elements a = imageUrlElements.first().getElementsByTag("a");
+//
+//            for (Element element : e) {
+//                //System.out.println(element.getElementsByIndexEquals(1).get(5).text());
+//               // System.out.println(element.getElementsByIndexEquals(2).text().length());
+//
+//
+//
+//                if(element.getElementsByIndexEquals(1).get(5).text().contains("동물병원")) {
+//                    System.out.println(element.getElementsByIndexEquals(1).get(5).text());
+//                    System.out.println(", "+element.getElementsByIndexEquals(2).text());
+//                    System.out.println(","+element.getElementsByTag("a"));
+//
+//                }
+//
+//            }
+//            for (Element element : imageUrlElements2) {
+//                System.out.println(element);
+//
+//            }
 
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
+    public CrawlDto crawling(String city, String name) {
+        String code = city+name;
+        String inflearnUrl = "https://search.daum.net/search?nil_suggest=btn&w=tot&DA=SBC&q="+code;
+        Connection conn = Jsoup.connect(inflearnUrl);
+        try {
+            Document document = conn.get();
+            Elements title = document.getElementsByClass("inner_tit").first().select("b");
+            Elements score = document.getElementsByClass("f_eb");
+//            String title2 = title.text().replaceAll(" ","");
+            String score2 = score.first().text();
+            String link = score.attr("href");
+            CrawlDto crawlDto = new CrawlDto();
+            crawlDto.setScroe(score2);
+            crawlDto.setLink(link);
+//            String link = score.attr("href");
+            return  crawlDto;
+            //  System.out.println(code);
+
+//            if(name.equals(title2)) {
+//                Elements score = document.getElementsByClass("f_eb");
+//                String score2 = score.first().text();
+//                String link = score.attr("href");
+//            }
+
+
+//
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return  null;
+    }
+
+   /* 조회수 증가
+   @Transactional
+    public JSONObject getboard(int bno) { // 개별조회
+        // 조회수 증가처리
+        String ip = request.getRemoteAddr(); // 사용자의 ip 가져오기
+        Optional<BoardEntity> Optional = boardRepository.findById(bno);
+        BoardEntity entitiy = Optional.get();
+        // ip와 bno를 합쳐서 세션(서버내 저장소) 부여
+        Object com = request.getSession().getAttribute(ip+bno);
+        if(com == null) {
+            request.getSession().setAttribute(ip+bno, 1);
+            request.getSession().setMaxInactiveInterval(60*60*24); // 세션 허용시간 [ 초단위 ]
+            // 조회수 증가
+            entitiy.setBview(entitiy.getBview()+1);
+        }
+        JSONObject jo = new JSONObject();
+        jo.put("bno", entitiy.getBno());
+        jo.put("btitle", entitiy.getBtitle() );
+        jo.put("bcontent", entitiy.getBcontent());
+        jo.put("bview", entitiy.getBview());
+        jo.put("blike", entitiy.getBlike());
+        jo.put("bindate" , entitiy.getCreateDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm") ) );
+        jo.put("bmodate" , entitiy.getUpdateDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm") ) );
+        jo.put("mid", entitiy.getMemberEntity().getMid());
+        return jo;
+    }
+    */
 
     public CrawlDto crawling(String city, String name) {
         String code = city+name;
@@ -358,4 +441,6 @@ public class BoardService {
         return jo;
     }
     */
+
+
 }
