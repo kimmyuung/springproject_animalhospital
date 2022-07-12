@@ -3,6 +3,9 @@ package animalhospital.service;
 import org.apache.tomcat.util.json.JSONParser;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
@@ -58,6 +61,7 @@ public class MapService {
 
     public JSONArray search (String keyword){
         JSONArray hospital = map();
+
         JSONArray jsonArray = new JSONArray();
         if(keyword != null) {
             for(int i = 0; i < hospital.length(); i++){
