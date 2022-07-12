@@ -37,6 +37,9 @@ public class SecurityConfig {
                 .antMatchers("/**").permitAll()
                 .antMatchers("member/login").permitAll()
                 .antMatchers("board/blist").permitAll()
+                .antMatchers("board/getboard").permitAll()
+                .antMatchers("board/getreply").permitAll()
+                .antMatchers("board/getrereply").permitAll()
                 .and()
                 .formLogin() // 로그인페이지 보안 설정
                 .loginPage("/member/login") // 아이디 / 비밀번호를 입력받을 페이지 URL
@@ -67,6 +70,9 @@ public class SecurityConfig {
                 .ignoringAntMatchers("/board/replysave")
                 .ignoringAntMatchers("/board/reupdate")
                 .ignoringAntMatchers("/board/rereply")
+                .ignoringAntMatchers("/board/getboard")
+                .ignoringAntMatchers("/board/getreply")
+                .ignoringAntMatchers("/board/getrereply")
                 .ignoringAntMatchers("/")
                 .and()
                 .exceptionHandling()

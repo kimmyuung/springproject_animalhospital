@@ -185,8 +185,12 @@ function replysave(){
         method : "POST",
         data : {"reply": reply, "bno": bnum},
         success : function(result){
-            $('#reply').val('');
-            getreply();
+            if(result){
+                $('#reply').val('');
+                getreply();
+            }else{
+                alert("로그인 후 이용해주세요!")
+            }
         }
     });
 }
@@ -285,13 +289,17 @@ function rereply(rno){
         method : "POST",
         data : {"reply": reply, "bno": bnum, "rindex":rindex},
         success : function(result){
-            $('#reply').val('');
-            getreply();
+            if(result){
+                $('#reply').val('');
+                getreply();
+            }else{
+                alert("로그인 후 이용해주세요!")
+            }
         }
+
     });
 }
 function getrereply(rno){
-console.log(rno);
     let rindex = rno;
     let rereplyhtml = "";
     $.ajax({

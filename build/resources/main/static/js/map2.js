@@ -109,10 +109,13 @@ $.ajax({
     }
 })
 
+    navigator.geolocation.getCurrentPosition(function(position) {
+            var lat = position.coords.latitude, // 위도
+                 lng = position.coords.longitude; // 경도
 
 var mapContainer = document.getElementById('map'), // 지도를 표시할 div
     mapOption = {
-        center: new kakao.maps.LatLng(37.63457, 127.33838), // 지도의 중심좌표
+        center: new kakao.maps.LatLng(lat, lng), // 지도의 중심좌표
         level: 5, // 지도의 확대 레벨
         mapTypeId : kakao.maps.MapTypeId.ROADMAP // 지도종류
     };
@@ -182,7 +185,7 @@ function panTo(lat, logt) {
 //name = list[i].name;
 //hview(city,name);
 //}
-
+});
 let searchresult;
 function search(){
     let keyword = $("#searchbar").val();

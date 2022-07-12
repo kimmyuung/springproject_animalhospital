@@ -231,11 +231,14 @@ public class BoardService {
         Optional<BoardEntity> optionalRoomEntity =  boardRepository.findById(bno );
         BoardEntity boardEntity =  optionalRoomEntity.get();
         String same = null;
-        if(boardEntity.getMemberEntity().getMid().equals(loginDto.getMid())){
+        if(loginDto == null){
+            same = "false";
+        }else if(boardEntity.getMemberEntity().getMid().equals(loginDto.getMid())){
             same =  "true";
         }else{
             same =  "false";
         }
+
         // 2.  해당 엔티티 -> json 객체 변환
         JSONObject object = new JSONObject();
         // 1. json에 엔티티 필드 값 넣기
@@ -250,8 +253,10 @@ public class BoardService {
             jsonArray.put( boardimgEntity.getBimg());
         }
         // 3. jsonarray를 json객체 포함
+        System.out.println(jsonArray);
         object.put("bimglist" , jsonArray) ;
         // 3. 반한
+
         return object;
     }
 
@@ -380,6 +385,7 @@ public class BoardService {
                 replyRepository.save(replyEntity);
                 return true;
             } else { // 로그인이 안되어 있는경우
+
                 return false;
             }
         }
@@ -400,11 +406,14 @@ public class BoardService {
             object.put("mid",replyEntity.getMemberEntity().getMid());
             object.put("rcontent",replyEntity.getRcontent());
             object.put("createdate",replyEntity.getCreatedate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
-                if(replyEntity.getMemberEntity().getMid().equals(oauthDto.getMid())){
-                    same = true;
-                }else{
-                    same = false;
-                }
+
+            if(oauthDto == null){
+                same = false;
+            }else if(replyEntity.getMemberEntity().getMid().equals(oauthDto.getMid())){
+                same =  true;
+            }else{
+                same =  false;
+            }
             object.put("same",same);
             jsonArray.put(object);
         }
@@ -476,7 +485,6 @@ public class BoardService {
 
     public JSONArray getrereply(int bno, int rindex) {
 
-        System.out.println("rere : "+bno+ "-" + rindex);
         OauthDto oauthDto= (OauthDto) request.getSession().getAttribute("login");
         boolean same;
 
@@ -489,11 +497,14 @@ public class BoardService {
             object.put("mid",replyEntity.getMemberEntity().getMid());
             object.put("rcontent",replyEntity.getRcontent());
             object.put("createdate",replyEntity.getCreatedate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
-            if(replyEntity.getMemberEntity().getMid().equals(oauthDto.getMid())){
-                same = true;
-            }else{
+            if(oauthDto == null){
                 same = false;
+            }else if(replyEntity.getMemberEntity().getMid().equals(oauthDto.getMid())){
+                same =  true;
+            }else{
+                same =  false;
             }
+
             object.put("same",same);
             jsonArray.put(object);
         }
