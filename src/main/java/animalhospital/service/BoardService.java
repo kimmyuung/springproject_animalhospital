@@ -270,6 +270,7 @@ public class BoardService {
         }else{
             same =  "false";
         }
+
         // 2.  해당 엔티티 -> json 객체 변환
         JSONObject object = new JSONObject();
         // 1. json에 엔티티 필드 값 넣기
@@ -284,8 +285,10 @@ public class BoardService {
             jsonArray.put( boardimgEntity.getBimg());
         }
         // 3. jsonarray를 json객체 포함
+        System.out.println(jsonArray);
         object.put("bimglist" , jsonArray) ;
         // 3. 반한
+
         return object;
     }
 
@@ -476,7 +479,6 @@ public class BoardService {
 
     public JSONArray getrereply(int bno, int rindex) {
 
-        System.out.println("rere : "+bno+ "-" + rindex);
         OauthDto oauthDto= (OauthDto) request.getSession().getAttribute("login");
         boolean same;
 
