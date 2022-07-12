@@ -92,7 +92,7 @@ public class BoardService {
                                     .build();
 
                             boardimgRespository.save(boardimgEntity);
-
+                            System.out.println(boardimgEntity);
                             boardEntity.getBoardimgEntities().add(boardimgEntity);
 
                         } catch (Exception e) {
@@ -150,7 +150,6 @@ public class BoardService {
 
     public Map< String , List<Map<String , String >>> boardlist(int page ) // 인수
     {
-
         System.out.println( "페이지 :"+ page );
 
         Page<BoardEntity> boardEntitylist = null ;
@@ -477,6 +476,7 @@ public class BoardService {
 
     public JSONArray getrereply(int bno, int rindex) {
 
+        System.out.println("rere : "+bno+ "-" + rindex);
         OauthDto oauthDto= (OauthDto) request.getSession().getAttribute("login");
         boolean same;
 

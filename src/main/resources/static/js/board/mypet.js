@@ -196,7 +196,6 @@ function getreply(){
         url:"/board/getreply",
         data : { "bno": bnum },
         success : function(result){
-                console.log(result);
             for(let i = 0; i <result.length; i++){
                 if(result[i].rindex == 0){
                     if(result[i].same == true){
@@ -210,7 +209,7 @@ function getreply(){
                                 '<div id="repltbtn">'+
                                     '<button type="button" onclick="rereplyinput('+result[i].rno+')">답글</button><button type="button" onclick="replyupdate('+result[i].rno+')">수정</button><button type="button" onclick="replydelete('+result[i].rno+')">삭제</button>'+
                                 '</div>'+
-                                '<div id="'+result[i].rno+'"></div>'+
+                                '<div id = "'+result[i].rno+'"></div>'+
                             '</div>';
                     }else{
                         replyhtml +=
@@ -227,7 +226,7 @@ function getreply(){
                             '</div>';
                     }
                 }else{
-                    getrereply(result[i].rno);
+                    getrereply(result[i].rindex);
                 }
 
             }
@@ -278,6 +277,7 @@ function rereplyinput(rno){
 }
 
 function rereply(rno){
+
     let reply = $("#reply").val();
     let rindex = rno;
     $.ajax({
@@ -291,6 +291,7 @@ function rereply(rno){
     });
 }
 function getrereply(rno){
+console.log(rno);
     let rindex = rno;
     let rereplyhtml = "";
     $.ajax({
@@ -322,7 +323,8 @@ function getrereply(rno){
                         '</div>';
                 }
             }
-            $('#'+result[i].rno).html(rereplyhtml);
+            console.log(rereplyhtml);
+            $("#"+ rindex).html(rereplyhtml);
         }
     });
 }
