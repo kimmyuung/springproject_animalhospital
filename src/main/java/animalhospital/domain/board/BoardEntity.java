@@ -28,9 +28,10 @@ public class BoardEntity extends BaseTime {
     @JoinColumn(name = "mno")
     private MemberEntity memberEntity;
 
-    @OneToMany( mappedBy = "boardEntity" , cascade = CascadeType.ALL )
+    @OneToMany(mappedBy = "boardEntity" , cascade = CascadeType.ALL)
     private List<BoardimgEntity> boardimgEntities;
 
     @OneToMany (mappedBy = "boardEntity", cascade = CascadeType.ALL)
     private List<ReplyEntity> replyEntities;
+
 }
