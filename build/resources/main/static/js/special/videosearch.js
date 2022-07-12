@@ -28,7 +28,6 @@ if(searchtext == "") {
 
     });
 }else {
-
     $.ajax({
         url : '/videosearch',
         data : {"search" : searchtext},
@@ -43,7 +42,7 @@ if(searchtext == "") {
                '</div>';
                 }
 
-             $("#videobox").html(html);
+             $("#videobox").append(html);
             }
         });
     }
