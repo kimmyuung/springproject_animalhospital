@@ -1,5 +1,8 @@
 info();
-function info(){
+let page = 0;
+let hname = "";
+let hdate = "";
+function info(page){
     $.ajax({
         url: "/map/info",
         method: "POST",
@@ -199,27 +202,410 @@ function avg(){
 }
 function file1(){
     document.all.file1.click();
-        var imagesPreview = function(input, placeToInsertImagePreview) {
-            if (input.files) {
-                var filesAmount = input.files.length;
-                for (i = 0; i < 1; i++) {
-                    var reader = new FileReader();
+      $(function() {
+                     $("#file1").on('change', function(){
+                     readURL(this);
+                     });
+                 });
+                 function readURL(input) {
+                     if (input.files && input.files[0]) {
+                         var reader = new FileReader();
+                         reader.onload = function (e) {
+                         $('#preview1').attr('src', e.target.result);
+                         }
+                         reader.readAsDataURL(input.files[0]);
+                     }
+                 }
 
-                    reader.onload = function(event) {
-                      $($("#preview1")).attr('src', event.target.result).appendTo(placeToInsertImagePreview);
-                    }
-
-                    reader.readAsDataURL(input.files[i]);
-                }
-            }
-
-        };
-
-        $('#preview1').on('change', function() {
-            imagesPreview(this, 'preview');
-        });
 
 }
 function file2(){
     document.all.file2.click();
+     $(function() {
+         $("#file2").on('change', function(){
+         readURL(this);
+         });
+     });
+     function readURL(input) {
+         if (input.files && input.files[0]) {
+             var reader = new FileReader();
+             reader.onload = function (e) {
+             $('#preview2').attr('src', e.target.result);
+             }
+             reader.readAsDataURL(input.files[0]);
+         }
+     }
+}
+
+function addreview(){
+
+        alert($("#loginmidbox").html());
+
+        if(document.getElementById('rcontent').value==""){
+            alert("내용을 입력해주세요");
+            return false;
+        }
+        let formData = new FormData();
+        formData.append('rcontent',document.getElementById('rcontent').value);
+        if(document.getElementById('file1').files[0]==null){
+
+        }else{
+            formData.append('rimg1',document.getElementById('file1').files[0]);
+        }
+
+        if(document.getElementById('file2').files[0]==null){
+
+        }else{
+            formData.append('rimg2',document.getElementById('file2').files[0]);
+        }
+
+        formData.append('rkind',ckind);
+        formData.append('rfac',cfac);
+        formData.append('rprice',cprice);
+
+       $.ajax({
+               url: "/map/addreview",
+               method: "POST",
+               data : formData ,
+               contentType: false,
+               processData: false ,
+               success: function(re){
+                alert(re);
+             }
+           });
+}
+
+
+function getreviewlist(page,hname,hdate){
+        this.hname=hname;
+        this.hdate=hdate;
+        this.page=page;
+
+           $.ajax({
+           		url: "/map/getreviewlist",
+           		 method: "POST",
+           		 data: {"hname":this.hname,"hdate":this.hdate,"page":this.page},
+           		success: function(reviewlist){
+           		console.log(reviewlist);
+           		    html = '';
+           		    let star = '';
+           		       let totalcount = 0;
+                            let ravg = '';
+                             let kindavg = '';
+                              let facavg = '';
+                               let priceavg = '';
+                            let kind=0;
+                            let fac =0;
+                            let price=0;
+           		  totalcount = reviewlist.data.length;
+                       if( reviewlist.data.length == 0 ){ // 검색 결과가 존재하지 않으면
+                                                 html +=
+                                                       '<div>'+
+                                                               '<div colspan="5">검색 결과가 존재하지 않습니다.</div> '+
+                                                        '</div>';
+                                       }else{
+                                               for( let i = 0 ; i<reviewlist.data.length ; i++ ){
+                                                  let sum  = (parseInt( reviewlist.data[i].rkind)+ parseInt( reviewlist.data[i].rfac)+parseInt( reviewlist.data[i].rprice))/3;
+
+                                                    kind+= parseInt( reviewlist.data[i].rkind);
+                                                     fac+= parseInt( reviewlist.data[i].rfac);
+                                                      price+= parseInt( reviewlist.data[i].rprice);
+                                                  if(sum<=1){
+                                                  star = '<img class="star1" src="/img/star2.png">'+
+                                                   '<img class="star1" src="/img/star1.png">'+
+                                                   '<img class="star1"  src="/img/star1.png">'+
+                                                   '<img class="star1" src="/img/star1.png">'+
+                                                   '<img class="star1" src="/img/star1.png">';
+                                                  }
+                                                  else if(1<sum<=2){
+                                                     star = '<img class="star1" src="/img/star2.png">'+
+                                                   '<img class="star1" src="/img/star2.png">'+
+                                                   '<img class="star1" src="/img/star1.png">'+
+                                                   '<img class="star1"  src="/img/star1.png">'+
+                                                   '<img class="star1" src="/img/star1.png">';
+                                                  }
+                                                  else if(2<sum<=3){
+                                                       star = '<img class="star1" src="/img/star2.png">'+
+                                                             '<img class="star1"  src="/img/star2.png">'+
+                                                             '<img class="star1" src="/img/star2.png">'+
+                                                             '<img class="star1"  src="/img/star1.png">'+
+                                                             '<img class="star1"  src="/img/star1.png">';
+                                                  }
+                                                  else if(3<sum<=4){
+                                                            star = '<img  class="star1" src="/img/star2.png">'+
+                                                               '<img class="star1" src="/img/star2.png">'+
+                                                               '<img  class="star1" src="/img/star2.png">'+
+                                                               '<img  class="star1" src="/img/star2.png">'+
+                                                               '<img class="star1"  src="/img/star1.png">';
+                                                  }
+                                                  else if(4<sum<=5){
+                                                         star = '<img  class="star1" src="/img/star2.png">'+
+                                                               '<img  class="star1" src="/img/star2.png">'+
+                                                               '<img  class="star1" src="/img/star2.png">'+
+                                                               '<img  class="star1" src="/img/star2.png">'+
+                                                               '<img  class="star1" src="/img/star2.png">';
+                                                  }
+
+                                               if(reviewlist.data[i].rimg2==null&&reviewlist.data[i].rimg1==null){
+                                                      html +=
+                                                        '<div class="row reviewlist" onclick="rview('+reviewlist.data[i].rno+')">'+
+                                                               '<div class="col-md-8"><div>'+reviewlist.data[i].mid+'</div> '+
+                                                               '<div id="mstar'+reviewlist.data[i].rno+'"></div> '+
+                                                               '<div>'+reviewlist.data[i].rcontent+'</div> </div>'+
+                                                        '</div>';
+                                               }
+                                               else if(reviewlist.data[i].rimg2==null&&reviewlist.data[i].rimg1!=null){
+                                                     html +=
+                                                           '<div class="row reviewlist" onclick="rview('+reviewlist.data[i].rno+')">'+
+                                                               '<div class="col-md-8"><div>'+reviewlist.data[i].mid+'</div> '+
+                                                               '<div id="mstar'+reviewlist.data[i].rno+'"></div> '+
+                                                               '<div>'+reviewlist.data[i].rcontent+'</div> </div>'+
+                                                               '<div class="col-md-2"><div><img src="/upload/'+reviewlist.data[i].rimg1+'"></div></div>'+
+                                                        '</div>';
+                                               }
+                                               else if(reviewlist.data[i].rimg2!=null&&reviewlist.data[i].rimg1==null){
+                                                     html +=
+                                                       '<div class="row reviewlist" onclick="rview('+reviewlist.data[i].rno+')">'+
+                                                          '<div class="col-md-8"><div>'+reviewlist.data[i].mid+'</div> '+
+                                                          '<div id="mstar'+reviewlist.data[i].rno+'"></div> '+
+                                                          '<div>'+reviewlist.data[i].rcontent+'</div> </div>'+
+                                                          '<div class="col-md-2"><div><img src="/upload/'+reviewlist.data[i].rimg2+'"></div></div>'+
+                                                   '</div>';
+                                               }
+                                               else{
+                                                     html +=
+                                                       '<div class="row reviewlist" onclick="rview('+reviewlist.data[i].rno+')">'+
+                                                               '<div class="col-md-8"><div>'+reviewlist.data[i].mid+'</div> '+
+                                                               '<div id="mstar'+reviewlist.data[i].rno+'"></div> '+
+                                                               '<div>'+reviewlist.data[i].rcontent+'</div> </div>'+
+                                                               '<div class="col-md-2"><div><img src="/upload/'+reviewlist.data[i].rimg1+'"></div></div>'+
+                                                               '<div class="col-md-2"><div><img src="/upload/'+reviewlist.data[i].rimg2+'"></div></div>'+
+                                                        '</div>';
+                                               }
+                                               }
+
+
+                           }
+                            let pagehtml = "";
+                                                if( page == 0 ){
+
+                                                }else{
+                                                    pagehtml +=
+                                                       '<li class="page-item"> '+
+                                                                   '<button class="page-link" onclick="getreviewlist('+ (page-1)  +')"> 이전 </button>'+
+                                                        '</li>';
+                                                 }
+                                                for( let i = reviewlist.startbtn ; i<=reviewlist.endbtn; i++ ){
+                                                   pagehtml +=
+                                                         '<li class="page-item"> '+
+                                                           '<button class="page-link" onclick="getreviewlist('+(i-1)+')"> '+i+' </button>'+
+                                                         '</li>';
+                                                }
+
+                                               if( page == reviewlist.totalpages -1 ){
+                                                    pagehtml +=
+                                                           '<li class="page-item"> '+
+                                                                       '<button class="page-link" onclick="getreviewlist('+ (page)  +')"> 다음 </button>'+
+                                                            '</li>';
+                                               }else{
+                                                    pagehtml +=
+                                                       '<li class="page-item"> '+
+                                                                   '<button class="page-link" onclick="getreviewlist('+ (page+1)  +')"> 다음 </button>'+
+                                                        '</li>';
+                                               }
+                        $("#table").html(html);
+                       $("#pagebtnbox").html(pagehtml);
+
+                       for( let i = 0 ; i<reviewlist.data.length ; i++ ){
+                            $("#mstar"+reviewlist.data[i].rno).html(star);
+                       }
+
+
+                let rk =	parseFloat(parseInt(kind)/parseInt(totalcount));
+               let rf =	parseFloat(parseInt(fac)/parseInt(totalcount));
+                let rp =	parseFloat(parseInt(price)/parseInt(totalcount));
+                        console.log(rk);
+                        if(rk<=0){
+                             kindavg = '<img  class="star1" src="/img/star1.png">'+
+                              '<img  class="star1" src="/img/star1.png">'+
+                              '<img  class="star1"  src="/img/star1.png">'+
+                              '<img class="star1" src="/img/star1.png">'+
+                              '<img class="star1" src="/img/star1.png">';
+                             }
+                           if(0<rk&&rk<=1.5){
+                                 kindavg = '<img  class="star1" src="/img/star2.png">'+
+                                  '<img  class="star1" src="/img/star1.png">'+
+                                  '<img  class="star1"  src="/img/star1.png">'+
+                                  '<img class="star1" src="/img/star1.png">'+
+                                  '<img class="star1" src="/img/star1.png">';
+                                 }
+                                 else if(1.5<rk&&rk<=2.5){
+                                 alert(rk);
+                                    kindavg = '<img class="star1" src="/img/star2.png">'+
+                                  '<img class="star1" src="/img/star2.png">'+
+                                  '<img class="star1" src="/img/star1.png">'+
+                                  '<img class="star1"  src="/img/star1.png">'+
+                                  '<img class="star1" src="/img/star1.png">';
+                                 }
+                                 else if(2.5<rk&&rk<=3.5){
+                                      kindavg = '<img class="star1" src="/img/star2.png">'+
+                                            '<img class="star1"  src="/img/star2.png">'+
+                                            '<img class="star1" src="/img/star2.png">'+
+                                            '<img class="star1"  src="/img/star1.png">'+
+                                            '<img class="star1"  src="/img/star1.png">';
+                                 }
+                                 else if(3.5<rk&&rk<=4.5){
+                                           kindavg = '<img class="star1"  src="/img/star2.png">'+
+                                              '<img class="star1" src="/img/star2.png">'+
+                                              '<img class="star1"  src="/img/star2.png">'+
+                                              '<img class="star1"  src="/img/star2.png">'+
+                                              '<img class="star1"  src="/img/star1.png">';
+                                 }
+                                 else if(4.5<rk&&rk<=5){
+                                        kindavg = '<img class="star1"  src="/img/star2.png">'+
+                                              '<img  class="star1" src="/img/star2.png">'+
+                                              '<img class="star1"  src="/img/star2.png">'+
+                                              '<img class="star1"  src="/img/star2.png">'+
+                                              '<img class="star1"  src="/img/star2.png">';
+                                 }
+
+                           if(rf<=0){
+                                         facavg = '<img  class="star1" src="/img/star1.png">'+
+                                          '<img  class="star1" src="/img/star1.png">'+
+                                          '<img  class="star1"  src="/img/star1.png">'+
+                                          '<img class="star1" src="/img/star1.png">'+
+                                          '<img class="star1" src="/img/star1.png">';
+                                         }
+                                else if(0<rf&&rf<=1.5){
+                                     facavg = '<img  class="star1" src="/img/star2.png">'+
+                                      '<img  class="star1" src="/img/star1.png">'+
+                                      '<img  class="star1"  src="/img/star1.png">'+
+                                      '<img class="star1" src="/img/star1.png">'+
+                                      '<img class="star1" src="/img/star1.png">';
+                                     }
+                                     else if(1.5<rf&&rf<=2.5){
+                                        facavg = '<img class="star1" src="/img/star2.png">'+
+                                      '<img class="star1" src="/img/star2.png">'+
+                                      '<img class="star1" src="/img/star1.png">'+
+                                      '<img class="star1"  src="/img/star1.png">'+
+                                      '<img class="star1" src="/img/star1.png">';
+                                     }
+                                     else if(2.5<rf&&rf<=3.5){
+                                          facavg = '<img class="star1" src="/img/star2.png">'+
+                                                '<img class="star1"  src="/img/star2.png">'+
+                                                '<img class="star1" src="/img/star2.png">'+
+                                                '<img class="star1"  src="/img/star1.png">'+
+                                                '<img class="star1"  src="/img/star1.png">';
+                                     }
+                                     else if(3.5<rf&&rf<=4.5){
+                                               facavg = '<img class="star1"  src="/img/star2.png">'+
+                                                  '<img class="star1" src="/img/star2.png">'+
+                                                  '<img class="star1"  src="/img/star2.png">'+
+                                                  '<img class="star1"  src="/img/star2.png">'+
+                                                  '<img class="star1"  src="/img/star1.png">';
+                                     }
+                                     else if(4.5<rf&&rf<=5){
+                                            facavg = '<img class="star1"  src="/img/star2.png">'+
+                                                  '<img  class="star1" src="/img/star2.png">'+
+                                                  '<img class="star1"  src="/img/star2.png">'+
+                                                  '<img class="star1"  src="/img/star2.png">'+
+                                                  '<img class="star1"  src="/img/star2.png">';
+                                     }
+                                  if(rp<=0){
+                                         priceavg = '<img  class="star1" src="/img/star1.png">'+
+                                          '<img  class="star1" src="/img/star1.png">'+
+                                          '<img  class="star1"  src="/img/star1.png">'+
+                                          '<img class="star1" src="/img/star1.png">'+
+                                          '<img class="star1" src="/img/star1.png">';
+                                         }
+                                  else if(0<rp&&rp<=1.5){
+                                       priceavg = '<img  class="star1" src="/img/star2.png">'+
+                                        '<img  class="star1" src="/img/star1.png">'+
+                                        '<img  class="star1"  src="/img/star1.png">'+
+                                        '<img class="star1" src="/img/star1.png">'+
+                                        '<img class="star1" src="/img/star1.png">';
+                                       }
+                                       else if(1.5<rp&&rp<=2.5){
+                                          priceavg = '<img class="star1" src="/img/star2.png">'+
+                                        '<img class="star1" src="/img/star2.png">'+
+                                        '<img class="star1" src="/img/star1.png">'+
+                                        '<img class="star1"  src="/img/star1.png">'+
+                                        '<img class="star1" src="/img/star1.png">';
+                                       }
+                                       else if(2.5<rp&&rp<=3.5){
+                                            priceavg = '<img class="star1" src="/img/star2.png">'+
+                                                  '<img class="star1"  src="/img/star2.png">'+
+                                                  '<img class="star1" src="/img/star2.png">'+
+                                                  '<img class="star1"  src="/img/star1.png">'+
+                                                  '<img class="star1"  src="/img/star1.png">';
+                                       }
+                                       else if(3.5<rp&&rp<=4.5){
+                                                 priceavg = '<img class="star1"  src="/img/star2.png">'+
+                                                    '<img class="star1" src="/img/star2.png">'+
+                                                    '<img class="star1"  src="/img/star2.png">'+
+                                                    '<img class="star1"  src="/img/star2.png">'+
+                                                    '<img class="star1"  src="/img/star1.png">';
+                                       }
+                                       else if(4.5<rp&&rp<=5){
+                                              priceavg = '<img class="star1"  src="/img/star2.png">'+
+                                                    '<img  class="star1" src="/img/star2.png">'+
+                                                    '<img class="star1"  src="/img/star2.png">'+
+                                                    '<img class="star1"  src="/img/star2.png">'+
+                                                    '<img class="star1"  src="/img/star2.png">';
+                                       }
+                            $("#rkind").html(kindavg);
+                            $("#rfac").html(facavg);
+                            $("#rprice").html(priceavg);
+
+                    let avg=parseFloat((rk+rf+rp)/3).toFixed(2);
+                                if(avg<=0){
+                                   ravg = '<img  class="star1" src="/img/star1.png">'+
+                                    '<img  class="star1" src="/img/star1.png">'+
+                                    '<img  class="star1"  src="/img/star1.png">'+
+                                    '<img class="star1" src="/img/star1.png">'+
+                                    '<img class="star1" src="/img/star1.png">';
+                                   }
+                                else if(0<avg&&avg<=1.5){
+                                       ravg = '<img  class="star1" src="/img/star2.png">'+
+                                        '<img  class="star1" src="/img/star1.png">'+
+                                        '<img  class="star1"  src="/img/star1.png">'+
+                                        '<img class="star1" src="/img/star1.png">'+
+                                        '<img class="star1" src="/img/star1.png">';
+                                       }
+                                       else if(1.5<avg&&avg<=2.5){
+                                          ravg = '<img class="star1" src="/img/star2.png">'+
+                                        '<img class="star1" src="/img/star2.png">'+
+                                        '<img class="star1" src="/img/star1.png">'+
+                                        '<img class="star1"  src="/img/star1.png">'+
+                                        '<img class="star1" src="/img/star1.png">';
+                                       }
+                                       else if(2.5<avg&&avg<=3.5){
+                                            ravg = '<img class="star1" src="/img/star2.png">'+
+                                                  '<img class="star1"  src="/img/star2.png">'+
+                                                  '<img class="star1" src="/img/star2.png">'+
+                                                  '<img class="star1"  src="/img/star1.png">'+
+                                                  '<img class="star1"  src="/img/star1.png">';
+                                       }
+                                       else if(3.5<avg&&avg<=4.5){
+                                                 ravg = '<img class="star1"  src="/img/star2.png">'+
+                                                    '<img class="star1" src="/img/star2.png">'+
+                                                    '<img class="star1"  src="/img/star2.png">'+
+                                                    '<img class="star1"  src="/img/star2.png">'+
+                                                    '<img class="star1"  src="/img/star1.png">';
+                                       }
+                                       else if(4.5<avg&&avg<=5.5){
+                                              ravg = '<img class="star1"  src="/img/star2.png">'+
+                                                    '<img  class="star1" src="/img/star2.png">'+
+                                                    '<img class="star1"  src="/img/star2.png">'+
+                                                    '<img class="star1"  src="/img/star2.png">'+
+                                                    '<img class="star1"  src="/img/star2.png">';
+                                       }
+                                        $("#ravg").html(ravg);
+                                        $("#totalavg").html(avg);
+
+           		}
+
+           	});
+
+
 }

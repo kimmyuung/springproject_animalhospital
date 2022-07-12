@@ -107,7 +107,7 @@ function panTo(lat, logt) {
 let hname;
 let hdate;
 let hcity;
-
+let searchresult;
 function search(){
     let keyword = $("#searchbar").val();
     if(keyword == "") {
@@ -118,12 +118,13 @@ function search(){
     alert("검색되는 숫자가 너무 많습니다. 다른 검색어로 검색해주세요"); return;
     $("#searchbar").val("");
     }
-    var pr = /^[가-힣]{3,}$/      //한글 3글자 이상
+    var pr = /^[가-힣]{3,20}$/      //한글 3글자 이상 20글자 이하
     if(pr.test(keyword)) {
     $.ajax({
             url: "/map/search",
             data: {"keyword" : keyword},
             success: function(result) {
+                 searchresult = result;
                 let searchlist= "";
                 if(result.length == 0){
                     searchlist = '<div>일치하는 병원이 없습니다.</div>'
@@ -133,7 +134,7 @@ function search(){
                         hdate = result[i].opendate;
                         hcity = result[i].city;
                         searchlist +=
-                            '<div Onclick="infopage()" style="cursor:pointer" >'+result[i].city+' '+result[i].name+'</div>';
+                           '<div Onclick="infopage('+i+')" style="cursor:pointer" >'+result[i].city+' '+result[i].name+'</div>';
                     }
                 }
                 $("#searchlist").html(searchlist);
@@ -162,15 +163,15 @@ function hview(i){
    });
 }
 
-function infopage(){
-    console.log(hname+" "+hdate);
+function infopage(i){
+    alert(searchresult[i].name+"hdate"+searchresult[i].opendate+"hcity"+searchresult[i].city);
     $.ajax({
         url: "/map/view",
         method: "GET",
-        data: {"hname":hname , "hdate": hdate ,"hcity" : hcity},
-         success: function(re){
-           location.href = "/map/infopage";
-         }
+        data: {"hname":searchresult[i].name , "hdate": searchresult[i].opendate, "hcity" : searchresult[i].city},
+        success: function(re){
+        location.href = "/map/infopage";
+        }
     });
 
 }
