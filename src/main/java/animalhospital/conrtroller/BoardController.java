@@ -43,7 +43,7 @@ public class BoardController {
     @ResponseBody
     public boolean write_save( BoardDto boardDto ){
         boardDto.setCno(2);
-        System.out.println("컨트롤러"+boardDto);
+        System.out.println("컨트롤러");
         boolean result = boardService.save( boardDto );
 
         return result;
