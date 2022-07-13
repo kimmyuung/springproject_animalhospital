@@ -85,7 +85,6 @@ public class BoardController {
     @GetMapping("/replydelete")
     @ResponseBody
     public boolean replydelete(@RequestParam("rno") int rno){
-        System.out.println("replydelete : " + rno);
         return boardService.replydelete(rno);
     }
     @GetMapping("/replyupdate")

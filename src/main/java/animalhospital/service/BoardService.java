@@ -445,7 +445,6 @@ public class BoardService {
     }
 
     public boolean rereplysave(int bno, int rindex, String reply) {
-        System.out.println(rindex);
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Object principal = authentication.getPrincipal();
         String mid = null;
