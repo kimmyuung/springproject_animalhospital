@@ -25,39 +25,50 @@ boardlist(0);
 
 function boardlist( page){
      this.current_page = page;
-//     console.log(this.current_page);
+    console.log(this.current_page);
     $.ajax({
     		url: "/board/blist",
     		 method: "POST",
     		 data: {"page":this.current_page},
     		success: function(boardlist){
-//    		console.log(boardlist);
-    		    html =
-    		        '<tr>'+
-                    '   <th>번호</th>'+
-                    '   <th>제목</th>'+
-                    '   <th>이미지</th>'+
-                    '</tr>';
+    		console.log(boardlist);
+    		    html ="";
+
 //    		    '<div><div>번호</div><div>제목</div><div>이미지</div></div>';
                 if( boardlist.blists.length == 0 ){ // 검색 결과가 존재하지 않으면
-                                          html +=
-                                                '<div>'+
-                                                        '<div colspan="5">검색 결과가 존재하지 않습니다.</div> '+
-                                                 '</div>';
-                                }else{
-                                        for( let i = 0 ; i<boardlist.blists.length ; i++ ){
-                                            html +=
-                                                '<tr type="button" data-bs-toggle="modal" data-bs-target="#myModal2" onclick="bview('+boardlist.blists[i].bno+')">'+
-                                                '   <td>'+boardlist.blists[i].bno+'</td>'+
-                                                '   <td>'+boardlist.blists[i].btitle+'</td>'+
-                                                '   <td><img src="/upload/'+boardlist.blists[i].bimg+'"></td>'+
-                                                '</tr>';
-//                                                    '<div type="button" data-bs-toggle="modal" data-bs-target="#myModal2" onclick="bview('+boardlist.blists[i].bno+')">'+
-//                                                            '<div>'+boardlist.blists[i].bno+'</div> '+
-//                                                            '<div>'+boardlist.blists[i].btitle+'</div> '+
-//                                                            '<div><img src="/upload/'+boardlist.blists[i].bimg+'"></div> '+
-//                                                     '</div>';
-                                        }
+                      html +=
+                                        '<div>'+
+                                                '<div colspan="5">검색 결과가 존재하지 않습니다.</div> '+
+                                         '</div>';
+                      }else{
+                                for( let i = 0 ; i<boardlist.blists.length ; i++ ){
+                                    if(i%3 ==0){
+
+                                         html +=
+                                            '<div class="row">'+
+                                                '<div class="col-md-4" type="button" data-bs-toggle="modal" data-bs-target="#myModal2" onclick="bview('+boardlist.blists[i].bno+')">'+
+                                                '   <div>'+boardlist.blists[i].bno+'</div>'+
+                                                '   <div>'+boardlist.blists[i].btitle+'</div>'+
+                                                '   <div><img src="/upload/'+boardlist.blists[i].bimg+'"></div>'+
+                                                '</div>';
+
+                                    }else if(i %3 ==1){
+                                        html +=
+                                            '<div class="col-md-4" type="button" data-bs-toggle="modal" data-bs-target="#myModal2" onclick="bview('+boardlist.blists[i].bno+')">'+
+                                            '   <div>'+boardlist.blists[i].bno+'</div>'+
+                                            '   <div>'+boardlist.blists[i].btitle+'</div>'+
+                                            '   <div><img src="/upload/'+boardlist.blists[i].bimg+'"></div>'+
+                                            '</div>';
+                                    }else if(i %3 ==2){
+                                        html +=
+                                                '<div class="col-md-4" type="button" data-bs-toggle="modal" data-bs-target="#myModal2" onclick="bview('+boardlist.blists[i].bno+')">'+
+                                                '   <div>'+boardlist.blists[i].bno+'</div>'+
+                                                '   <div>'+boardlist.blists[i].btitle+'</div>'+
+                                                '   <div><img src="/upload/'+boardlist.blists[i].bimg+'"></div>'+
+                                                '</div>'+
+                                            '</div>';
+                                    }
+                                }
                     }
                      let pagehtml = "";
                      if( page == 0 ){
@@ -71,7 +82,7 @@ function boardlist( page){
                                         '<button class="page-link" onclick="boardlist('+ (page-1)  +')"> 이전 </button>'+
                              '</li>';
                       }
-                        alert(boardlist.blists[0].endbtn);
+                      console.log(boardlist.blists);
                      for( let i = boardlist.blists[0].startbtn ; i<=boardlist.blists[0].endbtn; i++ ){
                         pagehtml +=
                               '<li class="page-item"> '+
