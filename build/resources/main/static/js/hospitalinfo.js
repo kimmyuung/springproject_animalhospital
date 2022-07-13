@@ -384,7 +384,6 @@ function getreviewlist(page,hname,hdate){
                                                                '<div class="col-md-2"><div><img src="/upload/'+reviewlist.data[i].rimg2+'"></div></div>'+
                                                         '</div>';
                                                }
-
                                                }
 
 
