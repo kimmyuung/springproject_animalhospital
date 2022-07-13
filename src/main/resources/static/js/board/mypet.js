@@ -13,18 +13,23 @@ function save(){
             contentType: false,
             processData: false ,
             success: function( re ){
-                alert("등록완료");
-                location.reload();
+                if(re){
+                     location.href ="list"
+
+                }else{
+                    alert("로그인 후 이용해주세요!")
+                }
             }
         });
         }
 }
+
 let current_page = 0;
 boardlist(0);
 
 
 function boardlist( page){
-     this.current_page = page;
+    this.current_page = page;
     console.log(this.current_page);
     $.ajax({
     		url: "/board/blist",
@@ -33,39 +38,55 @@ function boardlist( page){
     		success: function(boardlist){
     		console.log(boardlist);
     		    html ="";
-
 //    		    '<div><div>번호</div><div>제목</div><div>이미지</div></div>';
                 if( boardlist.blists.length == 0 ){ // 검색 결과가 존재하지 않으면
                       html +=
-                                        '<div>'+
-                                                '<div colspan="5">검색 결과가 존재하지 않습니다.</div> '+
-                                         '</div>';
+                        '<div>'+
+                            '<div colspan="5">검색 결과가 존재하지 않습니다.</div> '+
+                        '</div>';
                       }else{
                                 for( let i = 0 ; i<boardlist.blists.length ; i++ ){
                                     if(i%3 ==0){
 
                                          html +=
                                             '<div class="row">'+
-                                                '<div class="col-md-4" type="button" data-bs-toggle="modal" data-bs-target="#myModal2" onclick="bview('+boardlist.blists[i].bno+')">'+
-                                                '   <div>'+boardlist.blists[i].bno+'</div>'+
-                                                '   <div>'+boardlist.blists[i].btitle+'</div>'+
-                                                '   <div><img src="/upload/'+boardlist.blists[i].bimg+'"></div>'+
+                                                '<div class="card" style="width: 18rem;" >'+
+                                                '  <img src="/upload/'+boardlist.blists[i].bimg+'" class="card-img-top"  data-bs-toggle="modal" data-bs-target="#myModal2" onclick="bview('+boardlist.blists[i].bno+')">'+
+                                                '  <div class="card-body">'+
+                                                '    <h5 class="card-title">'+boardlist.blists[i].btitle+'</h5>'+
+                                                '    <p class="card-text d-flex justify-content-end">'+boardlist.blists[i].bdate+'</p>'+
+//                                                '    <p class="card-text">'+boardlist.blists[i].mid+boardlist.blists[i].bdate+'</p>'+
+//                                                '    <a href="#" class="btn btn-primary">Go somewhere</a>'+
+                                                '  </div>'+
                                                 '</div>';
+//                                                '<div class="col-md-3" type="button" data-bs-toggle="modal" data-bs-target="#myModal2" onclick="bview('+boardlist.blists[i].bno+')">'+
+//                                                '   <div>'+boardlist.blists[i].bno+'</div>'+
+//                                                '   <div>'+boardlist.blists[i].btitle+'</div>'+
+//                                                '   <div><img width="100%" height="30vh" src="/upload/'+boardlist.blists[i].bimg+'"></div>'+
+//                                                '</div>';
 
                                     }else if(i %3 ==1){
                                         html +=
-                                            '<div class="col-md-4" type="button" data-bs-toggle="modal" data-bs-target="#myModal2" onclick="bview('+boardlist.blists[i].bno+')">'+
-                                            '   <div>'+boardlist.blists[i].bno+'</div>'+
-                                            '   <div>'+boardlist.blists[i].btitle+'</div>'+
-                                            '   <div><img src="/upload/'+boardlist.blists[i].bimg+'"></div>'+
-                                            '</div>';
+                                            '<div class="card" style="width: 18rem;" >'+
+                                                '  <img src="/upload/'+boardlist.blists[i].bimg+'" class="card-img-top"  data-bs-toggle="modal" data-bs-target="#myModal2" onclick="bview('+boardlist.blists[i].bno+')">'+
+                                                '  <div class="card-body">'+
+                                                '    <h5 class="card-title">'+boardlist.blists[i].btitle+'</h5>'+
+                                                '    <p class="card-text d-flex justify-content-end">'+boardlist.blists[i].bdate+'</p>'+
+//                                                '    <p class="card-text">'+boardlist.blists[i].mid+boardlist.blists[i].bdate+'</p>'+
+//                                                '    <a href="#" class="btn btn-primary">Go somewhere</a>'+
+                                                '  </div>'+
+                                                '</div>';
                                     }else if(i %3 ==2){
                                         html +=
-                                                '<div class="col-md-4" type="button" data-bs-toggle="modal" data-bs-target="#myModal2" onclick="bview('+boardlist.blists[i].bno+')">'+
-                                                '   <div>'+boardlist.blists[i].bno+'</div>'+
-                                                '   <div>'+boardlist.blists[i].btitle+'</div>'+
-                                                '   <div><img src="/upload/'+boardlist.blists[i].bimg+'"></div>'+
-                                                '</div>'+
+                                                '<div class="card" style="width: 18rem;" >'+
+                                                '  <img src="/upload/'+boardlist.blists[i].bimg+'" class="card-img-top"  data-bs-toggle="modal" data-bs-target="#myModal2" onclick="bview('+boardlist.blists[i].bno+')">'+
+                                                '  <div class="card-body">'+
+                                                '    <h5 class="card-title">'+boardlist.blists[i].btitle+'</h5>'+
+                                                '    <p class="card-text d-flex justify-content-end">'+boardlist.blists[i].bdate+'</p>'+
+//                                                '    <p class="card-text">'+boardlist.blists[i].mid+boardlist.blists[i].bdate+'</p>'+
+//                                                '    <a href="#" class="btn btn-primary">Go somewhere</a>'+
+                                                '  </div>'+
+                                                '</div>';
                                             '</div>';
                                     }
                                 }
@@ -136,8 +157,8 @@ function bview(bno){
                 }
                 if(board.same="true"){
                     $("#deletebutton").html(
-                                        '<button type="button" class="btn btn-primary" onclick="bdelete('+board.bno+')">삭제</button>'
-                                     );
+                    '<button type="button" class="btn btn-primary" onclick="bdelete('+board.bno+')">삭제</button>'
+                 );
                 }
 
                 $("#bwiter").html( board.mid );

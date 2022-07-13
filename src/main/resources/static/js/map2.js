@@ -19,17 +19,18 @@ var mapContainer = document.getElementById('map'), // 지도를 표시할 div
 var map = new kakao.maps.Map(mapContainer, mapOption);
 
 var clusterer = new kakao.maps.MarkerClusterer({
-            map: map,
-            averageCenter: true, // 클러스터에 포함된 마커들의 평균 위치를 클러스터 마커 위치로 설정
-            minLevel: 8, // 클러스터 할 최소 지도 레벨
-            styles: [{
-                width : '53px', height : '52px',
-                background: 'url(cluster.png) no-repeat',
-                color: '#000',
-                textAlign: 'center',
-                lineHeight: '54px'
-            }]
-    });
+        map: map,
+        averageCenter: true, // 클러스터에 포함된 마커들의 평균 위치를 클러스터 마커 위치로 설정
+        minLevel: 8, // 클러스터 할 최소 지도 레벨
+        styles: [{
+            width : '53px',
+            height : '52px',
+            background: 'url(cluster.png) no-repeat',
+            color: '#000',
+            textAlign: 'center',
+            lineHeight: '54px'
+        }]
+});
 
 
 let html ="";
@@ -61,15 +62,15 @@ kakao.maps.event.addListener(map, 'idle', function() {
                     });
                      // 마커에 클릭 이벤트를 등록한다 (우클릭 : rightclick)
                     kakao.maps.event.addListener(marker, 'click', function() {
-                      $.ajax({
-                           url: "/map/view",
-                           method: "GET",
-                           data: {"hname":list[i].name , "hdate": list[i].opendate, "hcity" : list[i].city},
+                        $.ajax({
+                            url: "/map/view",
+                            method: "GET",
+                            data: {"hname":list[i].name , "hdate": list[i].opendate, "hcity" : list[i].city},
                             success: function(re){
                                  alert(re);
                                  location.href = "/map/infopage";
                             }
-                       });
+                        });
 
                     });
 

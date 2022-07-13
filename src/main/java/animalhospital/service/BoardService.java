@@ -168,10 +168,13 @@ public class BoardService {
 
 
         for( BoardEntity entity : boardEntitylist ){
+            System.out.println(entity);
             // 3. map 객체 생성
             Map<String, String> map = new HashMap<>();
             map.put("bno", entity.getBno()+"" );
             map.put("btitle", entity.getBtitle());
+            map.put("mid", entity.getMemberEntity().getMid());
+            map.put("bdate",  entity.getCreatedate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
             map.put("bimg", entity.getBoardimgEntities().get(0).getBimg());
             map.put( "startbtn" , startbtn+"" );
             map.put( "endbtn" , endbtn+"" );
@@ -182,7 +185,6 @@ public class BoardService {
         Map< String , List<  Map<String , String >  > > object = new HashMap<>();
 
         object.put( "blists" , Maplist );
-
         return  object;
     }
 
