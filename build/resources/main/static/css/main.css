@@ -1,3 +1,9 @@
+a {
+text-decoration: none;
+ color: inherit; /* 링크의 색상 제거 */
+  font-weight :bold;
+
+}
 .main_wrap{
     display: flex;
     flex-direction: column;
@@ -21,10 +27,9 @@ ul li {
     display: flex;
         justify-content: flex-start;
 
-
 }
 #logo{
-    width: 30%;
+        width: 100%
 
 }
 .menu{
@@ -32,6 +37,8 @@ ul li {
 }
 .menu_li {
     display: flex;
+        text-align: center;
+
 }
 .header_wrap{
 
@@ -41,9 +48,9 @@ ul li {
 
 }
 .b{
-    width: 200px;
-    font-size: 25px;
-    margin-top: 30px;
+    width: 150px;
+       font-size: 20px;
+       margin-top: 10px;
 
 }
 .bb {
@@ -53,6 +60,8 @@ ul li {
 .header_menu_b{
    width: 100%;
    display: flex;
+   align-items: center;
+       border-bottom: solid 2px #eee;
 
 
 }
@@ -119,3 +128,11 @@ ul li {
        top: 50px;
        z-index: 1;
    }
+.login {
+
+   float: right;
+}
+.login button {
+font-size: 15px;
+ margin-bottom: 40px;
+}

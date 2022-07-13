@@ -25,8 +25,9 @@ var clusterer = new kakao.maps.MarkerClusterer({
             minLevel: 8, // 클러스터 할 최소 지도 레벨
             styles: [{
                 width : '53px', height : '52px',
-                background: 'url(cluster.png) no-repeat',
-                color: '#000',
+                borderRadius : '20px',
+                background: 'rgba(255, 51, 204, .8)',
+                color: '#fff',
                 textAlign: 'center',
                 lineHeight: '54px'
             }]
