@@ -1,4 +1,4 @@
-info(0);
+info();
 let page = 0;
 let hname = "";
 let hdate = "";
@@ -8,9 +8,8 @@ function info(page){
         method: "POST",
         contentType : 'application/json' ,
         success: function(re){
-        console.log(re);
+        console.log(re)
             $("#hname").html(re.hname);
-            getreviewlist(page,re.hname,re.hdate);
       }
     });
 }
@@ -121,7 +120,6 @@ function fac(i){
     }
     avg();
 }
-
 function price(i){
     cprice=i;
     if(i==1){
@@ -166,35 +164,35 @@ avg();
 function avg(){
     cavg=((ckind+cfac+cprice)/3).toFixed(1);
     $("#avg").html(cavg);
-    if(cavg<=1){
+    if(i==1){
         document.getElementById("avg1").src =  "/img/star2.png";
         document.getElementById("avg2").src = "/img/star1.png";
         document.getElementById("avg3").src =  "/img/star1.png";
         document.getElementById("avg4").src = "/img/star1.png";
         document.getElementById("avg5").src = "/img/star1.png";
         }
-        else if(cavg<=2){
+        else if(i==2){
             document.getElementById("avg1").src =  "/img/star2.png";
             document.getElementById("avg2").src = "/img/star2.png";
            document.getElementById("avg3").src =  "/img/star1.png";
             document.getElementById("avg4").src = "/img/star1.png";
            document.getElementById("avg5").src = "/img/star1.png";
         }
-        else if(cavg<=3){
+        else if(i==3){
             document.getElementById("avg1").src =  "/img/star2.png";
             document.getElementById("avg2").src = "/img/star2.png";
            document.getElementById("avg3").src =  "/img/star2.png";
             document.getElementById("avg4").src = "/img/star1.png";
              document.getElementById("avg5").src = "/img/star1.png";
         }
-        else if(cavg<=4){
+        else if(i==4){
            document.getElementById("avg1").src = "/img/star2.png";
             document.getElementById("avg2").src = "/img/star2.png";
             document.getElementById("avg3").src = "/img/star2.png";
             document.getElementById("avg4").src = "/img/star2.png";
             document.getElementById("avg5").src = "/img/star1.png";
         }
-        else if(cavg<=5){
+        else if(i==5){
             document.getElementById("avg1").src = "/img/star2.png";
             document.getElementById("avg2").src = "/img/star2.png";
             document.getElementById("avg3").src = "/img/star2.png";
@@ -384,7 +382,6 @@ function getreviewlist(page,hname,hdate){
                                                                '<div class="col-md-2"><div><img src="/upload/'+reviewlist.data[i].rimg2+'"></div></div>'+
                                                         '</div>';
                                                }
-
                                                }
 
 

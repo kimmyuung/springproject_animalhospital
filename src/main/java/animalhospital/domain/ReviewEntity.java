@@ -11,7 +11,7 @@ import javax.persistence.*;
 @Builder@ToString
 @Entity
 @Table(name="review")
-public class ReviewEntity extends BaseTime {
+public class ReviewEntity extends BaseTime{
 
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY )

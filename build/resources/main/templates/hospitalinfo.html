@@ -20,18 +20,18 @@
     <div>
       <div class="row">
         <div class="col-md-4">
-            <h5>친절</h5>
-            <div id="rkind"></div>
+          <h5>친절</h5>
+          <div id="rkind"></div>
         </div>
         <div class="col-md-4">
-            <h5>시설</h5>
-            <div id="rfac"></div>
+          <h5>시설</h5>
+          <div id="rfac"></div>
         </div>
-          <div class="col-md-4">
-            <h5>가격</h5>
-            <div id="rprice"></div>
-          </div>
+        <div class="col-md-4">
+          <h5>가격</h5>
+          <div id="rprice"></div>
         </div>
+      </div>
       <h5>전체평점</h5>
       <span id="totalavg"></span>
       <div id="ravg"></div>
@@ -50,58 +50,58 @@
 
       </ul>
     </div>
-</div>
+  </div>
   <span id="loginmidbox" sec:authentication="name"></span>
 
-<div class="modal" id="myModal">
-  <div class="modal-dialog modal-xl">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">후기남기기</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <div>
-          친절
-          <div id="kind">
-
-          </div>
-          시설
-          <div id="fac"></div>
-          가격
-          <div id="price"></div>
+  <div class="modal" id="myModal">
+    <div class="modal-dialog modal-xl">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">후기남기기</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <div>
+        <div class="modal-body">
           <div>
-            <h3>전체평점: <span id="avg"></span></h3>
-            <img class="star" id="avg1" src="/img/star2.png">
-            <img class="star" id="avg2" src="/img/star2.png">
-            <img class="star" id="avg3" src="/img/star2.png">
-            <img class="star" id="avg4" src="/img/star2.png">
-            <img class="star" id="avg5" src="/img/star2.png">
+            친절
+            <div id="kind">
+
+            </div>
+            시설
+            <div id="fac"></div>
+            가격
+            <div id="price"></div>
+          </div>
+          <div>
+            <div>
+              <h3>전체평점: <span id="avg"></span></h3>
+              <img class="star" id="avg1" src="/img/star2.png">
+              <img class="star" id="avg2" src="/img/star2.png">
+              <img class="star" id="avg3" src="/img/star2.png">
+              <img class="star" id="avg4" src="/img/star2.png">
+              <img class="star" id="avg5" src="/img/star2.png">
+            </div>
+          </div>
+          <div>
+            <textarea id="rcontent" name='rcontent' cols="40" rows="5"></textarea>
+          </div>
+          <h3>후기사진등록</h3>
+          <div>
+            <input type=file id="file1" name='file1' style='display: none;'>
+            <img class="preview" id="preview1" src='/img/plusimg.jpg' onclick='file1()'>
+          </div>
+          <h3>영수증사진등록<span>(개인정보유출에 유의해 등록해주세요)</span></h3>
+          <div>
+            <input type=file id="file2" name='file2' style='display: none;'>
+            <img id="preview2" src='/img/plusimg.jpg' onclick='file2()'>
+          </div>
+          <div>
+            <button type="button" onclick="addreview()">등록하기</button>
           </div>
         </div>
-        <div>
-          <textarea id="rcontent" name='rcontent' cols="40" rows="5"></textarea>
-        </div>
-        <h3>후기사진등록</h3>
-        <div>
-          <input type=file id="file1" name='file1' style='display: none;'>
-          <img class="preview" id="preview1" src='/img/plusimg.jpg' onclick='file1()'>
-        </div>
-        <h3>영수증사진등록<span>(개인정보유출에 유의해 등록해주세요)</span></h3>
-        <div>
-          <input type=file id="file2" name='file2' style='display: none;'>
-          <img id="preview2" src='/img/plusimg.jpg' onclick='file2()'>
-        </div>
-        <div>
-            <button type="button" onclick="addreview()">등록하기</button>
-        </div>
       </div>
-    </div>
 
+    </div>
   </div>
-</div>
 </div>
 </div>
 

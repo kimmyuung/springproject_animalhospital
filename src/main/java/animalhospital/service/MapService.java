@@ -2,8 +2,6 @@ package animalhospital.service;
 
 import animalhospital.domain.ReviewEntity;
 import animalhospital.domain.ReviewRepository;
-import animalhospital.domain.board.BoardEntity;
-import animalhospital.domain.board.BoardimgEntity;
 import animalhospital.domain.member.MemberEntity;
 import animalhospital.domain.member.MemberRepository;
 import animalhospital.dto.OauthDto;
@@ -21,17 +19,15 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartRequest;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.transaction.Transactional;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
-import java.time.format.DateTimeFormatter;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
@@ -44,7 +40,6 @@ public class MapService {
 
     @Autowired
     private MemberRepository memberRepository;
-    
     public JSONArray map() {
         JSONArray animalhospital =  new JSONArray();
         try {
@@ -91,6 +86,7 @@ public class MapService {
 
     public JSONArray search (String keyword){
         JSONArray hospital = map();
+
         JSONArray jsonArray = new JSONArray();
         if(keyword != null) {
             for(int i = 0; i < hospital.length(); i++){
@@ -104,7 +100,6 @@ public class MapService {
 //        System.out.println(jsonArray);
         return jsonArray;
     }
-
     @Transactional
     public boolean addreview(ReviewDto reviewDto){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -212,6 +207,5 @@ public class MapService {
         System.out.println(jo);
         return jo;
     }
-
 
 }

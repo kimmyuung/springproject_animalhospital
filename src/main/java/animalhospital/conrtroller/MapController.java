@@ -66,7 +66,8 @@ public class MapController {
     }
 
     @GetMapping("/search")
-    public void search(HttpServletResponse response, @RequestParam("keyword") String keyword ){
+    public void search(HttpServletResponse response,
+                       @RequestParam("keyword") String keyword){
 
         try {
             response.setCharacterEncoding("UTF-8");

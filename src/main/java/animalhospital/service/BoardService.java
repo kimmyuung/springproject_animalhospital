@@ -1,9 +1,6 @@
 package animalhospital.service;
 
-import animalhospital.domain.board.BoardEntity;
-import animalhospital.domain.board.BoardRepository;
-import animalhospital.domain.board.BoardimgEntity;
-import animalhospital.domain.board.BoardimgRespository;
+import animalhospital.domain.board.*;
 import animalhospital.domain.member.MemberEntity;
 import animalhospital.domain.member.MemberRepository;
 import animalhospital.dto.BoardDto;
@@ -49,6 +46,10 @@ public class BoardService {
     @Autowired
     private MemberRepository memberRepository;
 
+    @Autowired
+    private ReplyRepository replyRepository;
+
+
     @Transactional
     public boolean save(BoardDto boardDto) {
 
@@ -60,11 +61,13 @@ public class BoardService {
         }else if( principal instanceof DefaultOAuth2User){
             Map<String , Object>  map =  ((DefaultOAuth2User) principal).getAttributes();
             if( map.get("response") != null ){
-                Map< String , Object> map2  = (Map<String, Object>) map.get("response");
+                Map< String , Object> map2  = (Map<String, Object>) map.get("response"); // 네이버
                 mid = map2.get("email").toString().split("@")[0];
-            }else{
-                Map< String , Object> map2  = (Map<String, Object>) map.get("kakao_account");
+            }else if(map.get("kakao_account") != null){
+                Map< String , Object> map2  = (Map<String, Object>) map.get("kakao_account"); // 카카오
                 mid = map2.get("email").toString().split("@")[0];
+            }else if(map.get("kakao_account") == null && map.get("response") == null ) { // 구글, 깃허브
+                mid = map.get("email").toString().split("@")[0];
             }
         }else{
             return false;
@@ -349,33 +352,166 @@ public class BoardService {
         return  null;
     }
 
-   /* 조회수 증가
-   @Transactional
-    public JSONObject getboard(int bno) { // 개별조회
-        // 조회수 증가처리
-        String ip = request.getRemoteAddr(); // 사용자의 ip 가져오기
-        Optional<BoardEntity> Optional = boardRepository.findById(bno);
-        BoardEntity entitiy = Optional.get();
-        // ip와 bno를 합쳐서 세션(서버내 저장소) 부여
-        Object com = request.getSession().getAttribute(ip+bno);
-        if(com == null) {
-            request.getSession().setAttribute(ip+bno, 1);
-            request.getSession().setMaxInactiveInterval(60*60*24); // 세션 허용시간 [ 초단위 ]
-            // 조회수 증가
-            entitiy.setBview(entitiy.getBview()+1);
+    @Transactional
+    public boolean replysave(int bno, String reply) {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Object principal = authentication.getPrincipal();
+        String mid = null;
+        if( principal instanceof UserDetails){
+            mid = ((UserDetails) principal).getUsername();
+        }else if( principal instanceof DefaultOAuth2User){
+            Map<String , Object>  map =  ((DefaultOAuth2User) principal).getAttributes();
+            if( map.get("response") != null ){
+                Map< String , Object> map2  = (Map<String, Object>) map.get("response");
+                mid = map2.get("email").toString().split("@")[0];
+            }else{
+                Map< String , Object> map2  = (Map<String, Object>) map.get("kakao_account");
+                mid = map2.get("email").toString().split("@")[0];
+            }
+        }else{
+            return false;
         }
-        JSONObject jo = new JSONObject();
-        jo.put("bno", entitiy.getBno());
-        jo.put("btitle", entitiy.getBtitle() );
-        jo.put("bcontent", entitiy.getBcontent());
-        jo.put("bview", entitiy.getBview());
-        jo.put("blike", entitiy.getBlike());
-        jo.put("bindate" , entitiy.getCreateDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm") ) );
-        jo.put("bmodate" , entitiy.getUpdateDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm") ) );
-        jo.put("mid", entitiy.getMemberEntity().getMid());
-        return jo;
+        if( mid != null  ) {
+            Optional<MemberEntity> optionalMember = memberRepository.findBymid(mid);
+            if (optionalMember.isPresent()) { // null 아니면
+                MemberEntity memberEntity = memberRepository.findBymid(mid).get();
+                BoardEntity boardEntity = boardRepository.findBybno(bno);
+                ReplyEntity replyEntity = ReplyEntity.builder()
+                        .rindex(0)
+                        .rcontent(reply)
+                        .boardEntity(boardEntity)
+                        .memberEntity(memberEntity)
+                        .build();
+                replyRepository.save(replyEntity);
+                return true;
+            } else { // 로그인이 안되어 있는경우
+
+                return false;
+            }
+        }
+        return false;
     }
-    */
+
+    public JSONArray getreply(int bno){
+//        System.out.println("login : " + request.getSession().getAttribute("login"));
+        OauthDto oauthDto= (OauthDto) request.getSession().getAttribute("login");
+        boolean same;
+
+        JSONArray jsonArray = new JSONArray();
+        List<ReplyEntity> replyEntities = replyRepository.findreply(bno);
+        for(ReplyEntity replyEntity : replyEntities){
+            JSONObject object = new JSONObject();
+            object.put("rno",replyEntity.getRno());
+            object.put("rindex",replyEntity.getRindex());
+            object.put("mid",replyEntity.getMemberEntity().getMid());
+            object.put("rcontent",replyEntity.getRcontent());
+            object.put("createdate",replyEntity.getCreatedate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+
+            if(oauthDto == null){
+                same = false;
+            }else if(replyEntity.getMemberEntity().getMid().equals(oauthDto.getMid())){
+                same =  true;
+            }else{
+                same =  false;
+            }
+            object.put("same",same);
+            jsonArray.put(object);
+        }
+        return jsonArray;
+    }
+    @Transactional
+    public boolean replydelete(int rno) {
+        ReplyEntity replyEntity = replyRepository.findByrno(rno);
+        replyRepository.delete(replyEntity);
+        return true;
+
+    }
+
+    @Transactional
+    public JSONObject replyupdate(int rno) {
+        ReplyEntity replyEntity = replyRepository.findByrno(rno);
+        JSONObject object = new JSONObject();
+        object.put("rno", replyEntity.getRno());
+        object.put("rcontent", replyEntity.getRcontent());
+        object.put("member", replyEntity.getMemberEntity());
+        object.put("board", replyEntity.getBoardEntity());
+        return object;
+    }
+    @Transactional
+    public boolean reupdate(int rno, String reply) {
+        ReplyEntity replyEntity = replyRepository.findByrno(rno);
+        replyEntity.setRcontent(reply);
+        return true;
+    }
+
+    public boolean rereplysave(int bno, int rindex, String reply) {
+        System.out.println(rindex);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Object principal = authentication.getPrincipal();
+        String mid = null;
+        if( principal instanceof UserDetails){
+            mid = ((UserDetails) principal).getUsername();
+        }else if( principal instanceof DefaultOAuth2User){
+            Map<String , Object>  map =  ((DefaultOAuth2User) principal).getAttributes();
+            if( map.get("response") != null ){
+                Map< String , Object> map2  = (Map<String, Object>) map.get("response");
+                mid = map2.get("email").toString().split("@")[0];
+            }else{
+                Map< String , Object> map2  = (Map<String, Object>) map.get("kakao_account");
+                mid = map2.get("email").toString().split("@")[0];
+            }
+        }else{
+            return false;
+        }
+        if( mid != null  ) {
+            Optional<MemberEntity> optionalMember = memberRepository.findBymid(mid);
+            if (optionalMember.isPresent()) { // null 아니면
+                MemberEntity memberEntity = memberRepository.findBymid(mid).get();
+                BoardEntity boardEntity = boardRepository.findBybno(bno);
+                ReplyEntity replyEntity = ReplyEntity.builder()
+                        .rindex(rindex)
+                        .rcontent(reply)
+                        .boardEntity(boardEntity)
+                        .memberEntity(memberEntity)
+                        .build();
+                replyRepository.save(replyEntity);
+                return true;
+            } else { // 로그인이 안되어 있는경우
+                return false;
+            }
+        }
+        return false;
+    }
+
+    public JSONArray getrereply(int bno, int rindex) {
+
+        OauthDto oauthDto= (OauthDto) request.getSession().getAttribute("login");
+        boolean same;
+
+        JSONArray jsonArray = new JSONArray();
+        List<ReplyEntity> replyEntities = replyRepository.findrereply(bno, rindex);
+        for(ReplyEntity replyEntity : replyEntities){
+            JSONObject object = new JSONObject();
+            object.put("rno",replyEntity.getRno());
+            object.put("rindex",replyEntity.getRindex());
+            object.put("mid",replyEntity.getMemberEntity().getMid());
+            object.put("rcontent",replyEntity.getRcontent());
+            object.put("createdate",replyEntity.getCreatedate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+            if(oauthDto == null){
+                same = false;
+            }else if(replyEntity.getMemberEntity().getMid().equals(oauthDto.getMid())){
+                same =  true;
+            }else{
+                same =  false;
+            }
+
+            object.put("same",same);
+            jsonArray.put(object);
+        }
+        return jsonArray;
+
+    }
 
    /* 조회수 증가
    @Transactional
