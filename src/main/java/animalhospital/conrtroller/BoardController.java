@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -69,6 +70,68 @@ public class BoardController {
 
 
         }catch( Exception e ){ System.out.println( e ); }
+    }
+
+    @PostMapping("/replysave")
+    @ResponseBody
+    public boolean replysave(@RequestParam("bno") int bno, @RequestParam("reply") String reply){
+        return boardService.replysave( bno, reply );
+    }
+
+    @GetMapping("/getreply")
+    @ResponseBody
+    public void getreply(@RequestParam("bno")int bno, HttpServletResponse response){
+        try {
+            JSONArray jsonArray = boardService.getreply(bno);
+            response.setCharacterEncoding("UTF-8");
+            response.setContentType("application/json");
+            response.getWriter().print(jsonArray);
+        } catch (IOException e) {
+            System.out.println("getreply error : "+e);
+        }
+    }
+
+    @GetMapping("/replydelete")
+    @ResponseBody
+    public boolean replydelete(@RequestParam("rno") int rno){
+        System.out.println("replydelete : " + rno);
+        return boardService.replydelete(rno);
+    }
+    @GetMapping("/replyupdate")
+    @ResponseBody
+    public void replyupdate(@RequestParam("rno") int rno,HttpServletResponse response){
+        try {
+            JSONObject object = boardService.replyupdate(rno);
+            response.setCharacterEncoding("UTF-8");
+            response.setContentType("application/json");
+            response.getWriter().print(object);
+//            System.out.println("replyupdate : " + object);
+        } catch (IOException e) {
+            System.out.println("replyupdate error : "+e);
+        }
+    }
+    @PostMapping("/reupdate")
+    @ResponseBody
+    public boolean reupdate(@RequestParam("rno") int rno, @RequestParam("reply") String reply){
+        return boardService.reupdate( rno, reply );
+    }
+
+    @PostMapping("/rereply")
+    @ResponseBody
+    public boolean rereply(@RequestParam("bno") int bno, @RequestParam("rindex") int rindex, @RequestParam("reply") String reply){
+        return boardService.rereplysave(bno, rindex, reply );
+    }
+    @GetMapping("/getrereply")
+    @ResponseBody
+    public void getrereply(@RequestParam("bno")int bno,@RequestParam("rindex") int rindex, HttpServletResponse response){
+        try {
+            JSONArray jsonArray = boardService.getrereply(bno,rindex);
+            response.setCharacterEncoding("UTF-8");
+            response.setContentType("application/json");
+            response.getWriter().print(jsonArray);
+        } catch (IOException e) {
+            System.out.println("getrereply error : "+e);
+        }
     }
 
 }

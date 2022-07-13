@@ -118,7 +118,7 @@ function search(){
     alert("검색되는 숫자가 너무 많습니다. 다른 검색어로 검색해주세요"); return;
     $("#searchbar").val("");
     }
-    var pr = /^[가-힣]{3,20}$/      //한글 3글자 이상 20글자 이하
+    var pr = /^[가-힣0-9 ]{3,20}$/      //한글 3글자 이상 20글자 이하
     if(pr.test(keyword)) {
     $.ajax({
             url: "/map/search",
