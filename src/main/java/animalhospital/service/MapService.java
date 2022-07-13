@@ -2,6 +2,8 @@ package animalhospital.service;
 
 import animalhospital.domain.ReviewEntity;
 import animalhospital.domain.ReviewRepository;
+import animalhospital.domain.board.BoardEntity;
+import animalhospital.domain.board.BoardimgEntity;
 import animalhospital.domain.member.MemberEntity;
 import animalhospital.domain.member.MemberRepository;
 import animalhospital.dto.OauthDto;
@@ -130,7 +132,7 @@ public class MapService {
                     MultipartFile file = reviewDto.getRimg1();
                     UUID uuid = UUID.randomUUID();
                     uuidfile = uuid.toString() + "_" + file.getOriginalFilename().replaceAll("_", "-");
-                    String dir = "C:\\Users\\504\\springproject_animalhospital\\src\\main\\resources\\static\\upload\\";
+                   String dir = "C:\\Users\\504\\springproject_animalhospital\\src\\main\\resources\\static\\upload\\";
                     String filepath = dir + uuidfile;
                     try {
                         file.transferTo(new File(filepath));
@@ -144,6 +146,7 @@ public class MapService {
                     UUID uuid2 = UUID.randomUUID();
                     uuidfile2 = uuid2.toString() + "_" + file2.getOriginalFilename().replaceAll("_", "-");
                     String dir2 = "C:\\Users\\504\\springproject_animalhospital\\src\\main\\resources\\static\\upload\\";
+
                     String filepath2 = dir2 + uuidfile2;
 
                     try {
@@ -174,10 +177,13 @@ public class MapService {
         Pageable pageable = PageRequest.of( page , 3 , Sort.by( Sort.Direction.DESC , "rno")    ); // SQL : limit 와 동일 한 기능처리
         Page<ReviewEntity> reviewEntity =  reviewRepository.findByrlist(hname, hdate,pageable);
         JSONArray jsonArray = new JSONArray();
-        String same = null;
         for (ReviewEntity entity : reviewEntity ) {
+            String same = null;
             JSONObject object = new JSONObject();
-            if(entity.getMemberEntity().getMid().equals(loginDto.getMid())){
+            if(loginDto == null){
+                same =  same="false";
+            }
+            else if(entity.getMemberEntity().getMid().equals(loginDto.getMid())){
                 same="true";
             }
             else{ same="false";}
@@ -207,5 +213,87 @@ public class MapService {
         System.out.println(jo);
         return jo;
     }
+
+    @Transactional
+    public boolean rdelete( int rno ){
+        System.out.println(rno);
+        ReviewEntity reviewEntity =  reviewRepository.findById( rno ).get();
+        if( reviewEntity != null ){
+            // 해당 엔티티를 삭제
+            reviewRepository.delete( reviewEntity );
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+
+    public JSONObject getreview( int rno ){
+
+        Optional<ReviewEntity> optionalReviewEntity =  reviewRepository.findById(rno );
+        ReviewEntity reviewEntity =  optionalReviewEntity.get();
+
+        // 2.  해당 엔티티 -> json 객체 변환
+        JSONObject object = new JSONObject();
+        // 1. json에 엔티티 필드 값 넣기
+        object.put("rno" ,reviewEntity.getRno());
+        object.put("rcontent" , reviewEntity.getRcontent());
+        object.put("mid" , reviewEntity.getMemberEntity().getMid());
+        object.put("rimg1" , reviewEntity.getRimg1());
+        object.put("rimg2" , reviewEntity.getRimg2());
+        object.put("rkind" , reviewEntity.getRkind());
+        object.put("rfac" , reviewEntity.getRfac());
+        object.put("rprice" , reviewEntity.getRprice());
+
+        return object;
+    }
+
+    @Transactional
+    public boolean updatereview( ReviewDto reviewDto ){
+        Optional<ReviewEntity> optional
+                =  reviewRepository.findById( reviewDto.getRno() );
+        ReviewEntity reviewEntity =  optional.get();
+
+            String uuidfile = null;
+            String uuidfile2 = null;
+
+            if(reviewDto.getRimg1()!=null) {
+                MultipartFile file = reviewDto.getRimg1();
+                UUID uuid = UUID.randomUUID();
+                uuidfile = uuid.toString() + "_" + file.getOriginalFilename().replaceAll("_", "-");
+                // String dir = "C:\\Users\\504\\springproject_animalhospital\\src\\main\\resources\\static\\upload\\";
+                String dir = "C:\\Users\\82102\\IdeaProjects\\springproject_animalhospital\\src\\main\\resources\\static\\upload\\";
+                String filepath = dir + uuidfile;
+                try {
+                    file.transferTo(new File(filepath));
+                    reviewEntity.setRimg1(uuidfile);
+                } catch (Exception e) {
+                    System.out.println("파일저장실패 : " + e);
+                }
+            }
+            if(reviewDto.getRimg2()!=null) {
+                MultipartFile file2 = reviewDto.getRimg2();
+                UUID uuid2 = UUID.randomUUID();
+                uuidfile2 = uuid2.toString() + "_" + file2.getOriginalFilename().replaceAll("_", "-");
+                //String dir2 = "C:\\Users\\504\\springproject_animalhospital\\src\\main\\resources\\static\\upload\\";
+                String dir2 = "C:\\Users\\82102\\IdeaProjects\\springproject_animalhospital\\src\\main\\resources\\static\\upload\\";
+                String filepath2 = dir2 + uuidfile2;
+
+                try {
+                    file2.transferTo(new File(filepath2));
+                    reviewEntity.setRimg2(uuidfile2);
+                } catch (Exception e) {
+                    System.out.println("파일저장실패 : " + e);
+                }
+            }
+        reviewEntity.setRcontent(reviewDto.getRcontent());
+        reviewEntity.setRkind(reviewDto.getRkind());
+        reviewEntity.setRfac(reviewDto.getRfac());
+        reviewEntity.setRprice(reviewDto.getRprice());
+
+        return true;
+    }
+
+
 
 }

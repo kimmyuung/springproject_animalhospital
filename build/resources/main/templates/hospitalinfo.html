@@ -51,7 +51,6 @@
       </ul>
     </div>
   </div>
-  <span id="loginmidbox" sec:authentication="name"></span>
 
   <div class="modal" id="myModal">
     <div class="modal-dialog modal-xl">
@@ -94,7 +93,7 @@
             <input type=file id="file2" name='file2' style='display: none;'>
             <img id="preview2" src='/img/plusimg.jpg' onclick='file2()'>
           </div>
-          <div>
+          <div id="addbox">
             <button type="button" onclick="addreview()">등록하기</button>
           </div>
         </div>
