@@ -53,8 +53,13 @@ public class MapController {
         object.put("hname",hname);
         object.put("hdate",hdate);
         object.put("hcity",hcity);
-        object.put("score",crawlDto.getScroe());
-        object.put("link",crawlDto.getLink());
+        if(crawlDto.getScroe()==null) {
+            object.put("score","다음 리뷰 없음");
+            object.put("link","#");
+        } else {
+            object.put("score",crawlDto.getScroe());
+            object.put("link",crawlDto.getLink());
+        }
 
 
         try {
@@ -66,9 +71,9 @@ public class MapController {
         }
     }
 
-    @GetMapping("/search")
-    public void search(HttpServletResponse response,
-                       @RequestParam("keyword") String keyword){
+
+        @GetMapping("/search")
+    public void search(HttpServletResponse response, @RequestParam("keyword") String keyword){
 
         try {
             response.setCharacterEncoding("UTF-8");

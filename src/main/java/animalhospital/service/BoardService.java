@@ -28,6 +28,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import java.io.File;
+import java.io.IOException;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
@@ -324,29 +325,19 @@ public class BoardService {
         String inflearnUrl = "https://search.daum.net/search?nil_suggest=btn&w=tot&DA=SBC&q="+code;
         Connection conn = Jsoup.connect(inflearnUrl);
         try {
-            Document document = conn.get();
-            Elements title = document.getElementsByClass("inner_tit").first().select("b");
-            Elements score = document.getElementsByClass("f_eb");
-//            String title2 = title.text().replaceAll(" ","");
-            String score2 = score.first().text();
-            String link = score.attr("href");
             CrawlDto crawlDto = new CrawlDto();
-            crawlDto.setScroe(score2);
-            crawlDto.setLink(link);
-//            String link = score.attr("href");
+            Document document = conn.get();
+            // Elements title = document.getElementsByClass("inner_tit").first().select("b");
+            try{ // try catch 두번 쓴 이유 크롤링 null값 예외처리 위해서
+                Elements score = document.getElementsByClass("txt_info ").first().getElementsByClass("f_eb");
+//            String title2 = title.text().replaceAll(" ","");
+                String  score2 = score.first().text();
+                String  link = score.attr("href");
+                crawlDto.setScroe(score2);
+                crawlDto.setLink(link);
+            }catch (NullPointerException e){}
             return  crawlDto;
-            //  System.out.println(code);
-
-//            if(name.equals(title2)) {
-//                Elements score = document.getElementsByClass("f_eb");
-//                String score2 = score.first().text();
-//                String link = score.attr("href");
-//            }
-
-
-//
-
-        } catch (Exception e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
         return  null;
