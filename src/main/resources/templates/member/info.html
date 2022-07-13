@@ -10,6 +10,12 @@
 </head>
 <body>
 <h3> 회원정보 확인 페이지 </h3>
+<!-- 인증 객체의 이름 -->
+<p th:text="${#authentication.name}"></p>
+<!--인증 객체 호출 -->
+<p th:text="${#authentication.principal}"></p>
+<!--인증된 권한(Role) 확인 -->
+<p th:text="${#authentication.authorities}"></p>
 
 <!--
 <div class="container">

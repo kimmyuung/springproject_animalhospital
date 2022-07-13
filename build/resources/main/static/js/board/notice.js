@@ -6,10 +6,11 @@ function getnotice(page) {
 
 this.current_page = page;
 
+
 $.ajax({
     url : '/board/getnotice',
     type : 'post',
-    data : {"page" : current_page },
+    data : {"page" : page },
     success : function(json) {
     let html = "<tr> <th> 제목 </th> <th> 내용 </th><th> 작성날짜 </th><th>비고</th> </tr>";
     let html2 = '';
@@ -74,8 +75,8 @@ $.ajax({
            else { alert("등록 실패");}
            }
     });
-    $("#btitle").val() = "";
-    $("#bcontent").val() = "";
+    $("#btitle").val("");
+    $("#bcontent").val("");
 }
 
 

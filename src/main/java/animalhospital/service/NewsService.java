@@ -35,7 +35,7 @@ public class NewsService {
                 object.put("nlink",nlink);
                 object.put("imgurl",imgurl);
                 jsonArray.put(object);
-        }
+            }
 
 //            System.out.println(imgurl);
 //            System.out.println(nlink);
