@@ -82,6 +82,7 @@ public class BoardController {
     @ResponseBody
     public void getreply(@RequestParam("bno")int bno, HttpServletResponse response){
         try {
+            System.out.println("getreplycc");
             JSONArray jsonArray = boardService.getreply(bno);
             response.setCharacterEncoding("UTF-8");
             response.setContentType("application/json");

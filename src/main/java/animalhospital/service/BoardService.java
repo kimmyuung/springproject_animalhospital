@@ -237,7 +237,9 @@ public class BoardService {
         Optional<BoardEntity> optionalRoomEntity =  boardRepository.findById(bno );
         BoardEntity boardEntity =  optionalRoomEntity.get();
         String same = null;
-        if(boardEntity.getMemberEntity().getMid().equals(loginDto.getMid())){
+        if(loginDto == null){
+            same = "false";
+        }else if(boardEntity.getMemberEntity().getMid().equals(loginDto.getMid())){
             same =  "true";
         }else{
             same =  "false";
@@ -385,10 +387,11 @@ public class BoardService {
     }
 
     public JSONArray getreply(int bno){
+        System.out.println("getreply");
 //        System.out.println("login : " + request.getSession().getAttribute("login"));
         OauthDto oauthDto= (OauthDto) request.getSession().getAttribute("login");
+        System.out.println(oauthDto);
         boolean same;
-
         JSONArray jsonArray = new JSONArray();
         List<ReplyEntity> replyEntities = replyRepository.findreply(bno);
         for(ReplyEntity replyEntity : replyEntities){

@@ -85,8 +85,10 @@ function boardlist( page){
     	});
 
 }
-let  bno= 0;
+let bno = 0;
+let bnum;
 function bview(bno){
+    bnum = bno;
         $.ajax({
             url : "/board/getboard" ,
             method : "GET",
@@ -95,7 +97,7 @@ function bview(bno){
                 let imgtag = "";
                 // 응답받은 데이터를 모달에 데이터 넣기
                 console.log( board.mid  );
-
+                 getreply();
                 for( let i = 0 ; i<board.bimglist.length ; i++ ){
                      if( i == 0 ){  // 첫번째 이미지만 active 속성 추가
                         imgtag +=
@@ -316,7 +318,6 @@ function getrereply(rno){
                         '</div>';
                 }
             }
-            console.log(rereplyhtml);
             $("#"+ rindex).html(rereplyhtml);
         }
     });
