@@ -29,6 +29,8 @@ public class MemberEntity {
     private String mname;
     private String memail;
     private String oauth;   // 일반회원=인증  /oauth 구분용
+    private String hname;
+    private String hdate;
 
     // DB에 저장될 enum 타입 설정
     // @Enumerated( EnumType.ORDINAL ) // 열거형 인덱스 번호
