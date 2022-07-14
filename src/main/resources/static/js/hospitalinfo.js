@@ -683,6 +683,7 @@ function get(rno){
     $.ajax({
          url : "/map/getreview" ,
          data : { "rno" : rno } ,
+          async: false,
          success: function( review ){
          console.log("get"+review.rimg1);
          console.log("get"+review.rimg2);
@@ -692,11 +693,10 @@ function get(rno){
             price(parseInt(review.rprice));
             if(review.rimg1!=null){
             $('#preview1').attr('src','/upload/'+review.rimg1);
-            $("#file1").val(review.rimg1);
             }
             if(review.rimg2!=null){
             $('#preview2').attr('src','/upload/'+review.rimg2);
-            $("#file2").val(review.rimg2);}
+            }
          }
         });
 }
