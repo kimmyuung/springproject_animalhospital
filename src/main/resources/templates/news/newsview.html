@@ -6,61 +6,21 @@
     <link  href="/css/special/news.css" rel="stylesheet">
 </head>
 <body>
-<h3>뉴스입니다</h3>
 
 <!--<div id="newsbox"></div>-->
 <div class="main_wrap">
 
-    <div class="header_wrap">
-
-        <div class="header_menu_b">
-            <div class="logo_wrap">
-                <a href="/"> <img id="logo" src="/img/logo2.png"> </a>
-            </div>
-
-            <ul class="header_ul_menu">
-
-                <li class="menu_li">
-                    <div class="menu b">
-                        <a href="/board/notice"> 고객센터 </a>
-                    </div>
-                </li>
-                <li class="menu_li">
-                    <div class="menu b">
-                        <a href="/board/list"> 게시판 </a>
-                    </div>
-                </li>
-                <li class="menu_li">
-                    <div class="menu b">
-                        <a href="/special/videosearch"> 영상 갤러리 </a>
-                    </div>
-                </li>
-                <li class="menu_li">
-                    <div class="menu b">
-                        <a href="/news"> 뉴스 </a>
-                    </div>
-                </li>
-
-
-            </ul>
-            <div class="menu b  login">
-                <button>로그인</button>
-            </div>
-        </div>
-
-    </div>
-    <div class="newswrap">
+    <div th:replace="header.html :: header"></div>
+<div class="newswrap">
 
 
 
-    </div>
+</div>
 
 
 </div>
 
 <script  src="http://code.jquery.com/jquery-latest.min.js"></script>
 <script type="text/javascript" src="/js/special/news.js"></script>
-
-
 </body>
 </html>

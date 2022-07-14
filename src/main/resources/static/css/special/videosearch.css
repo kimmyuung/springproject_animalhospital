@@ -1,0 +1,26 @@
+#videobox{
+    display: flex;
+    flex-direction: row;
+    border: 1px solid #eee;
+    background-color: #fff;
+    box-shadow: 5px 3px 3px #eee;
+    width: 85%;
+    margin: 0 auto;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-bottom : 20px;
+}
+#ytplayer {
+    margin : 20px 10px 20px 10px;
+    border-radius:10px;
+}
+
+#searcharea{
+      width: 100%;
+      display: flex;
+      justify-content: center;
+}
+select {
+width : 85%
+border-radius: 15px;
+}
