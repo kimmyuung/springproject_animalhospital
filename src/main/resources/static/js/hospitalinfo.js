@@ -696,7 +696,7 @@ function get(rno){
             }
             if(review.rimg2!=null){
             $('#preview2').attr('src','/upload/'+review.rimg2);
-            }
+            }//
          }
         });
 }
