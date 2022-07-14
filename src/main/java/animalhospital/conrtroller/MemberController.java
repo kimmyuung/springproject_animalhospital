@@ -1,5 +1,6 @@
 package animalhospital.conrtroller;
 
+import animalhospital.dto.ItemDto;
 import animalhospital.dto.OauthDto;
 import animalhospital.service.ItemService;
 import animalhospital.service.MemberService;
@@ -35,39 +36,42 @@ public class MemberController {
 
     @GetMapping("/getitem")
     @ResponseBody
-    public void getitemlist(HttpServletResponse response) {
+    public void getitem(HttpServletResponse response,  @RequestParam("sno") int sno) {
         try{
             response.setCharacterEncoding("UTF-8");
             response.setContentType("application/json");
-            response.getWriter().print("test");
+            response.getWriter().print(itemService.getitem(sno));
         }catch(Exception e){e.printStackTrace();}
     }
+
+    @GetMapping("/getitemlist")
+    @ResponseBody
+    public void getitemlist(HttpServletResponse response, @RequestParam("page") int page) {
+        try{
+            response.setCharacterEncoding("UTF-8");
+            response.setContentType("application/json");
+            response.getWriter().print(itemService.itemlist(page));
+        }catch(Exception e){e.printStackTrace();}
+    }
+
     @PostMapping("/itemsave")
     @ResponseBody
-    public boolean itemsave(@RequestParam("stitle") String stitle,
-                            @RequestParam("scontent") String scontent,
-                             @RequestParam("sprice") int sprice
-    ) {
-        System.out.println(stitle + "  " + scontent + "  " + sprice);
-        return false;
+    public boolean itemsave(ItemDto itemDto) {
+        System.out.println(itemDto.getStitle() +" :  "+ itemDto.getScontent());
+        return itemService.itemsave(itemDto);
     }
 
     @PutMapping("/itemupdate")
     @ResponseBody
-    public boolean itemupdate( @RequestParam("sno") int sno,
-            @RequestParam("stitle") String stitle,
-            @RequestParam("scontent") String scontent,
-            @RequestParam("sprice") int sprice
-                              )
+    public boolean itemupdate( @RequestParam("sno") int sno, ItemDto itemDto )
     {
-        System.out.println(stitle + "  " + scontent + "  " + sprice);
-        return false;
+        return itemService.itemupdate(sno, itemDto);
     }
 
     @DeleteMapping("/deleteitem")
     @ResponseBody
     public boolean deleteitem(@RequestParam("sno") int sno) {
-        return false;
+        return itemService.itemdelete(sno);
     }
 
 
