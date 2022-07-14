@@ -194,6 +194,48 @@ public class BoardService {
         return  object;
     }
 
+    public Map< String , List<Map<String , String >>> boartiplist(int page ) // 인수
+    {
+
+        System.out.println( "페이지 :"+ page );
+
+        Page<BoardEntity> boardEntitylist = null ;
+        Pageable pageable = PageRequest.of( page , 5 , Sort.by( Sort.Direction.DESC , "bno")    );
+
+        int cno=3;
+        List<  Map<String , String >  > Maplist = new ArrayList<>();
+
+        boardEntitylist =boardRepository.findByblist(cno, pageable);
+        System.out.println( boardEntitylist.toString() );
+
+        int btncount = 5;
+        int startbtn  = ( page / btncount ) * btncount + 1;
+        int endhtn = startbtn + btncount -1;
+        if( endhtn > boardEntitylist.getTotalPages() ) endhtn = boardEntitylist.getTotalPages();
+
+
+        for( BoardEntity entity : boardEntitylist ){
+            // 3. map 객체 생성
+            Map<String, String> map = new HashMap<>();
+            map.put("bno", entity.getBno()+"" );
+            map.put("btitle", entity.getBtitle());
+            map.put("bimg", entity.getBoardimgEntities().get(0).getBimg());
+            map.put( "startbtn" , startbtn+"" );
+            map.put("mid", entity.getMemberEntity().getMid());
+            map.put("bdate",  entity.getCreatedate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+            map.put( "endhtn" , endhtn+"" );
+            map.put( "totalpages" , boardEntitylist.getTotalPages()+"" );
+            // 4. 리스트 넣기
+            Maplist.add(map);
+        }
+        Map< String , List<  Map<String , String >  > > object = new HashMap<>();
+
+        object.put( "blists" , Maplist );
+
+        return  object;
+    }
+
+
     public JSONObject getnoticelist(int page) {
         JSONObject jo = new JSONObject();
         // Pageable : 페이지처리 관련 인터페이스
@@ -252,6 +294,7 @@ public class BoardService {
         object.put("bno" ,boardEntity.getBno());
         object.put("btitle" , boardEntity.getBtitle());
         object.put("bcontent" , boardEntity.getBcontent());
+        object.put("modifiedate" , boardEntity.getModifiedate());
         object.put("mid" , boardEntity.getMemberEntity().getMid());
         object.put("same" , same);
 

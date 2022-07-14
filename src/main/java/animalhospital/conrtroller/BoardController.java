@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
@@ -20,8 +21,20 @@ public class BoardController {
     @Autowired
     private BoardService boardService;
 
+    @Autowired
+    private HttpServletRequest request;
+
     @GetMapping("/list")
     public String list(){ return "board/mypetlist";}
+
+    @GetMapping("/tiplist")
+    public String tiplist(){ return "board/tiplist";}
+
+    @GetMapping("/tipview/{bno}")
+    public String tipview( @PathVariable("bno") int bno){
+        request.getSession().setAttribute("bno", bno);
+        System.out.println(bno);
+        return "board/tipview";}
 
 
 
@@ -35,12 +48,31 @@ public class BoardController {
         return result;
     }
 
+    @PostMapping("/tipwrite")
+    @ResponseBody
+    public boolean tipwrite_save( BoardDto boardDto ){
+        boardDto.setCno(3);
+        boolean result = boardService.save( boardDto );
+
+        return result;
+    }
+
     @PostMapping("/blist")
     @ResponseBody
     public Map< String , List<Map<String , String >>>
     blist(HttpServletResponse response, @RequestParam("page") int page ){
         return boardService.boardlist(page);
     }
+
+
+    @PostMapping("/btiplist")
+    @ResponseBody
+    public Map< String , List<Map<String , String >>>
+    btiplist(HttpServletResponse response, @RequestParam("page") int page ){
+        return boardService.boartiplist(page);
+    }
+
+
 
     @GetMapping("/getboard")
     public void getboard( @RequestParam("bno") int bno ,
@@ -132,6 +164,20 @@ public class BoardController {
             response.getWriter().print(jsonArray);
         } catch (IOException e) {
             System.out.println("getrereply error : "+e);
+        }
+    }
+
+
+    @GetMapping("/gettipboard")
+    public void gettipboard( HttpServletResponse response){
+        int bno =  (Integer) request.getSession().getAttribute("bno");
+
+        try {
+            response.setCharacterEncoding("UTF-8");
+            response.setContentType("application/json");
+            response.getWriter().print(boardService.getboard(  bno   ));
+        }catch( Exception e ){
+            System.out.println( e );
         }
     }
 

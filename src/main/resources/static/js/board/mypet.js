@@ -59,11 +59,6 @@ function boardlist( page){
 //                                                '    <a href="#" class="btn btn-primary">Go somewhere</a>'+
                                                 '  </div>'+
                                                 '</div>';
-//                                                '<div class="col-md-3" type="button" data-bs-toggle="modal" data-bs-target="#myModal2" onclick="bview('+boardlist.blists[i].bno+')">'+
-//                                                '   <div>'+boardlist.blists[i].bno+'</div>'+
-//                                                '   <div>'+boardlist.blists[i].btitle+'</div>'+
-//                                                '   <div><img width="100%" height="30vh" src="/upload/'+boardlist.blists[i].bimg+'"></div>'+
-//                                                '</div>';
 
                                     }else if(i %3 ==1){
                                         html +=
