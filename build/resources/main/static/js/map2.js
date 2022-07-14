@@ -25,8 +25,9 @@ var clusterer = new kakao.maps.MarkerClusterer({
             minLevel: 8, // 클러스터 할 최소 지도 레벨
             styles: [{
                 width : '53px', height : '52px',
-                background: 'url(cluster.png) no-repeat',
-                color: '#000',
+                borderRadius : '20px',
+                background: 'rgba(255, 51, 204, .8)',
+                color: '#fff',
                 textAlign: 'center',
                 lineHeight: '54px'
             }]
@@ -34,7 +35,7 @@ var clusterer = new kakao.maps.MarkerClusterer({
 
 kakao.maps.event.addListener(map, 'idle', function() {
 
-
+let j =0;
 let html ="";
 clusterer.clear(); // 클러스터 클리어
 
@@ -66,28 +67,31 @@ clusterer.clear(); // 클러스터 클리어
 
                      // 마커에 클릭 이벤트를 등록한다 (우클릭 : rightclick)
                     kakao.maps.event.addListener(marker, 'click', function() {
+
                      $.ajax({
-                              url: "/map/view",
-                               method: "GET",
-                                data: {"hname":list[i].name , "hdate": list[i].opendate, "hcity" : list[i].city},
-                                success: function(re){
-                                alert(re);
-                                location.href = "/map/infopage";
-                                         }
-                                    });
+                                                url: "/map/view",
+                                                method: "GET",
+                                                data: {"hname":list[i].name , "hdate": list[i].opendate, "hcity" : list[i].city},
+                                                success: function(re){
+                                                     alert(re);
+                                                     location.href = "/map/infopage";
+                                                }
+                                            });
+                         clusterer.addMarker(marker);
+                                        });
 
+                                        if(j<10){
+                                            html +=
+                                                '<div class="hospital-box" onclick="hview('+i+')" >'+
+                                                    '<div >'+list[i].name+'</div>'+
+                                                    '<div>'+list[i].addr+'</div>'+
+                                                '</div>';
+                                            j++;
+                                        }
+                                    }//if end
 
-                    });
-                    html +=
-                        '<div class="hospital-box" onclick="hview('+i+')" >'+
-                            '<div>'+list[i].name+'</div>'+
-                            '<div>'+list[i].addr+'</div>'+
-                        '</div>';
+     } //if end
 
-
-            clusterer.addMarker(marker);
-         } //if end
-         }
          console.log( clusterer );
          $("#sidebar").html( html );
 
@@ -118,7 +122,7 @@ function search(){
     alert("검색되는 숫자가 너무 많습니다. 다른 검색어로 검색해주세요"); return;
     $("#searchbar").val("");
     }
-    var pr = /^[가-힣]{3,20}$/      //한글 3글자 이상 20글자 이하
+    var pr = /^[가-힣0-9 ]{3,20}$/      //한글 3글자 이상 20글자 이하
     if(pr.test(keyword)) {
     $.ajax({
             url: "/map/search",

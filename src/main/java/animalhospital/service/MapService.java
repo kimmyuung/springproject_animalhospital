@@ -2,8 +2,6 @@ package animalhospital.service;
 
 import animalhospital.domain.ReviewEntity;
 import animalhospital.domain.ReviewRepository;
-import animalhospital.domain.board.BoardEntity;
-import animalhospital.domain.board.BoardimgEntity;
 import animalhospital.domain.member.MemberEntity;
 import animalhospital.domain.member.MemberRepository;
 import animalhospital.dto.OauthDto;
@@ -30,7 +28,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
@@ -105,7 +102,6 @@ public class MapService {
     }
     @Transactional
     public boolean addreview(ReviewDto reviewDto){
-        System.out.println(reviewDto.getRcontent());
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Object principal = authentication.getPrincipal();
         String mid = null;
@@ -114,11 +110,13 @@ public class MapService {
         }else if( principal instanceof DefaultOAuth2User){
             Map<String , Object> map =  ((DefaultOAuth2User) principal).getAttributes();
             if( map.get("response") != null ){
-                Map< String , Object> map2  = (Map<String, Object>) map.get("response");
+                Map< String , Object> map2  = (Map<String, Object>) map.get("response"); // 네이버
                 mid = map2.get("email").toString().split("@")[0];
-            }else{
-                Map< String , Object> map2  = (Map<String, Object>) map.get("kakao_account");
+            }else if(map.get("kakao_account") != null){
+                Map< String , Object> map2  = (Map<String, Object>) map.get("kakao_account"); // 카카오
                 mid = map2.get("email").toString().split("@")[0];
+            }else if(map.get("kakao_account") == null && map.get("response") == null ) { // 구글, 깃허브
+                mid = map.get("email").toString().split("@")[0];
             }
         }else{
             return false;
@@ -134,7 +132,8 @@ public class MapService {
                     MultipartFile file = reviewDto.getRimg1();
                     UUID uuid = UUID.randomUUID();
                     uuidfile = uuid.toString() + "_" + file.getOriginalFilename().replaceAll("_", "-");
-                   String dir = "C:\\Users\\504\\springproject_animalhospital\\src\\main\\resources\\static\\upload\\";
+                    String dir = "C:\\Users\\504\\springproject_animalhospital\\src\\main\\resources\\static\\upload\\";
+                    // 배포용도 필요하다...
                     String filepath = dir + uuidfile;
                     try {
                         file.transferTo(new File(filepath));
@@ -148,7 +147,9 @@ public class MapService {
                     UUID uuid2 = UUID.randomUUID();
                     uuidfile2 = uuid2.toString() + "_" + file2.getOriginalFilename().replaceAll("_", "-");
                     String dir2 = "C:\\Users\\504\\springproject_animalhospital\\src\\main\\resources\\static\\upload\\";
-
+                   // 배포용도 있어야 한다...
+                    //  // String dir = "/home/ec2-user/app/springweb2/build/resources/main/static/upload/";
+                    //  // "/home/{유저명}/{폴더명}/{git프로젝트명}/build/resources/main/static/";
                     String filepath2 = dir2 + uuidfile2;
 
                     try {
@@ -179,6 +180,7 @@ public class MapService {
         Pageable pageable = PageRequest.of( page , 3 , Sort.by( Sort.Direction.DESC , "rno")    ); // SQL : limit 와 동일 한 기능처리
         Page<ReviewEntity> reviewEntity =  reviewRepository.findByrlist(hname, hdate,pageable);
         JSONArray jsonArray = new JSONArray();
+        ;
         for (ReviewEntity entity : reviewEntity ) {
             String same = null;
             JSONObject object = new JSONObject();
@@ -215,32 +217,6 @@ public class MapService {
         System.out.println(jo);
         return jo;
     }
-
-    public JSONObject getreviewstarlist( String hname,String hdate){
-        JSONObject jo = new JSONObject();
-        List<ReviewEntity> reviewEntity =  reviewRepository.findBylist(hname, hdate);
-        JSONArray jsonArray = new JSONArray();
-        for (ReviewEntity entity : reviewEntity ) {
-            JSONObject object = new JSONObject();
-            object.put("rno", entity.getRno());
-            object.put("rcontent", entity.getRcontent());
-            object.put("rmodifiedate", entity.getModifiedate());
-            object.put("rcreatedate", entity.getCreatedate());
-            object.put("rkind", entity.getRkind());
-            object.put("rfac", entity.getRfac());
-            object.put("rprice", entity.getRprice());
-            object.put("rimg1", entity.getRimg1());
-            object.put("rimg2", entity.getRimg2());
-            object.put("mid", entity.getMemberEntity().getMid());
-            jsonArray.put(object);
-        }
-        jo.put("data", jsonArray);
-        System.out.println(jo);
-        return jo;
-    }
-
-
-
     @Transactional
     public boolean rdelete( int rno ){
         System.out.println(rno);
@@ -281,36 +257,38 @@ public class MapService {
                 =  reviewRepository.findById( reviewDto.getRno() );
         ReviewEntity reviewEntity =  optional.get();
 
-            String uuidfile = null;
-            String uuidfile2 = null;
+        String uuidfile = null;
+        String uuidfile2 = null;
 
-            if(reviewDto.getRimg1()!=null) {
-                MultipartFile file = reviewDto.getRimg1();
-                UUID uuid = UUID.randomUUID();
-                uuidfile = uuid.toString() + "_" + file.getOriginalFilename().replaceAll("_", "-");
-                String dir = "C:\\Users\\504\\springproject_animalhospital\\src\\main\\resources\\static\\upload\\";
-                String filepath = dir + uuidfile;
-                try {
-                    file.transferTo(new File(filepath));
-                    reviewEntity.setRimg1(uuidfile);
-                } catch (Exception e) {
-                    System.out.println("파일저장실패 : " + e);
-                }
+        if(reviewDto.getRimg1()!=null) {
+            MultipartFile file = reviewDto.getRimg1();
+            UUID uuid = UUID.randomUUID();
+            uuidfile = uuid.toString() + "_" + file.getOriginalFilename().replaceAll("_", "-");
+            // String dir = "C:\\Users\\504\\springproject_animalhospital\\src\\main\\resources\\static\\upload\\";
+            String dir = "C:\\Users\\82102\\IdeaProjects\\springproject_animalhospital\\src\\main\\resources\\static\\upload\\";
+            String filepath = dir + uuidfile;
+            try {
+                file.transferTo(new File(filepath));
+                reviewEntity.setRimg1(uuidfile);
+            } catch (Exception e) {
+                System.out.println("파일저장실패 : " + e);
             }
-            if(reviewDto.getRimg2()!=null) {
-                MultipartFile file2 = reviewDto.getRimg2();
-                UUID uuid2 = UUID.randomUUID();
-                uuidfile2 = uuid2.toString() + "_" + file2.getOriginalFilename().replaceAll("_", "-");
-                String dir2 = "C:\\Users\\504\\springproject_animalhospital\\src\\main\\resources\\static\\upload\\";
-                String filepath2 = dir2 + uuidfile2;
+        }
+        if(reviewDto.getRimg2()!=null) {
+            MultipartFile file2 = reviewDto.getRimg2();
+            UUID uuid2 = UUID.randomUUID();
+            uuidfile2 = uuid2.toString() + "_" + file2.getOriginalFilename().replaceAll("_", "-");
+            String dir2 = "C:\\Users\\504\\springproject_animalhospital\\src\\main\\resources\\static\\upload\\";
+            //String dir2 = "C:\\Users\\82102\\IdeaProjects\\springproject_animalhospital\\src\\main\\resources\\static\\upload\\";
+            String filepath2 = dir2 + uuidfile2;
 
-                try {
-                    file2.transferTo(new File(filepath2));
-                    reviewEntity.setRimg2(uuidfile2);
-                } catch (Exception e) {
-                    System.out.println("파일저장실패 : " + e);
-                }
+            try {
+                file2.transferTo(new File(filepath2));
+                reviewEntity.setRimg2(uuidfile2);
+            } catch (Exception e) {
+                System.out.println("파일저장실패 : " + e);
             }
+        }
         reviewEntity.setRcontent(reviewDto.getRcontent());
         reviewEntity.setRkind(reviewDto.getRkind());
         reviewEntity.setRfac(reviewDto.getRfac());
@@ -318,7 +296,4 @@ public class MapService {
 
         return true;
     }
-
-
-
 }

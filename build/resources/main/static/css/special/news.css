@@ -1,16 +1,17 @@
+@import "/css/main.css";
 .newswrap{
     display:flex;
     flex-direction:column;
     justify-content:center;
+    margin: 0 auto;
 }
 .newsbox{
-      display: flex;
-      flex-direction: row;
-      width: 50%;
-
-      border-top: 1px solid #999;
-      border-bottom: 1px solid #999;
-      justify-content: space-around;
+       display: flex;
+         flex-direction: row;
+         width: 100%;
+         border-top: 1px solid #999;
+         border-bottom: 1px solid #999;
+         justify-content: space-around;
 
 }
 .content_wrap {

@@ -28,6 +28,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import java.io.File;
+import java.io.IOException;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
@@ -179,6 +180,8 @@ public class BoardService {
             map.put("btitle", entity.getBtitle());
             map.put("bimg", entity.getBoardimgEntities().get(0).getBimg());
             map.put( "startbtn" , startbtn+"" );
+            map.put("mid", entity.getMemberEntity().getMid());
+            map.put("bdate",  entity.getCreatedate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
             map.put( "endhtn" , endhtn+"" );
             map.put( "totalpages" , boardEntitylist.getTotalPages()+"" );
             // 4. 리스트 넣기
@@ -236,7 +239,9 @@ public class BoardService {
         Optional<BoardEntity> optionalRoomEntity =  boardRepository.findById(bno );
         BoardEntity boardEntity =  optionalRoomEntity.get();
         String same = null;
-        if(boardEntity.getMemberEntity().getMid().equals(loginDto.getMid())){
+        if(loginDto == null){
+            same = "false";
+        }else if(boardEntity.getMemberEntity().getMid().equals(loginDto.getMid())){
             same =  "true";
         }else{
             same =  "false";
@@ -324,29 +329,19 @@ public class BoardService {
         String inflearnUrl = "https://search.daum.net/search?nil_suggest=btn&w=tot&DA=SBC&q="+code;
         Connection conn = Jsoup.connect(inflearnUrl);
         try {
-            Document document = conn.get();
-            Elements title = document.getElementsByClass("inner_tit").first().select("b");
-            Elements score = document.getElementsByClass("f_eb");
-//            String title2 = title.text().replaceAll(" ","");
-            String score2 = score.first().text();
-            String link = score.attr("href");
             CrawlDto crawlDto = new CrawlDto();
-            crawlDto.setScroe(score2);
-            crawlDto.setLink(link);
-//            String link = score.attr("href");
+            Document document = conn.get();
+            // Elements title = document.getElementsByClass("inner_tit").first().select("b");
+            try{ // try catch 두번 쓴 이유 크롤링 null값 예외처리 위해서
+                Elements score = document.getElementsByClass("txt_info ").first().getElementsByClass("f_eb");
+//            String title2 = title.text().replaceAll(" ","");
+                String  score2 = score.first().text();
+                String  link = score.attr("href");
+                crawlDto.setScroe(score2);
+                crawlDto.setLink(link);
+            }catch (NullPointerException e){}
             return  crawlDto;
-            //  System.out.println(code);
-
-//            if(name.equals(title2)) {
-//                Elements score = document.getElementsByClass("f_eb");
-//                String score2 = score.first().text();
-//                String link = score.attr("href");
-//            }
-
-
-//
-
-        } catch (Exception e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
         return  null;
@@ -363,11 +358,13 @@ public class BoardService {
         }else if( principal instanceof DefaultOAuth2User){
             Map<String , Object>  map =  ((DefaultOAuth2User) principal).getAttributes();
             if( map.get("response") != null ){
-                Map< String , Object> map2  = (Map<String, Object>) map.get("response");
+                Map< String , Object> map2  = (Map<String, Object>) map.get("response"); // 네이버
                 mid = map2.get("email").toString().split("@")[0];
-            }else{
-                Map< String , Object> map2  = (Map<String, Object>) map.get("kakao_account");
+            }else if(map.get("kakao_account") != null){
+                Map< String , Object> map2  = (Map<String, Object>) map.get("kakao_account"); // 카카오
                 mid = map2.get("email").toString().split("@")[0];
+            }else if(map.get("kakao_account") == null && map.get("response") == null ) { // 구글, 깃허브
+                mid = map.get("email").toString().split("@")[0];
             }
         }else{
             return false;
@@ -394,10 +391,11 @@ public class BoardService {
     }
 
     public JSONArray getreply(int bno){
+        System.out.println("getreply");
 //        System.out.println("login : " + request.getSession().getAttribute("login"));
         OauthDto oauthDto= (OauthDto) request.getSession().getAttribute("login");
+        System.out.println(oauthDto);
         boolean same;
-
         JSONArray jsonArray = new JSONArray();
         List<ReplyEntity> replyEntities = replyRepository.findreply(bno);
         for(ReplyEntity replyEntity : replyEntities){
@@ -455,11 +453,13 @@ public class BoardService {
         }else if( principal instanceof DefaultOAuth2User){
             Map<String , Object>  map =  ((DefaultOAuth2User) principal).getAttributes();
             if( map.get("response") != null ){
-                Map< String , Object> map2  = (Map<String, Object>) map.get("response");
+                Map< String , Object> map2  = (Map<String, Object>) map.get("response"); // 네이버
                 mid = map2.get("email").toString().split("@")[0];
-            }else{
-                Map< String , Object> map2  = (Map<String, Object>) map.get("kakao_account");
+            }else if(map.get("kakao_account") != null){
+                Map< String , Object> map2  = (Map<String, Object>) map.get("kakao_account"); // 카카오
                 mid = map2.get("email").toString().split("@")[0];
+            }else if(map.get("kakao_account") == null && map.get("response") == null ) { // 구글, 깃허브
+                mid = map.get("email").toString().split("@")[0];
             }
         }else{
             return false;
