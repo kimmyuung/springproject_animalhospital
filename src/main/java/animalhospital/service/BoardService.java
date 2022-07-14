@@ -180,6 +180,8 @@ public class BoardService {
             map.put("btitle", entity.getBtitle());
             map.put("bimg", entity.getBoardimgEntities().get(0).getBimg());
             map.put( "startbtn" , startbtn+"" );
+            map.put("mid", entity.getMemberEntity().getMid());
+            map.put("bdate",  entity.getCreatedate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
             map.put( "endhtn" , endhtn+"" );
             map.put( "totalpages" , boardEntitylist.getTotalPages()+"" );
             // 4. 리스트 넣기
@@ -356,11 +358,13 @@ public class BoardService {
         }else if( principal instanceof DefaultOAuth2User){
             Map<String , Object>  map =  ((DefaultOAuth2User) principal).getAttributes();
             if( map.get("response") != null ){
-                Map< String , Object> map2  = (Map<String, Object>) map.get("response");
+                Map< String , Object> map2  = (Map<String, Object>) map.get("response"); // 네이버
                 mid = map2.get("email").toString().split("@")[0];
-            }else{
-                Map< String , Object> map2  = (Map<String, Object>) map.get("kakao_account");
+            }else if(map.get("kakao_account") != null){
+                Map< String , Object> map2  = (Map<String, Object>) map.get("kakao_account"); // 카카오
                 mid = map2.get("email").toString().split("@")[0];
+            }else if(map.get("kakao_account") == null && map.get("response") == null ) { // 구글, 깃허브
+                mid = map.get("email").toString().split("@")[0];
             }
         }else{
             return false;
@@ -449,11 +453,13 @@ public class BoardService {
         }else if( principal instanceof DefaultOAuth2User){
             Map<String , Object>  map =  ((DefaultOAuth2User) principal).getAttributes();
             if( map.get("response") != null ){
-                Map< String , Object> map2  = (Map<String, Object>) map.get("response");
+                Map< String , Object> map2  = (Map<String, Object>) map.get("response"); // 네이버
                 mid = map2.get("email").toString().split("@")[0];
-            }else{
-                Map< String , Object> map2  = (Map<String, Object>) map.get("kakao_account");
+            }else if(map.get("kakao_account") != null){
+                Map< String , Object> map2  = (Map<String, Object>) map.get("kakao_account"); // 카카오
                 mid = map2.get("email").toString().split("@")[0];
+            }else if(map.get("kakao_account") == null && map.get("response") == null ) { // 구글, 깃허브
+                mid = map.get("email").toString().split("@")[0];
             }
         }else{
             return false;

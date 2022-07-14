@@ -1,4 +1,4 @@
-info();
+info(0);
 let page = 0;
 let hname = "";
 let hdate = "";
@@ -8,8 +8,9 @@ function info(page){
         method: "POST",
         contentType : 'application/json' ,
         success: function(re){
-        console.log(re)
+        console.log(re);
             $("#hname").html(re.hname);
+            getreviewlist(page,re.hname,re.hdate);
       }
     });
 }
@@ -120,6 +121,7 @@ function fac(i){
     }
     avg();
 }
+
 function price(i){
     cprice=i;
     if(i==1){
@@ -164,35 +166,35 @@ avg();
 function avg(){
     cavg=((ckind+cfac+cprice)/3).toFixed(1);
     $("#avg").html(cavg);
-    if(i==1){
+    if(cavg<=1){
         document.getElementById("avg1").src =  "/img/star2.png";
         document.getElementById("avg2").src = "/img/star1.png";
         document.getElementById("avg3").src =  "/img/star1.png";
         document.getElementById("avg4").src = "/img/star1.png";
         document.getElementById("avg5").src = "/img/star1.png";
         }
-        else if(i==2){
+        else if(cavg<=2){
             document.getElementById("avg1").src =  "/img/star2.png";
             document.getElementById("avg2").src = "/img/star2.png";
            document.getElementById("avg3").src =  "/img/star1.png";
             document.getElementById("avg4").src = "/img/star1.png";
            document.getElementById("avg5").src = "/img/star1.png";
         }
-        else if(i==3){
+        else if(cavg<=3){
             document.getElementById("avg1").src =  "/img/star2.png";
             document.getElementById("avg2").src = "/img/star2.png";
            document.getElementById("avg3").src =  "/img/star2.png";
             document.getElementById("avg4").src = "/img/star1.png";
              document.getElementById("avg5").src = "/img/star1.png";
         }
-        else if(i==4){
+        else if(cavg<=4){
            document.getElementById("avg1").src = "/img/star2.png";
             document.getElementById("avg2").src = "/img/star2.png";
             document.getElementById("avg3").src = "/img/star2.png";
             document.getElementById("avg4").src = "/img/star2.png";
             document.getElementById("avg5").src = "/img/star1.png";
         }
-        else if(i==5){
+        else if(cavg<=5){
             document.getElementById("avg1").src = "/img/star2.png";
             document.getElementById("avg2").src = "/img/star2.png";
             document.getElementById("avg3").src = "/img/star2.png";
@@ -239,8 +241,6 @@ function file2(){
 
 function addreview(){
 
-        alert($("#loginmidbox").html());
-
         if(document.getElementById('rcontent').value==""){
             alert("내용을 입력해주세요");
             return false;
@@ -271,6 +271,7 @@ function addreview(){
                processData: false ,
                success: function(re){
                 alert(re);
+                location.reload();
              }
            });
 }
@@ -289,6 +290,7 @@ function getreviewlist(page,hname,hdate){
            		console.log(reviewlist);
            		    html = '';
            		    let star = '';
+           		    let mupdate = '';
            		       let totalcount = 0;
                             let ravg = '';
                              let kindavg = '';
@@ -306,6 +308,14 @@ function getreviewlist(page,hname,hdate){
                                        }else{
                                                for( let i = 0 ; i<reviewlist.data.length ; i++ ){
                                                   let sum  = (parseInt( reviewlist.data[i].rkind)+ parseInt( reviewlist.data[i].rfac)+parseInt( reviewlist.data[i].rprice))/3;
+
+                                                       if(reviewlist.data[i].same=="true"){
+                                                        mupdate='<button type="button"  data-bs-toggle="modal" data-bs-target="#myModal" onclick="updatemodal('+reviewlist.data[i].rno+')">수정</button>'+
+                                                        '<button type="button" onclick="rdelete('+reviewlist.data[i].rno+')">삭제</button>';
+                                                       }
+                                                       else{
+                                                         mupdate='';
+                                                       }
 
                                                     kind+= parseInt( reviewlist.data[i].rkind);
                                                      fac+= parseInt( reviewlist.data[i].rfac);
@@ -351,6 +361,7 @@ function getreviewlist(page,hname,hdate){
                                                         '<div class="row reviewlist" onclick="rview('+reviewlist.data[i].rno+')">'+
                                                                '<div class="col-md-8"><div>'+reviewlist.data[i].mid+'</div> '+
                                                                '<div id="mstar'+reviewlist.data[i].rno+'"></div> '+
+                                                               '<div id="mupdate'+reviewlist.data[i].rno+'"></div> '+
                                                                '<div>'+reviewlist.data[i].rcontent+'</div> </div>'+
                                                         '</div>';
                                                }
@@ -359,6 +370,7 @@ function getreviewlist(page,hname,hdate){
                                                            '<div class="row reviewlist" onclick="rview('+reviewlist.data[i].rno+')">'+
                                                                '<div class="col-md-8"><div>'+reviewlist.data[i].mid+'</div> '+
                                                                '<div id="mstar'+reviewlist.data[i].rno+'"></div> '+
+                                                               '<div id="mupdate'+reviewlist.data[i].rno+'"></div> '+
                                                                '<div>'+reviewlist.data[i].rcontent+'</div> </div>'+
                                                                '<div class="col-md-2"><div><img src="/upload/'+reviewlist.data[i].rimg1+'"></div></div>'+
                                                         '</div>';
@@ -368,6 +380,7 @@ function getreviewlist(page,hname,hdate){
                                                        '<div class="row reviewlist" onclick="rview('+reviewlist.data[i].rno+')">'+
                                                           '<div class="col-md-8"><div>'+reviewlist.data[i].mid+'</div> '+
                                                           '<div id="mstar'+reviewlist.data[i].rno+'"></div> '+
+                                                          '<div id="mupdate'+reviewlist.data[i].rno+'"></div> '+
                                                           '<div>'+reviewlist.data[i].rcontent+'</div> </div>'+
                                                           '<div class="col-md-2"><div><img src="/upload/'+reviewlist.data[i].rimg2+'"></div></div>'+
                                                    '</div>';
@@ -377,6 +390,7 @@ function getreviewlist(page,hname,hdate){
                                                        '<div class="row reviewlist" onclick="rview('+reviewlist.data[i].rno+')">'+
                                                                '<div class="col-md-8"><div>'+reviewlist.data[i].mid+'</div> '+
                                                                '<div id="mstar'+reviewlist.data[i].rno+'"></div> '+
+                                                               '<div id="mupdate'+reviewlist.data[i].rno+'"></div> '+
                                                                '<div>'+reviewlist.data[i].rcontent+'</div> </div>'+
                                                                '<div class="col-md-2"><div><img src="/upload/'+reviewlist.data[i].rimg1+'"></div></div>'+
                                                                '<div class="col-md-2"><div><img src="/upload/'+reviewlist.data[i].rimg2+'"></div></div>'+
@@ -419,6 +433,9 @@ function getreviewlist(page,hname,hdate){
                        for( let i = 0 ; i<reviewlist.data.length ; i++ ){
                             $("#mstar"+reviewlist.data[i].rno).html(star);
                        }
+                         for( let i = 0 ; i<reviewlist.data.length ; i++ ){
+                                      $("#mupdate"+reviewlist.data[i].rno).html(mupdate);
+                              }
 
 
                 let rk =	parseFloat(parseInt(kind)/parseInt(totalcount));
@@ -608,4 +625,98 @@ function getreviewlist(page,hname,hdate){
            	});
 
 
+}
+
+
+function updatemodal(rno){
+alert(rno);
+     let kind="";
+    let fac="";
+    let price="";
+
+    for(let i=1; i<6;i++){
+   kind +=
+       '<img class="star" id="star'+i+'" src="/img/star2.png" onclick="kind('+i+')">';
+             }
+     for(let i=1; i<6;i++){
+        fac +=
+            '<img class="star" id="fac'+i+'" src="/img/star2.png" onclick="fac('+i+')">';
+      }
+      for(let i=1; i<6;i++){
+         price +=
+              '<img class="star" id="price'+i+'" src="/img/star2.png" onclick="price('+i+')">';
+                  }
+        $("#kind").html(kind);
+        $("#fac").html(fac);
+        $("#price").html(price);
+         $("#addbox").html('<button type="button" onclick="updatereview('+rno+')">수정하기</button>');
+       get(rno);
+}
+
+function get(rno){
+    $.ajax({
+         url : "/map/getreview" ,
+         data : { "rno" : rno } ,
+         success: function( review ){
+         console.log(review);
+            kind(parseInt(review.rkind));
+            fac(parseInt(review.rfac));
+            price(parseInt(review.rprice));
+            if(review.rimg1!=null){$('#preview1').attr('src','/upload/'+review.rimg1);
+            $("#file1").val(review.rimg1);
+            }
+            else if(review.rimg2!=null){$('#preview2').attr('src', '/upload/'+review.rimg2);
+            $("#file2").val(review.rimg2);}
+         }
+        });
+}
+
+function updatereview(rno){
+
+     if(document.getElementById('rcontent').value==""){
+                alert("내용을 입력해주세요");
+                return false;
+            }
+            let formData = new FormData();
+            formData.append('rno',rno);
+            formData.append('rcontent',document.getElementById('rcontent').value);
+            if(document.getElementById('file1').files[0]==null){
+
+            }else{
+                formData.append('rimg1',document.getElementById('file1').files[0]);
+            }
+
+            if(document.getElementById('file2').files[0]==null){
+
+            }else{
+                formData.append('rimg2',document.getElementById('file2').files[0]);
+            }
+
+            formData.append('rkind',ckind);
+            formData.append('rfac',cfac);
+            formData.append('rprice',cprice);
+
+           $.ajax({
+                   url: "/map/updatereview",
+                   method: "POST",
+                   data : formData ,
+                   contentType: false,
+                   processData: false ,
+                   success: function(re){
+                    alert(re);
+                    location.reload();
+                 }
+               });
+}
+
+function rdelete(rno){
+alert(rno);
+     $.ajax({
+             url : "/map/rdelete" ,
+             method : "Delete",
+             data : { "rno" : rno } ,
+             success: function( re ){
+                alert(re);
+             }
+    });
 }

@@ -56,12 +56,10 @@ public class MapController {
         if(crawlDto.getScroe()==null) {
             object.put("score","다음 리뷰 없음");
             object.put("link","#");
-        } else {
-            object.put("score",crawlDto.getScroe());
-            object.put("link",crawlDto.getLink());
+        }else {
+            object.put("score", crawlDto.getScroe());
+            object.put("link", crawlDto.getLink());
         }
-
-
         try {
             response.setCharacterEncoding("UTF-8");
             response.setContentType("application/json");
@@ -105,5 +103,30 @@ public class MapController {
             response.getWriter().println(mapService.getreviewlist(hname,hdate, page ));
         }catch( Exception e ){ System.out.println( e ); }
     }
+    @GetMapping("/getreview")
+    public void getreview(HttpServletResponse response , @RequestParam("rno") int rno){
+        System.out.println(rno);
+        try{
+            JSONObject object =  mapService.getreview( rno );
+            response.setCharacterEncoding("UTF-8");
+            response.setContentType("application/json");
+            response.getWriter().print( object );
+        }catch( Exception e ){ System.out.println( e ); }
+    }
 
+
+    @DeleteMapping("/rdelete")
+    @ResponseBody
+    public boolean rdelete(@RequestParam("rno") int rno ){
+        System.out.println(rno);
+        return mapService.rdelete( rno );
+    }
+
+    @PostMapping("/updatereview" )
+    @ResponseBody
+    public boolean updatereview(HttpServletResponse response, ReviewDto reviewDto){
+        System.out.println("sssss"+reviewDto);
+        boolean result = mapService.updatereview(reviewDto);
+        return result;
+    }
 }
