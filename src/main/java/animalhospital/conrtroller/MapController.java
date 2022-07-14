@@ -32,10 +32,16 @@ public class MapController {
 
     @GetMapping("/view")
     @ResponseBody
-    public String view(HttpServletResponse response, @RequestParam("hname") String hname, @RequestParam("hdate") String hdate,@RequestParam("hcity") String hcity ){
+    public String view(HttpServletResponse response, @RequestParam("hname") String hname, @RequestParam("hdate") String hdate,@RequestParam("hcity") String hcity
+            ,@RequestParam("haddress") String haddress, @RequestParam("htel") String htel ,@RequestParam("lat") String lat ,@RequestParam("logt") String logt)
+    {
         request.getSession().setAttribute("hname", hname);
         request.getSession().setAttribute("hdate", hdate);
         request.getSession().setAttribute("hcity",hcity);
+        request.getSession().setAttribute("haddress",haddress);
+        request.getSession().setAttribute("htel",htel);
+        request.getSession().setAttribute("lat",lat);
+        request.getSession().setAttribute("logt",logt);
         return hname;
     }
 
@@ -45,6 +51,11 @@ public class MapController {
         String hname =  (String) request.getSession().getAttribute("hname");
         String hdate =  (String) request.getSession().getAttribute("hdate");
         String hcity = (String) request.getSession().getAttribute("hcity");
+        String htel = (String) request.getSession().getAttribute("htel");
+        String haddress = (String) request.getSession().getAttribute("haddress");
+        String lat = (String) request.getSession().getAttribute("lat");
+        String logt = (String) request.getSession().getAttribute("logt");
+
         System.out.println("크롤링에서뽑아온이름"+boardService.crawling(hcity,hname));
         CrawlDto crawlDto = boardService.crawling(hcity,hname);
         //String score = boardService.crawling(hcity,hname);
@@ -53,6 +64,10 @@ public class MapController {
         object.put("hname",hname);
         object.put("hdate",hdate);
         object.put("hcity",hcity);
+        object.put("haddress",haddress);
+        object.put("htel",htel);
+        object.put("lat",lat);
+        object.put("logt",logt);
         if(crawlDto.getScroe()==null) {
             object.put("score","다음 리뷰 없음");
             object.put("link","#");

@@ -1,18 +1,49 @@
+let list;
+let lat;
+let logt;
 info(0);
+ 출력()
 let page = 0;
 let hname = "";
 let hdate = "";
+
+
 function info(page){
     $.ajax({
         url: "/map/info",
         method: "POST",
         contentType : 'application/json' ,
+        async : false,
         success: function(re){
+        console.log(re)
+        lat = re.lat
+        logt = re.logt
             $("#hname").html(re.hname);
             getreviewlist(page,re.hname,re.hdate);
             getreviewstarlist(re.hname,re.hdate);
       }
     });
+}
+function 출력() {
+    var mapContainer = document.getElementById('map'), // 지도를 표시할 div
+        mapOption = {
+            center: new kakao.maps.LatLng(lat, logt), // 지도의 중심좌표
+            level: 3 // 지도의 확대 레벨
+        };
+
+    var map = new kakao.maps.Map(mapContainer, mapOption); // 지도를 생성합니다
+
+    // 마커가 표시될 위치입니다
+    var markerPosition  = new kakao.maps.LatLng(lat, logt);
+
+    // 마커를 생성합니다
+    var marker = new kakao.maps.Marker({
+        position: markerPosition
+    });
+
+    // 마커가 지도 위에 표시되도록 설정합니다
+    marker.setMap(map);
+
 }
 
 function modal(){
