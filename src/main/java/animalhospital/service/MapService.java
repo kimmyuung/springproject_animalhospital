@@ -30,6 +30,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
@@ -104,6 +105,7 @@ public class MapService {
     }
     @Transactional
     public boolean addreview(ReviewDto reviewDto){
+        System.out.println(reviewDto.getRcontent());
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Object principal = authentication.getPrincipal();
         String mid = null;
@@ -214,6 +216,31 @@ public class MapService {
         return jo;
     }
 
+    public JSONObject getreviewstarlist( String hname,String hdate){
+        JSONObject jo = new JSONObject();
+        List<ReviewEntity> reviewEntity =  reviewRepository.findBylist(hname, hdate);
+        JSONArray jsonArray = new JSONArray();
+        for (ReviewEntity entity : reviewEntity ) {
+            JSONObject object = new JSONObject();
+            object.put("rno", entity.getRno());
+            object.put("rcontent", entity.getRcontent());
+            object.put("rmodifiedate", entity.getModifiedate());
+            object.put("rcreatedate", entity.getCreatedate());
+            object.put("rkind", entity.getRkind());
+            object.put("rfac", entity.getRfac());
+            object.put("rprice", entity.getRprice());
+            object.put("rimg1", entity.getRimg1());
+            object.put("rimg2", entity.getRimg2());
+            object.put("mid", entity.getMemberEntity().getMid());
+            jsonArray.put(object);
+        }
+        jo.put("data", jsonArray);
+        System.out.println(jo);
+        return jo;
+    }
+
+
+
     @Transactional
     public boolean rdelete( int rno ){
         System.out.println(rno);
@@ -261,8 +288,7 @@ public class MapService {
                 MultipartFile file = reviewDto.getRimg1();
                 UUID uuid = UUID.randomUUID();
                 uuidfile = uuid.toString() + "_" + file.getOriginalFilename().replaceAll("_", "-");
-                // String dir = "C:\\Users\\504\\springproject_animalhospital\\src\\main\\resources\\static\\upload\\";
-                String dir = "C:\\Users\\82102\\IdeaProjects\\springproject_animalhospital\\src\\main\\resources\\static\\upload\\";
+                String dir = "C:\\Users\\504\\springproject_animalhospital\\src\\main\\resources\\static\\upload\\";
                 String filepath = dir + uuidfile;
                 try {
                     file.transferTo(new File(filepath));
@@ -275,8 +301,7 @@ public class MapService {
                 MultipartFile file2 = reviewDto.getRimg2();
                 UUID uuid2 = UUID.randomUUID();
                 uuidfile2 = uuid2.toString() + "_" + file2.getOriginalFilename().replaceAll("_", "-");
-                //String dir2 = "C:\\Users\\504\\springproject_animalhospital\\src\\main\\resources\\static\\upload\\";
-                String dir2 = "C:\\Users\\82102\\IdeaProjects\\springproject_animalhospital\\src\\main\\resources\\static\\upload\\";
+                String dir2 = "C:\\Users\\504\\springproject_animalhospital\\src\\main\\resources\\static\\upload\\";
                 String filepath2 = dir2 + uuidfile2;
 
                 try {
