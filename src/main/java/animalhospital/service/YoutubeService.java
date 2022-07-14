@@ -18,7 +18,7 @@ public class YoutubeService {
     public String videosearch(String search) {
         try{
         String apiurl = "https://www.googleapis.com/youtube/v3/search";
-        apiurl += "?key=AIzaSyC494PKkVrEBCmAUjZvdlXjwU8KrOYkguk";
+        apiurl += "?key=AIzaSyD2KglODGU99HtA5co0gBPMo5iMDxnIA0Q";
         apiurl += "&part=snippet&type=video&maxResults=6&videoEmbeddable=true";
         apiurl += "&q="+ URLEncoder.encode(search,"UTF-8");
 

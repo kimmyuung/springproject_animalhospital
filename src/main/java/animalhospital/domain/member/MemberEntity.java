@@ -3,6 +3,7 @@ package animalhospital.domain.member;
 
 import animalhospital.domain.BaseTime;
 import animalhospital.domain.message.MessageEntity;
+import animalhospital.domain.shop.ShopEntity;
 import lombok.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -40,5 +41,8 @@ public class MemberEntity {
     @OneToMany( mappedBy ="toentity" , cascade = CascadeType.ALL)  // 1:M
     List<MessageEntity> toentitylist = new ArrayList<>();
 
+    @Builder.Default    // 빌더 사용시 초기값 설정
+    @OneToMany( mappedBy ="member" , cascade = CascadeType.ALL)  // 1:M
+    List<ShopEntity> shopEntityList = new ArrayList<>();
 
 }

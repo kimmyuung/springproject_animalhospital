@@ -84,12 +84,11 @@ public class MapController {
     @PostMapping("/addreview" )
     @ResponseBody
     public boolean addreview(HttpServletResponse response, ReviewDto reviewDto){
-        System.out.println("Dddd");
         String hname =  (String) request.getSession().getAttribute("hname");
         String hdate =  (String) request.getSession().getAttribute("hdate");
         reviewDto.setHname(hname);
         reviewDto.setHdate(hdate);
-        System.out.println("sssss"+reviewDto);
+        System.out.println("등록"+reviewDto);
         boolean result = mapService.addreview(reviewDto);
         return result;
     }
@@ -103,6 +102,16 @@ public class MapController {
             response.getWriter().println(mapService.getreviewlist(hname,hdate, page ));
         }catch( Exception e ){ System.out.println( e ); }
     }
+    @PostMapping("/getreviewstarlist")
+    @ResponseBody
+    public void getreviewstarlist(HttpServletResponse response, @RequestParam("hname") String hname , @RequestParam("hdate") String hdate ){
+        try {
+            response.setCharacterEncoding("UTF-8");
+            response.setContentType("application/json");
+            response.getWriter().println(mapService.getreviewstarlist(hname,hdate ));
+        }catch( Exception e ){ System.out.println( e ); }
+    }
+
     @GetMapping("/getreview")
     public void getreview(HttpServletResponse response , @RequestParam("rno") int rno){
         System.out.println(rno);
