@@ -1,0 +1,32 @@
+package animalhospital.domain.message;
+
+import animalhospital.domain.BaseTime;
+import animalhospital.domain.member.MemberEntity;
+import lombok.*;
+
+import javax.persistence.*;
+
+@Entity
+@Table(name="message")
+@Builder
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+public class MessageEntity extends BaseTime {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int msgno;
+    private String msg;
+    private boolean isread;
+
+    @ManyToOne
+    @JoinColumn(name="hospital")
+    MemberEntity hospitalEntity;
+
+    @ManyToOne
+    @JoinColumn(name="member")
+    MemberEntity memberEntity;
+
+}

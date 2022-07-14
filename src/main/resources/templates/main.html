@@ -13,6 +13,7 @@
             <li th:if= "${session.admin != null}" th:text="${session.admin.role}" class="header_li"></li>
             <li th:if="${ session.login == null && session.admin == null}"class="header_li"><a href="/member/login">로그인 </a>  </li>
             <li th:if="${ session.login == null && session.admin == null}"class="header_li"><a href="/member/login">회원가입</a></li>
+            <li th:if="${ session.login != null || session.admin != null}" class="header_li"><a href="/member/memberinfo">회원정보</a></li>
             <li th:if="${ session.login != null || session.admin != null}" class="header_li"><a href="/member/logout">로그아웃</a></li>
             <li th:if="${ session.login != null }" class="header_li"><button onclick="mdelete()">회원탈퇴</button> </li>
         </ul>
@@ -108,7 +109,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button id="closebtn" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
 
             </div>
         </div>
