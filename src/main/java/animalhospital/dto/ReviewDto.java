@@ -31,6 +31,7 @@ public class ReviewDto {
     public ReviewEntity toentity(){
         return ReviewEntity.builder()
                 .rno(this.rno)
+                .rcontent(this.rcontent)
                 .hname(this.hname)
                 .hdate(this.hdate)
                 .rkind(this.rkind)

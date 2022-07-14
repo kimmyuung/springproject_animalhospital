@@ -4,10 +4,15 @@
 }
 
 .star1{
-    width: 90px;
+    width: 50px;
 }
 
 .reviewlist{
     border: solid 1px #eeeeee;
     border-radius: 10px;
+}
+
+.star2{
+    text-align: center;
+    width: 80px;
 }
