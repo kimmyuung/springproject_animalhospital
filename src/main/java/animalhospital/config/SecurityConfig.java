@@ -82,6 +82,7 @@ public class SecurityConfig {
                 .ignoringAntMatchers("/map/rdelete")
                 .ignoringAntMatchers("/map/getreview")
                 .ignoringAntMatchers("/map/updatereview")
+                .ignoringAntMatchers("/map/getreviewstarlist")
                 .ignoringAntMatchers("/")
                 .and()
                 .exceptionHandling()

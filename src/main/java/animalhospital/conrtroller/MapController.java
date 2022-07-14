@@ -103,6 +103,18 @@ public class MapController {
             response.getWriter().println(mapService.getreviewlist(hname,hdate, page ));
         }catch( Exception e ){ System.out.println( e ); }
     }
+
+    @PostMapping("/getreviewstarlist")
+    @ResponseBody
+    public void getreviewstarlist(HttpServletResponse response, @RequestParam("hname") String hname , @RequestParam("hdate") String hdate ){
+        try {
+            response.setCharacterEncoding("UTF-8");
+            response.setContentType("application/json");
+            response.getWriter().println(mapService.getreviewstarlist(hname,hdate ));
+        }catch( Exception e ){ System.out.println( e ); }
+    }
+
+
     @GetMapping("/getreview")
     public void getreview(HttpServletResponse response , @RequestParam("rno") int rno){
         System.out.println(rno);

@@ -35,7 +35,7 @@ function boardlist( page){
     		url: "/board/blist",
     		 method: "POST",
     		 data: {"page":this.current_page},
-    		success: function(reviewlist){
+    		success: function(boardlist){
     		console.log(boardlist);
     		    html ="";
 //    		    '<div><div>번호</div><div>제목</div><div>이미지</div></div>';
