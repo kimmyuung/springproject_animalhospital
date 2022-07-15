@@ -1,6 +1,6 @@
 package animalhospital.conrtroller;
 
-import animalhospital.dto.ItemDto;
+import animalhospital.dto.ShopDto;
 import animalhospital.dto.OauthDto;
 import animalhospital.service.ItemService;
 import animalhospital.service.MemberService;
@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
+import java.util.Map;
 
 @RequestMapping("/member")
 @Controller
@@ -46,26 +48,22 @@ public class MemberController {
 
     @GetMapping("/getitemlist")
     @ResponseBody
-    public void getitemlist(HttpServletResponse response, @RequestParam("page") int page) {
-        try{
-            response.setCharacterEncoding("UTF-8");
-            response.setContentType("application/json");
-            response.getWriter().print(itemService.itemlist(page));
-        }catch(Exception e){e.printStackTrace();}
+    public Map<String, List<Map<String, String>>> getitemlist(@RequestParam("page") int page) {
+             return itemService.itemlist(page);
     }
 
     @PostMapping("/itemsave")
     @ResponseBody
-    public boolean itemsave(ItemDto itemDto) {
-        System.out.println(itemDto.getStitle() +" :  "+ itemDto.getScontent());
-        return itemService.itemsave(itemDto);
+    public boolean itemsave(ShopDto shopDto) {
+        System.out.println(shopDto.getStitle() +" :  "+ shopDto.getScontent());
+        return itemService.itemsave(shopDto);
     }
 
     @PutMapping("/itemupdate")
     @ResponseBody
-    public boolean itemupdate( @RequestParam("sno") int sno, ItemDto itemDto )
+    public boolean itemupdate( @RequestParam("sno") int sno, ShopDto shopDto)
     {
-        return itemService.itemupdate(sno, itemDto);
+        return itemService.itemupdate(sno, shopDto);
     }
 
     @DeleteMapping("/deleteitem")

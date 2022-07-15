@@ -1,53 +1,58 @@
 let current_page = 0;
 let updatebno = 0;
-getitem(0);
+getitemlist(0);
 
-function getitem(page) {
+function getitemlist(page) {
 
 this.current_page = page;
 
 
 $.ajax({
-    url : '/member/getitem',
+    url : '/member/getitemlist',
     data : {"page" : page },
     success : function(json) {
-    let html = "<tr> <th> 상품 이름 </th> <th> 상품 설명 </th><th> 가격 </th> <th>판매자</th> <th>비고</th> </tr>";
+
+    let html = "<tr> <th> 상품 이름 </th> <th> 상품 설명 </th> <th> 등록일 </th> <th> 가격 </th><th>판매자</th> <th>비고</th> </tr>";
     let html2 = '';
     console.log(json);
-    if(json.data.length == 0) {
+
+
+    if(json.itemlist.length == 0) {
                                 html += '<tr>' +
                                 '<td colspan="5"> 검색 결과가 존재하지 않습니다. </td> ' +
                                 '</tr>';
                                 }else{
-       for(let i = 0; i < json.data.length; i++) {
+       for(let i = 0; i < json.itemlist.length; i++) {
             html += '<tr>' +
-            '<td>'+ json.data[i]["btitle"] +'</td>' +
-            '<td>'+ json.data[i]["bcontent"] + '</td>' +
-            '<td>'+ json.data[i]["bindate"] + '</td>' +
-            '<td> <button type="button" onclick="bnosave('+json.data[i]["bno"]+')" data-bs-toggle="modal" data-bs-target="#myModal2")">상품 상세보기</button>' +
+            '<td>'+ json.itemlist[i].stitle +'</td>' +
+            '<td>'+ json.itemlist[i].scontent + '</td>' +
+            '<td>'+ json.itemlist[i].bdate + '</td>' +
+            '<td>'+ json.itemlist[i].sprice + '</td>' +
+            '<td>'+ json.itemlist[i].mid + '</td>' +
+            '<td> <button type="button" onclick="showitem('+json.itemlist[i].sno+')">상품 상세보기</button>' +
              '</td></tr>';
              }
                ////////////////////////////////////// 이전 /////////////////////////////////////////////
              if( page == 0 )
               {
-              html2 += ' <div class="page-item col-md-2"><a class="page-link" onclick="getitem('+ (page)+')">Previous</a></div>' ;
+              html2 += ' <div class="page-item col-md-2"><a class="page-link" onclick="getitemlist('+ (page)+')">Previous</a></div>' ;
               } else{
                  html2 +=
-                   ' <div class="page-item col-md-2"><a class="page-link" onclick="getitem('+(page-1)+')">Previous</a></div>' ;
+                   ' <div class="page-item col-md-2"><a class="page-link" onclick="getitemlist('+(page-1)+')">Previous</a></div>' ;
                     }
                                ////////////////////////////////////// 페이징 ////////////////////////////////////////////
-              for( let i = json.startbtn-1 ; i <= json.endbtn - 1; i++) {
-                    html2 += '<div class="page-item col-md-2"><button class="btn btn-primary mx-1" onclick="getitem(' + i +')">'
-                    + (i+1) + '</button></div>';
+              for( let i = json.itemlist[0].startbtn ; i <=  json.itemlist[0].endbtn; i++) {
+                    html2 += '<div class="page-item col-md-2"><button class="btn btn-primary mx-1" onclick="getitemlist(' + i +')">'
+                    + (i) + '</button></div>';
                      }
                              ////////////////////////////////////// 이후 버튼 //////////////////////////////////////////
-                             if(page == json.totalpage-1){
+                             if(page == json.itemlist[0].totalpage -1){
                              html2 +=
-                              ' <div class="page-item col-md-2"><a class="page-link" onclick="getitem('+ (page) +')">Next</a></div>' ;
+                              ' <div class="page-item col-md-2"><a class="page-link" onclick="getitemlist('+ (page) +')">Next</a></div>' ;
                              }
                              else {
                               html2 +=
-                              ' <div class="page-item col-md-2"><a class="page-link" onclick="getitem('+(page+1)+')">Next</a></div>' ;
+                              ' <div class="page-item col-md-2"><a class="page-link" onclick="getitemlist('+(page+1)+')">Next</a></div>' ;
                               }
 
 
@@ -75,7 +80,7 @@ $.ajax({
             processData : false,
             success : function(re) {
             console.log(re);
-           if(re == true) {alert("등록 성공"); getnotice(0);}
+           if(re == true) {alert("등록 성공"); getitemlist(0);}
            else { alert("등록 실패");}
            }
     });
@@ -117,4 +122,8 @@ $.ajax({
            }
     });
 }
+}
+
+function showitem(sno) {
+alert(sno);
 }

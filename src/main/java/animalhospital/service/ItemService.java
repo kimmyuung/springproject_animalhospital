@@ -1,16 +1,12 @@
 package animalhospital.service;
 
-import animalhospital.domain.board.BoardEntity;
-import animalhospital.domain.board.BoardimgEntity;
-import animalhospital.domain.board.ReplyEntity;
 import animalhospital.domain.member.MemberEntity;
 import animalhospital.domain.member.MemberRepository;
 import animalhospital.domain.shop.ShopEntity;
 import animalhospital.domain.shop.ShopImgEntity;
 import animalhospital.domain.shop.ShopImgRepository;
 import animalhospital.domain.shop.ShopRepository;
-import animalhospital.dto.BoardDto;
-import animalhospital.dto.ItemDto;
+import animalhospital.dto.ShopDto;
 import animalhospital.dto.OauthDto;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -47,7 +43,7 @@ public class ItemService {
     HttpServletRequest request;
 
     @Transactional
-    public boolean itemsave(ItemDto itemDto) {
+    public boolean itemsave(ShopDto shopDto) {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Object principal = authentication.getPrincipal();
@@ -71,12 +67,12 @@ public class ItemService {
         if( mid != null  ) {
             Optional<MemberEntity> optionalMember = memberRepository.findBymid(mid);
             if (optionalMember.isPresent()) { // null 아니면
-                ShopEntity shopEntity = itemDto.toentity();
+                ShopEntity shopEntity = shopDto.toentity();
                 shopEntity.setMember( optionalMember.get() );
                 shopRepository.save(shopEntity);
                 String uuidfile = null;
-                if (itemDto.getSimg().size() != 0) {
-                    for (MultipartFile file : itemDto.getSimg()) {
+                if (shopDto.getSimg().size() != 0) {
+                    for (MultipartFile file : shopDto.getSimg()) {
                         UUID uuid = UUID.randomUUID();
 
                         uuidfile = uuid.toString() + "_" + file.getOriginalFilename().replaceAll("_", "-");
@@ -117,14 +113,13 @@ public class ItemService {
 
         System.out.println( "페이지 :"+ page );
 
-        Page<ShopEntity> shopEntities = null ;
+        int itemstatus = 0; // 상품 판매 상태가 판매 중인거만 리스트로 출력하기 위해서
         Pageable pageable = PageRequest.of( page , 5 , Sort.by( Sort.Direction.DESC , "sno")    );
-
+        Page<ShopEntity> shopEntities = shopRepository.findByblist(itemstatus , pageable);
 
         List<  Map<String , String >  > Maplist = new ArrayList<>();
 
-        shopEntities =shopRepository.findByblist(page, pageable);
-        System.out.println( shopEntities.toString() );
+
 
         int btncount = 5;
         int startbtn  = ( page / btncount ) * btncount + 1;
@@ -135,21 +130,28 @@ public class ItemService {
         for( ShopEntity entity : shopEntities ){
             // 3. map 객체 생성
             Map<String, String> map = new HashMap<>();
-            map.put("bno", entity.getSno()+"" );
-            map.put("btitle", entity.getStitle());
-            map.put("bimg", entity.getShopimgEntities().get(0).getSimg());
+            map.put("sno", entity.getSno()+"" );
+            map.put("stitle", entity.getStitle());
+            map.put("scontent", entity.getScontent());
+            map.put("sprice", entity.getPrice()+"");
+//            if(entity.getShopimgEntities().get(0).getSimg().equals("")){
+//                map.put("simg", "이미지가 없습니다.");
+//            } else {
+//                map.put("simg", entity.getShopimgEntities().get(0).getSimg());
+//            }
+            // 경로가 달라 이미지가 저장되지 않음
             map.put( "startbtn" , startbtn+"" );
             map.put("mid", entity.getMember().getMid());
             map.put("bdate",  entity.getCreatedate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
-            map.put( "endhtn" , endhtn+"" );
+            map.put( "endbtn" , endhtn+"" );
             map.put( "totalpages" , shopEntities.getTotalPages()+"" );
             // 4. 리스트 넣기
             Maplist.add(map);
         }
         Map< String , List<  Map<String , String >  > > object = new HashMap<>();
 
-        object.put( "blists" , Maplist );
-
+        object.put( "itemlist" , Maplist );
+        System.out.println(object.toString() );
         return  object;
     }
 
@@ -198,14 +200,14 @@ public class ItemService {
     }
 
     @Transactional
-    public boolean itemupdate(int bno, ItemDto itemDto) {
+    public boolean itemupdate(int bno, ShopDto shopDto) {
         Optional<ShopEntity> optional = shopRepository.findById(bno);
         if(optional.isPresent()) {
             ShopEntity shopEntity = optional.get(); // 새로운 내용을 인수로 보내야 함
-            shopEntity.setScontent(itemDto.getScontent());
-            shopEntity.setPrice(itemDto.getPrice());
-            shopEntity.setStitle(itemDto.getStitle());
-            shopEntity.setShopimgEntities(itemDto.toentity().getShopimgEntities());
+            shopEntity.setScontent(shopDto.getScontent());
+            shopEntity.setPrice(shopDto.getPrice());
+            shopEntity.setStitle(shopDto.getStitle());
+            shopEntity.setShopimgEntities(shopDto.toentity().getShopimgEntities());
             return true;
         }
         return false;
