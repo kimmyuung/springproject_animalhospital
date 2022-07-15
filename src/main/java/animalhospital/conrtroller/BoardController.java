@@ -57,6 +57,17 @@ public class BoardController {
         return result;
     }
 
+    @PutMapping("/tipupdate")
+    @ResponseBody
+    public boolean tipwrite_update( BoardDto boardDto ){
+        boardDto.setCno(3);
+        int bno =  (Integer) request.getSession().getAttribute("bno");
+        boardDto.setBno(bno);
+        boolean result = boardService.save( boardDto );
+
+        return result;
+    }
+
     @PostMapping("/blist")
     @ResponseBody
     public Map< String , List<Map<String , String >>>
@@ -77,6 +88,7 @@ public class BoardController {
     @GetMapping("/getboard")
     public void getboard( @RequestParam("bno") int bno ,
                           HttpServletResponse response  ){
+        request.getSession().setAttribute("bno", bno);
         try{
             JSONObject object =  boardService.getboard( bno );
             response.setCharacterEncoding("UTF-8");

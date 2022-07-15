@@ -65,13 +65,14 @@ function boardlist( page){
                 if( boardlist.blists.length == 0 ){ // 검색 결과가 존재하지 않으면
                       html +=
                         '<div>'+
-                            '<div colspan="5">검색 결과가 존재하지 않습니다.</div> '+
+                            '<div colspan="5">게시글이 존재하지 않습니다.</div> '+
                         '</div>';
                       }else{
                                 for( let i = 0 ; i<boardlist.blists.length ; i++ ){
+                                console.log(boardlist.blists[i]);
                                          html +=
-                                            '<div class="card mb-3"  style="max-width: 1000px;"  onclick="bupdate('+boardlist.blists[i].bno+')">'+
-                                                '<div class="row g-0"><div class="col-md-4">'+
+                                            '<div class="card mb-3"  style="max-width: 1000px;"  >'+
+                                                '<div class="row g-0"  onclick="bupdate('+boardlist.blists[i].bno+')"><div class="col-md-4">'+
                                                 '  <img src="/upload/'+boardlist.blists[i].bimg+'"  class="img-fluid rounded-start" alt="...">'+
                                                 '  </div><div class="col-md-8"><div class="card-body">'+
                                                 '    <h5 class="card-title">'+boardlist.blists[i].btitle+'</h5>'+
@@ -93,8 +94,7 @@ function boardlist( page){
                                         '<button class="page-link" onclick="boardlist('+ (page-1)  +')"> 이전 </button>'+
                              '</li>';
                       }
-                      console.log(boardlist.blists);
-                     for( let i = boardlist.blists[0].startbtn ; i<=boardlist.blists[0].endbtn; i++ ){
+                     for( let i = boardlist.blists[0].startbtn ; i<=boardlist.blists[0].endhtn; i++ ){
                         pagehtml +=
                               '<li class="page-item"> '+
                                 '<button class="page-link" onclick="boardlist('+(i-1)+')"> '+i+' </button>'+

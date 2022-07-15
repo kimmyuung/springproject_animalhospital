@@ -141,18 +141,19 @@ function bview(bno){
                      if( i == 0 ){  // 첫번째 이미지만 active 속성 추가
                         imgtag +=
                                      '<div class="carousel-item active">'+
-                                         '<img src="/upload/'+board.bimglist[i]+'" class="d-block w-100" alt="...">'+
+                                         '<img id="preview" src="/upload/'+board.bimglist[i]+'" class="d-block w-100" alt="...">'+
                                     '</div>';
                      }else{
                         imgtag +=
                                  '<div class="carousel-item">'+
-                                     '<img src="/upload/'+board.bimglist[i]+'" class="d-block w-100" alt="...">'+
+                                     '<img  id="preview" src="/upload/'+board.bimglist[i]+'" class="d-block w-100" alt="...">'+
                                 '</div>';
                      }
                 }
-                if(board.same="true"){
+                if(board.same=="true"){
                     $("#deletebutton").html(
-                    '<button type="button" class="btn btn-primary" onclick="bdelete('+board.bno+')">삭제</button>'
+                    '<button type="button" class="btn btn-primary" onclick="bdelete('+board.bno+')">삭제</button>'+
+                    '<button type="button" class="btn btn-primary" onclick="bupdate('+board.bno+')"   data-bs-toggle="modal" data-bs-target="#myModal3">수정</button>'
                  );
                 }
 
@@ -166,6 +167,53 @@ function bview(bno){
         });
 }
 
+function bupdate(bno){
+alert(bno);
+    $.ajax({
+            url : "/board/getboard" ,
+            method : "GET",
+            data: {"bno":bno},
+            success: function( board ){
+            console.log(board);
+                let imgtag = "";
+                console.log( board );
+                for( let i = 0 ; i<board.bimglist.length ; i++ ){
+                     if( i == 0 ){  // 첫번째 이미지만 active 속성 추가
+                        imgtag +=
+                                     '<div class="carousel-item active">'+
+                                         '<img id="img_preview" src="/upload/'+board.bimglist[i]+'" class="d-block w-100" alt="...">'+
+                                    '</div>';
+                     }else{
+                        imgtag +=
+                                 '<div class="carousel-item">'+
+                                     '<img id="img_preview" src="/upload/'+board.bimglist[i]+'" class="d-block w-100" alt="...">'+
+                                '</div>';
+                     }
+                }
+                 $("#btitle2").val( board.btitle );
+                 $("#bcontent2").html( board.bcontent );
+                $("#preview2").html( imgtag );
+            }
+    })
+}
+function tipupdate(){
+    let form = $("#updateform")[0];
+            let formdata = new FormData( form);
+            $.ajax({
+                url: "/board/tipupdate",
+                method: "PUT",
+                data : formdata ,
+                contentType: false,
+                processData: false ,
+                success: function( re ){
+                    if(re){
+                    location.reload();
+                    }else{
+                        alert("로그인 후 이용해주세요!")
+                    }
+                }
+            });
+}
 function bdelete(bno){
       $.ajax({
                  url : "/board/bdelete" ,
@@ -205,6 +253,35 @@ $(function() {
     });
 });
 
+$(function() {
+    // Multiple images preview in browser
+    var imagesPreview = function(input, placeToInsertImagePreview) {
+
+        if (input.files) {
+            var filesAmount = input.files.length;
+//               $(".preview").html("");
+        console.log(filesAmount);
+            for (i = 0; i < filesAmount; i++) {
+                var reader = new FileReader();
+
+                reader.onload = function(event) {
+                  $($("#img_preview")).attr('src', event.target.result).appendTo(placeToInsertImagePreview);
+//
+                     $($.parseHTML('<img>')).attr('style', 'width:80%');
+                }
+
+                reader.readAsDataURL(input.files[i]);
+            }
+        }
+    };
+
+    $('#bimg2').on('change', function() {
+        imagesPreview(this, 'div.preview');
+    });
+});
+
+
+
 function replysave(){
     let reply = $("#reply").val();
     $.ajax({
@@ -221,6 +298,9 @@ function replysave(){
         }
     });
 }
+
+
+
 function getreply(){
     let replyhtml = "";
     $.ajax({

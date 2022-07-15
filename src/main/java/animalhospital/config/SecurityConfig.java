@@ -86,6 +86,8 @@ public class SecurityConfig {
                 .ignoringAntMatchers("/map/getreviewstarlist")
                 .ignoringAntMatchers("/board/btiplist")
                 .ignoringAntMatchers("/board/tipwrite")
+                .ignoringAntMatchers("/board/tipupdate")
+                .ignoringAntMatchers("/board/gettipboard")
                 .ignoringAntMatchers("/")
                 .and()
                 .exceptionHandling()
