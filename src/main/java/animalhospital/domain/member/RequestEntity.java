@@ -23,6 +23,7 @@ public class RequestEntity {
     private String bin;
     private boolean active;
     private int mno;
+    private String mid;
     private String binimg;
 
 }

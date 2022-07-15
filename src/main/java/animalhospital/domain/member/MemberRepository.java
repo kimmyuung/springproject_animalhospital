@@ -13,6 +13,8 @@ public interface MemberRepository extends JpaRepository<MemberEntity , Integer> 
     // 2. 이메일을 이용한 엔티티 검색
     Optional< MemberEntity > findBymemail( String email );
 
+    Optional<MemberEntity>findBymno (String mno);
+
 }
 
 //  특정 필드 검색 메소드 만들기 : findBy필드명

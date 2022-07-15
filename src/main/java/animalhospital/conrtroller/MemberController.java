@@ -33,12 +33,26 @@ public class MemberController {
     public String request() {return "member/request";}
 
 
+//    @PostMapping("/requestsave")
+//    @ResponseBody
+//    public boolean requestsave (String hname, String hdate) {
+//        System.out.println("save");
+//        System.out.println(hname+ hdate);
+//        memberService.requestsave(hname, hdate);
+//        return true;
+//    }
+
+
     @PostMapping("/requestsave")
     @ResponseBody
     public boolean requestsave (RequestDto requestDto) {
         System.out.println("save");
         System.out.println(requestDto.toString());
-        memberService.requestsave(requestDto);
-        return true;
+        boolean result = memberService.requestsave(requestDto);
+
+        return result;
     }
+
+
+
 }

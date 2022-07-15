@@ -2,6 +2,7 @@ package animalhospital.dto;
 
 import animalhospital.domain.member.RequestEntity;
 import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @Getter
 @Setter
@@ -17,8 +18,8 @@ public class RequestDto {
     private String hospital; //병원 식별 - 병원이름+인허가일자
     private String bin; //사업자 번호
     private boolean active; //신청상황
-    private int mno;    //회원번호
-    private String binimg; //사업자등록증 사진경로
+    private String mid;  //회원번호
+    private MultipartFile binimg; //사업자등록증 사진경로
 
     public RequestEntity toentity() {
         return RequestEntity.builder()
@@ -28,7 +29,6 @@ public class RequestDto {
                 .hospital(this.hospital)
                 .bin(this.bin)
                 .active(this.active)
-                .binimg(this.binimg)
                 .build();
     }
 

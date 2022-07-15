@@ -2,9 +2,13 @@ package animalhospital.service;
 
 import animalhospital.domain.member.MemberEntity;
 import animalhospital.domain.member.MemberRepository;
+import animalhospital.domain.member.RequestEntity;
+import animalhospital.domain.member.RequestRepository;
 import animalhospital.dto.LoginDto;
 import animalhospital.dto.OauthDto;
 import animalhospital.dto.RequestDto;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -20,9 +24,12 @@ import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 
 import javax.servlet.http.HttpSession;
+import java.io.File;
+import java.io.IOException;
 import java.util.*;
 
 @Service
@@ -169,7 +176,8 @@ public class MemberService implements OAuth2UserService<OAuth2UserRequest ,OAuth
 
         return new LoginDto(memberEntity, authorityList); // 회원엔티티, 인증된 리스트를 인증세션 부여
     }
-
+    @Autowired
+    RequestRepository requestRepository;
     public boolean requestsave(RequestDto requestDto) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Object principal = authentication.getPrincipal();
@@ -191,12 +199,46 @@ public class MemberService implements OAuth2UserService<OAuth2UserRequest ,OAuth
         if( mid != null  ) {
             Optional<MemberEntity> optionalMember = memberRepository.findBymid(mid);
             if (optionalMember.isPresent()) {
-                System.out.println("hname : "+ requestDto.getHname());
-                MemberEntity memberEntity = memberRepository.findBymid(mid).get();
+                int mno = optionalMember.get().getMno();
+                RequestEntity requestEntity = requestDto.toentity();
+                requestEntity.setMid(mid);
+
+                String uuidfile = null;
+                UUID uuid = UUID.randomUUID();
+                MultipartFile file = requestDto.getBinimg();
+                uuidfile = uuid.toString() + "_" + file.getOriginalFilename().replaceAll("_", "-");
+                String dir = "C:\\Users\\504\\Desktop\\springproject_animalhospital\\src\\main\\resources\\static\\upload\\";
+                String filepath = dir + uuidfile;
+                try {
+
+                    file.transferTo(new File(filepath));
+                    requestEntity.setBinimg(uuidfile);
+                    requestRepository.save(requestEntity);
+
+                } catch (IOException e) {
+                    System.out.println("requestsave error : " + e);
+                }
+
             }else {
                 return false;
             }
         }
         return false;
+    }
+
+    public JSONArray getbinlist() {
+        JSONArray jsonArray = new JSONArray();
+        List<RequestEntity> entities = requestRepository.findAll();
+        System.out.println(entities);
+        for (RequestEntity entity : entities ){
+            JSONObject object = new JSONObject();
+            object.put("hno", entity.getHno());
+            object.put("hname", entity.getHname());
+            object.put("hdate", entity.getHdate());
+            object.put("mid", entity.getMid());
+            object.put("binimg", entity.getBinimg());
+            jsonArray.put(object);
+        }
+        return jsonArray;
     }
 }

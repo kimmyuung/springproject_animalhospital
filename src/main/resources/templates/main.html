@@ -10,12 +10,13 @@
 <div class="main_wrap">
     <div class="header_menu">
         <ul class="header_ul">
-            <li th:if= "${session.admin != null}" th:text="${session.admin.role}" class="header_li"></li>
+            <li th:if= "${session.admin != null}" th:text="${session.admin.role}" class="header_li"> </li>
             <li th:if="${ session.login == null && session.admin == null}"class="header_li"><a href="/member/login">로그인 </a>  </li>
             <li th:if="${ session.login == null && session.admin == null}"class="header_li"><a href="/member/login">회원가입</a></li>
             <li th:if="${ session.login != null || session.admin != null}" class="header_li"><a href="/member/memberinfo">회원정보</a></li>
             <li th:if="${ session.login != null || session.admin != null}" class="header_li"><a href="/member/logout">로그아웃</a></li>
             <li th:if="${ session.login != null }" class="header_li"><button onclick="mdelete()">회원탈퇴</button> </li>
+            <li> <a href="/admin/binlist">관리</a> </li>
         </ul>
     </div>
     <div class="header_wrap">

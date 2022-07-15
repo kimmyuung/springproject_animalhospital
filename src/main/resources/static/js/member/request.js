@@ -33,10 +33,12 @@ function hnamesave(i){
 
 function request(){
 //    let hname = $("#hname").val();
-//    let hdate = $("#hdate").val();
-    let binimg = $("#binimg").val();
-    alert(hname + hdate+binimg);
-    let formData = new FormData($('#requestform')[0]);
+    let hdate = $("#hdate").val();
+    let hname = $('[name="hname"]').val();
+    alert(hname);
+//    let binimg = $("#binimg").val();
+//    alert(hname + hdate+binimg);
+    let formData = new FormData($("#requestform")[0]);
     $.ajax({
         url: '/member/requestsave',
         method: "POST",
@@ -47,7 +49,11 @@ function request(){
         contentType: false,
         processData: false ,
         success: function(result){
-            alert("완료");
+            if(result){
+                alert(신청완료);
+            }else{
+                alert(신청실패);
+            }
         }
     });
 }
