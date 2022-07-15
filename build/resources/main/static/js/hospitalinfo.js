@@ -598,44 +598,87 @@ function getreviewlist(page,hname,hdate){
                                                   }
 
                                                if(reviewlist.data[i].rimg2==null&&reviewlist.data[i].rimg1==null){
-                                                      html +=
-                                                        '<div class="row reviewlist" >'+
-                                                               '<div class="col-md-8"><div>'+reviewlist.data[i].mid+'</div> '+
-                                                               '<div id="mstar'+reviewlist.data[i].rno+'"></div> '+
-                                                               '<div id="mupdate'+reviewlist.data[i].rno+'"></div> '+
-                                                               '<div>'+reviewlist.data[i].rcontent+'</div> </div>'+
-                                                        '</div>';
+                                                     html +=
+                                                     ' <div class="user_review">'+
+                                                         '<div class="writer_area">'+
+                                                          '<span><i class="fas fa-user-alt"></i></span> <span class="id">'+reviewlist.data[i].mid+'</span> <span class="date">2022-07-15</span>'+
+                                                            '<div id="mstar'+reviewlist.data[i].rno+'"></div> '+
+                                                            '<div id="mupdate'+reviewlist.data[i].rno+'"></div> '+
+                                                         '</div>'+
+                                                         '<div class="user_content">'+
+
+                                                             '<div class="u_content">'+
+                                                               '<div class="c1"> '+reviewlist.data[i].rcontent+'</div>'+
+                                                             '</div>'+
+                                                         '</div>'+
+                                                     '  </div>'
                                                }
                                                else if(reviewlist.data[i].rimg2==null&&reviewlist.data[i].rimg1!=null){
-                                                     html +=
-                                                           '<div class="row reviewlist" >'+
-                                                               '<div class="col-md-8"><div>'+reviewlist.data[i].mid+'</div> '+
+                                                    html +=
+                                                        ' <div class="user_review">'+
+                                                            '<div class="writer_area">'+
+                                                             '<span><i class="fas fa-user-alt"></i></span> <span class="id">'+reviewlist.data[i].mid+'</span> <span class="date">2022-07-15</span>'+
                                                                '<div id="mstar'+reviewlist.data[i].rno+'"></div> '+
                                                                '<div id="mupdate'+reviewlist.data[i].rno+'"></div> '+
-                                                               '<div>'+reviewlist.data[i].rcontent+'</div> </div>'+
-                                                               '<div class="col-md-2"><div><img src="/upload/'+reviewlist.data[i].rimg1+'"></div></div>'+
-                                                        '</div>';
+                                                            '</div>'+
+                                                            '<div class="user_content">'+
+                                                                '<div class="img_area">'+
+                                                                  '<div class="first_img">'+
+                                                                    '<div class="img_sizing">'+
+                                                                      '<img src="/upload/'+reviewlist.data[i].rimg1+'">'+
+                                                                    '</div>'+
+                                                                  '</div>'+
+                                                                '</div>'+
+                                                                '<div class="u_content">'+
+                                                                  '<div class="c1"> '+reviewlist.data[i].rcontent+'</div>'+
+                                                                '</div>'+
+                                                            '</div>'+
+                                                        '  </div>'
                                                }
                                                else if(reviewlist.data[i].rimg2!=null&&reviewlist.data[i].rimg1==null){
-                                                     html +=
-                                                       '<div class="row reviewlist" >'+
-                                                          '<div class="col-md-8"><div>'+reviewlist.data[i].mid+'</div> '+
-                                                          '<div id="mstar'+reviewlist.data[i].rno+'"></div> '+
-                                                          '<div id="mupdate'+reviewlist.data[i].rno+'"></div> '+
-                                                          '<div>'+reviewlist.data[i].rcontent+'</div> </div>'+
-                                                          '<div class="col-md-2"><div><img src="/upload/'+reviewlist.data[i].rimg2+'"></div></div>'+
-                                                   '</div>';
+                                                    html +=
+                                                         ' <div class="user_review">'+
+                                                             '<div class="writer_area">'+
+                                                              '<span><i class="fas fa-user-alt"></i></span> <span class="id">'+reviewlist.data[i].mid+'</span> <span class="date">2022-07-15</span>'+
+                                                                '<div id="mstar'+reviewlist.data[i].rno+'"></div> '+
+                                                                '<div id="mupdate'+reviewlist.data[i].rno+'"></div> '+
+                                                             '</div>'+
+                                                             '<div class="user_content">'+
+                                                                 '<div class="img_area">'+
+                                                                   '<div class="first_img">'+
+                                                                     '<div class="img_sizing">'+
+                                                                       '<img src="/upload/'+reviewlist.data[i].rimg2+'">'+
+                                                                     '</div>'+
+                                                                   '</div>'+
+                                                                 '</div>'+
+                                                                 '<div class="u_content">'+
+                                                                   '<div class="c1"> '+reviewlist.data[i].rcontent+'</div>'+
+                                                                 '</div>'+
+                                                             '</div>'+
+                                                         '  </div>'
                                                }
                                                else{
                                                      html +=
-                                                       '<div class="row reviewlist" >'+
-                                                               '<div class="col-md-8"><div>'+reviewlist.data[i].mid+'</div> '+
-                                                               '<div id="mstar'+reviewlist.data[i].rno+'"></div> '+
-                                                               '<div id="mupdate'+reviewlist.data[i].rno+'"></div> '+
-                                                               '<div>'+reviewlist.data[i].rcontent+'</div> </div>'+
-                                                               '<div class="col-md-2"><div><img src="/upload/'+reviewlist.data[i].rimg1+'"></div></div>'+
-                                                               '<div class="col-md-2"><div><img src="/upload/'+reviewlist.data[i].rimg2+'"></div></div>'+
-                                                        '</div>';
+                                                      ' <div class="user_review">'+
+                                                          '<div class="writer_area">'+
+                                                           '<span><i class="fas fa-user-alt"></i></span> <span class="id">'+reviewlist.data[i].mid+'</span> <span class="date">2022-07-15</span>'+
+                                                             '<div id="mstar'+reviewlist.data[i].rno+'"></div> '+
+                                                             '<div id="mupdate'+reviewlist.data[i].rno+'"></div> '+
+                                                          '</div>'+
+                                                          '<div class="user_content">'+
+                                                              '<div class="img_area">'+
+                                                                '<div class="first_img">'+
+                                                                  '<div class="img_sizing">'+
+                                                                   ' <img src="/upload/'+reviewlist.data[i].rimg1+'">'+
+                                                                    '<img src="/upload/'+reviewlist.data[i].rimg2+'">'+
+                                                                  '</div>'+
+                                                                '</div>'+
+                                                              '</div>'+
+                                                              '<div class="u_content">'+
+                                                                '<div class="c1"> '+reviewlist.data[i].rcontent+'</div>'+
+                                                              '</div>'+
+                                                          '</div>'+
+                                                      '  </div>'
                                                }
                                                }
 
