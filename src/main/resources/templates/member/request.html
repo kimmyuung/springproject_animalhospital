@@ -9,23 +9,21 @@
 <body>
     <div class="container">
         <h3>병원등록</h3>
-        <form id="requestform" method="post" enctype=”multipart/form-data”>
+#        name="requestform" action="/member/requestsave" method="post" enctype=”multipart/form-data”
+        <form id="requestform" >
             <div>
                 <label>어느 병원이신가요?</label>
-                <input type="text" id="hname" name="hname" disabled>
-                <input type="hidden" id="hdate" name="hdate" disabled>
+                <input type="text" id="hname" name="hname" >
+                <input type="hidden" id="hdate" name="hdate" >
                 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
                     병원검색
                 </button>
             </div>
             <div>
-                <div>
-                    <input type="file" class="form-control" id="binimg" name="binimg">
-                </div>
+                <input type="file" class="form-control" id="binimg" name="binimg">
             </div>
-
             <div>
-                <button class="btn btn-primary" onclick="request()">등록 신청</button>
+                <button type="submit" class="btn btn-primary" onclick="request()">등록 신청</button>
             </div>
         </form>
 
