@@ -14,4 +14,5 @@ public interface ReviewRepository extends JpaRepository<ReviewEntity,Integer> {
     List<ReviewEntity> findBylist(@Param("hname") String hname, @Param("hdate") String hdate);
     @Query( value = "select * from review where hname =:hname and hdate =:hdate" , nativeQuery = true )
     Page<ReviewEntity> findByrlist(@Param("hname") String hname, @Param("hdate") String hdate, Pageable pageable);
+
 }

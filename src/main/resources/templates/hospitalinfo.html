@@ -5,20 +5,39 @@
   <title>Title</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="/css/hospitalinfo.css">
+  <script src="https://kit.fontawesome.com/d77abffe02.js"></script>
+  <!-- 폰트어썸[ 아이콘 ]  -->
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.14.0/css/all.css">
 </head>
 <body>
+<div th:replace="header.html :: header"></div>
+<div class="bgc">
+  <h1 id="hname"></h1>
+</div>
 
-<div class="container">
+<div class="container" >
+<div class="info_wrap">
+
+
+  <div id="map" style="width:100%;height:350px;"></div>
+
+</div>
+
+
+
+
   <div id="info">
-    <h3 id="hname"></h3>
-
     <div>
       <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal" onclick="modal()">
         리얼후기 등록하기
       </button>
     </div>
-    <div>
-      <div class="row">
+    <div class ="rivew_box">
+      <div class="row text-center">
+        <h5>전체평점</h5>
+        <span id="totalavg"></span>
+        <div id="ravg"></div>
+
         <div class="col-md-4">
           <h5>친절</h5>
           <div id="rkind"></div>
@@ -32,25 +51,24 @@
           <div id="rprice"></div>
         </div>
       </div>
-      <h5>전체평점</h5>
-      <span id="totalavg"></span>
-      <div id="ravg"></div>
-    </div>
-    <div class="row" id="table">
-      <div class="col-md-8">
-        <h5><span>작성자</span><span>등록일</span></h5>
-        <div>별</div>
-        <div>내용</div>
-      </div>
-      <div class="col-md-2">이미지</div>
-      <div class="col-md-2">이미지</div>
-    </div>
-    <div>
-      <ul id="pagebtnbox" class="pagination justify-content-center">
 
-      </ul>
+      <div>
     </div>
+
+    </div>
+    <div id="table">
+
+    </div>
+    <ul id="pagebtnbox" class="pagination justify-content-center">
+
+    </ul>
   </div>
+
+
+
+
+</div>
+  <span id="loginmidbox" sec:authentication="name"></span>
 
   <div class="modal" id="myModal">
     <div class="modal-dialog modal-xl">
@@ -91,7 +109,7 @@
           <h3>영수증사진등록<span>(개인정보유출에 유의해 등록해주세요)</span></h3>
           <div>
             <input type=file id="file2" name='file2' style='display: none;'>
-            <img class="preview" id="preview2" src='/img/plusimg.jpg' onclick='file2()'>
+            <img id="preview2" src='/img/plusimg.jpg' onclick='file2()'>
           </div>
           <div id="addbox">
             <button type="button" onclick="addreview()">등록하기</button>
@@ -102,10 +120,13 @@
     </div>
   </div>
 </div>
-</div>
+
+
+
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" ></script>
 <script  src="http://code.jquery.com/jquery-latest.min.js"></script>
+<script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=8b3a07d8d07edbf4917aee3d63a1b2a7&libraries=clusterer,services"></script>
 <script src="/js/hospitalinfo.js"></script>
 </body>
 </html>

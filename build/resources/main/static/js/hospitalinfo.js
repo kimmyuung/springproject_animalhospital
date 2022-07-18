@@ -1,18 +1,49 @@
+let list;
+let lat;
+let logt;
 info(0);
+ 출력()
 let page = 0;
 let hname = "";
 let hdate = "";
+
+
 function info(page){
     $.ajax({
         url: "/map/info",
         method: "POST",
         contentType : 'application/json' ,
+        async : false,
         success: function(re){
+        console.log(re)
+        lat = re.lat
+        logt = re.logt
             $("#hname").html(re.hname);
             getreviewlist(page,re.hname,re.hdate);
             getreviewstarlist(re.hname,re.hdate);
       }
     });
+}
+function 출력() {
+    var mapContainer = document.getElementById('map'), // 지도를 표시할 div
+        mapOption = {
+            center: new kakao.maps.LatLng(lat, logt), // 지도의 중심좌표
+            level: 3 // 지도의 확대 레벨
+        };
+
+    var map = new kakao.maps.Map(mapContainer, mapOption); // 지도를 생성합니다
+
+    // 마커가 표시될 위치입니다
+    var markerPosition  = new kakao.maps.LatLng(lat, logt);
+
+    // 마커를 생성합니다
+    var marker = new kakao.maps.Marker({
+        position: markerPosition
+    });
+
+    // 마커가 지도 위에 표시되도록 설정합니다
+    marker.setMap(map);
+
 }
 
 function modal(){
@@ -567,44 +598,87 @@ function getreviewlist(page,hname,hdate){
                                                   }
 
                                                if(reviewlist.data[i].rimg2==null&&reviewlist.data[i].rimg1==null){
-                                                      html +=
-                                                        '<div class="row reviewlist" onclick="rview('+reviewlist.data[i].rno+')">'+
-                                                               '<div class="col-md-8"><div>'+reviewlist.data[i].mid+'</div> '+
-                                                               '<div id="mstar'+reviewlist.data[i].rno+'"></div> '+
-                                                               '<div id="mupdate'+reviewlist.data[i].rno+'"></div> '+
-                                                               '<div>'+reviewlist.data[i].rcontent+'</div> </div>'+
-                                                        '</div>';
+                                                     html +=
+                                                     ' <div class="user_review">'+
+                                                         '<div class="writer_area">'+
+                                                          '<span><i class="fas fa-user-alt"></i></span> <span class="id">'+reviewlist.data[i].mid+'</span> <span class="date">2022-07-15</span>'+
+                                                            '<div id="mstar'+reviewlist.data[i].rno+'"></div> '+
+                                                            '<div id="mupdate'+reviewlist.data[i].rno+'"></div> '+
+                                                         '</div>'+
+                                                         '<div class="user_content">'+
+
+                                                             '<div class="u_content">'+
+                                                               '<div class="c1"> '+reviewlist.data[i].rcontent+'</div>'+
+                                                             '</div>'+
+                                                         '</div>'+
+                                                     '  </div>'
                                                }
                                                else if(reviewlist.data[i].rimg2==null&&reviewlist.data[i].rimg1!=null){
-                                                     html +=
-                                                           '<div class="row reviewlist" onclick="rview('+reviewlist.data[i].rno+')">'+
-                                                               '<div class="col-md-8"><div>'+reviewlist.data[i].mid+'</div> '+
+                                                    html +=
+                                                        ' <div class="user_review">'+
+                                                            '<div class="writer_area">'+
+                                                             '<span><i class="fas fa-user-alt"></i></span> <span class="id">'+reviewlist.data[i].mid+'</span> <span class="date">2022-07-15</span>'+
                                                                '<div id="mstar'+reviewlist.data[i].rno+'"></div> '+
                                                                '<div id="mupdate'+reviewlist.data[i].rno+'"></div> '+
-                                                               '<div>'+reviewlist.data[i].rcontent+'</div> </div>'+
-                                                               '<div class="col-md-2"><div><img src="/upload/'+reviewlist.data[i].rimg1+'"></div></div>'+
-                                                        '</div>';
+                                                            '</div>'+
+                                                            '<div class="user_content">'+
+                                                                '<div class="img_area">'+
+                                                                  '<div class="first_img">'+
+                                                                    '<div class="img_sizing">'+
+                                                                      '<img src="/upload/'+reviewlist.data[i].rimg1+'">'+
+                                                                    '</div>'+
+                                                                  '</div>'+
+                                                                '</div>'+
+                                                                '<div class="u_content">'+
+                                                                  '<div class="c1"> '+reviewlist.data[i].rcontent+'</div>'+
+                                                                '</div>'+
+                                                            '</div>'+
+                                                        '  </div>'
                                                }
                                                else if(reviewlist.data[i].rimg2!=null&&reviewlist.data[i].rimg1==null){
-                                                     html +=
-                                                       '<div class="row reviewlist" onclick="rview('+reviewlist.data[i].rno+')">'+
-                                                          '<div class="col-md-8"><div>'+reviewlist.data[i].mid+'</div> '+
-                                                          '<div id="mstar'+reviewlist.data[i].rno+'"></div> '+
-                                                          '<div id="mupdate'+reviewlist.data[i].rno+'"></div> '+
-                                                          '<div>'+reviewlist.data[i].rcontent+'</div> </div>'+
-                                                          '<div class="col-md-2"><div><img src="/upload/'+reviewlist.data[i].rimg2+'"></div></div>'+
-                                                   '</div>';
+                                                    html +=
+                                                         ' <div class="user_review">'+
+                                                             '<div class="writer_area">'+
+                                                              '<span><i class="fas fa-user-alt"></i></span> <span class="id">'+reviewlist.data[i].mid+'</span> <span class="date">2022-07-15</span>'+
+                                                                '<div id="mstar'+reviewlist.data[i].rno+'"></div> '+
+                                                                '<div id="mupdate'+reviewlist.data[i].rno+'"></div> '+
+                                                             '</div>'+
+                                                             '<div class="user_content">'+
+                                                                 '<div class="img_area">'+
+                                                                   '<div class="first_img">'+
+                                                                     '<div class="img_sizing">'+
+                                                                       '<img src="/upload/'+reviewlist.data[i].rimg2+'">'+
+                                                                     '</div>'+
+                                                                   '</div>'+
+                                                                 '</div>'+
+                                                                 '<div class="u_content">'+
+                                                                   '<div class="c1"> '+reviewlist.data[i].rcontent+'</div>'+
+                                                                 '</div>'+
+                                                             '</div>'+
+                                                         '  </div>'
                                                }
                                                else{
                                                      html +=
-                                                       '<div class="row reviewlist" onclick="rview('+reviewlist.data[i].rno+')">'+
-                                                               '<div class="col-md-8"><div>'+reviewlist.data[i].mid+'</div> '+
-                                                               '<div id="mstar'+reviewlist.data[i].rno+'"></div> '+
-                                                               '<div id="mupdate'+reviewlist.data[i].rno+'"></div> '+
-                                                               '<div>'+reviewlist.data[i].rcontent+'</div> </div>'+
-                                                               '<div class="col-md-2"><div><img src="/upload/'+reviewlist.data[i].rimg1+'"></div></div>'+
-                                                               '<div class="col-md-2"><div><img src="/upload/'+reviewlist.data[i].rimg2+'"></div></div>'+
-                                                        '</div>';
+                                                      ' <div class="user_review">'+
+                                                          '<div class="writer_area">'+
+                                                           '<span><i class="fas fa-user-alt"></i></span> <span class="id">'+reviewlist.data[i].mid+'</span> <span class="date">2022-07-15</span>'+
+                                                             '<div id="mstar'+reviewlist.data[i].rno+'"></div> '+
+                                                             '<div id="mupdate'+reviewlist.data[i].rno+'"></div> '+
+                                                          '</div>'+
+                                                          '<div class="user_content">'+
+                                                              '<div class="img_area">'+
+                                                                '<div class="first_img">'+
+                                                                  '<div class="img_sizing">'+
+                                                                   ' <img src="/upload/'+reviewlist.data[i].rimg1+'">'+
+                                                                    '<img src="/upload/'+reviewlist.data[i].rimg2+'">'+
+                                                                  '</div>'+
+                                                                '</div>'+
+                                                              '</div>'+
+                                                              '<div class="u_content">'+
+                                                                '<div class="c1"> '+reviewlist.data[i].rcontent+'</div>'+
+                                                              '</div>'+
+                                                          '</div>'+
+                                                      '  </div>'
                                                }
                                                }
 
@@ -747,6 +821,7 @@ alert(rno);
              data : { "rno" : rno } ,
              success: function( re ){
                 alert(re);
+                 location.reload();
              }
     });
 }

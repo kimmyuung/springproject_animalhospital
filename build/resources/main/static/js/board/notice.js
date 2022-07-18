@@ -2,6 +2,10 @@ let current_page = 0;
 let updatebno = 0;
 getnotice(0);
 
+var today = new Date();
+	formatDate(today);
+	let date = formatDate(today);
+
 function getnotice(page) {
 
 this.current_page = page;
@@ -12,7 +16,7 @@ $.ajax({
     type : 'post',
     data : {"page" : page },
     success : function(json) {
-    let html = "<tr> <th> 제목 </th> <th> 내용 </th><th> 작성날짜 </th><th>비고</th> </tr>";
+    let html = "<tr> <th> 제목 </th><th> 작성날짜 </th><th>비고</th> </tr>";
     let html2 = '';
     console.log(json);
     if(json.data.length == 0) {
@@ -21,35 +25,42 @@ $.ajax({
                                 '</tr>';
                                 }else{
        for(let i = 0; i < json.data.length; i++) {
+
+       if(json.data[i]["bindate"].split(" ")[0]==date) {
+       		json.data[i]["bindate"] = json.data[i]["bindate"].split(" ")[1]
+
+       	} else {
+       		json.data[i]["bindate"] = json.data[i]["bindate"].split(" ")[0]
+       	}
+
             html += '<tr>' +
-            '<td>'+ json.data[i]["btitle"] +'</td>' +
-            '<td>'+ json.data[i]["bcontent"] + '</td>' +
-            '<td>'+ json.data[i]["bindate"] + '</td>' +
-            '<td> <button type="button" onclick="bnosave('+json.data[i]["bno"]+')" data-bs-toggle="modal" data-bs-target="#myModal2")">공지사항 수정</button>' +
+            '<td width="60%" style="padding-left:50px;">'+ json.data[i]["btitle"] +'</td>' +
+            '<td width="20%" style="text-align:center">'+ json.data[i]["bindate"] + '</td>' +
+            '<td width="20%" style="text-align:center"> <button type="button" onclick="bnosave('+json.data[i]["bno"]+')" data-bs-toggle="modal" data-bs-target="#myModal2")">공지사항 수정</button>' +
                  '<button type="button" onclick="noticedelete('+json.data[i]["bno"]+')">공지사항 삭제</button>' +
              '</td></tr>';
              }
                ////////////////////////////////////// 이전 /////////////////////////////////////////////
              if( page == 0 )
               {
-              html2 += ' <div class="page-item col-md-2"><a class="page-link" onclick="getnotice('+ (page)+')">Previous</a></div>' ;
+              html2 += ' <div class="page-item "><a class="page-link" onclick="getnotice('+ (page)+')">이전</a></div>' ;
               } else{
                  html2 +=
-                   ' <div class="page-item col-md-2"><a class="page-link" onclick="getnotice('+(page-1)+')">Previous</a></div>' ;
+                   ' <div class="page-item "><a class="page-link" onclick="getnotice('+(page-1)+')">이전</a></div>' ;
                     }
                                ////////////////////////////////////// 페이징 ////////////////////////////////////////////
               for( let i = json.startbtn-1 ; i <= json.endbtn - 1; i++) {
-                    html2 += '<div class="page-item col-md-2"><button class="btn btn-primary mx-1" onclick="getnotice(' + i +')">'
+                    html2 += '<div class="page-item "><button class="btn btn-primary mx-1" onclick="getnotice(' + i +')">'
                     + (i+1) + '</button></div>';
                      }
                              ////////////////////////////////////// 이후 버튼 //////////////////////////////////////////
                              if(page == json.totalpage-1){
                              html2 +=
-                              ' <div class="page-item col-md-2"><a class="page-link" onclick="getnotice('+ (page) +')">Next</a></div>' ;
+                              ' <div class="page-item "><a class="page-link" onclick="getnotice('+ (page) +')">다음</a></div>' ;
                              }
                              else {
                               html2 +=
-                              ' <div class="page-item col-md-2"><a class="page-link" onclick="getnotice('+(page+1)+')">Next</a></div>' ;
+                              ' <div class="page-item "><a class="page-link" onclick="getnotice('+(page+1)+')">다음</a></div>' ;
                               }
 
 
@@ -113,4 +124,19 @@ $.ajax({
            }
     });
 }
+}
+
+
+function formatDate(date) {
+    var d = new Date(date),
+        month = '' + (d.getMonth() + 1),
+        day = '' + d.getDate(),
+        year = d.getFullYear();
+
+    if (month.length < 2)
+        month = '0' + month;
+    if (day.length < 2)
+        day = '0' + day;
+
+    return [year, month, day].join('-');
 }
