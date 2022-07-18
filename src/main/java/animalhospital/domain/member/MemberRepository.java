@@ -9,9 +9,11 @@ import java.util.Optional;
 public interface MemberRepository extends JpaRepository<MemberEntity , Integer> {
 
     // 1.아이디를 이용한 엔티티 검색
+    @Query( value = "select * from member where mid = :mid limit 1" , nativeQuery = true )
     Optional< MemberEntity> findBymid( String mid ); // select  sql 문법 없이 검색 메소드 생성
     // 2. 이메일을 이용한 엔티티 검색
-    Optional< MemberEntity > findBymemail( String email );
+    @Query( value = "select * from member where memail = :memail" , nativeQuery = true )
+    Optional< MemberEntity > findBymemail( String memail );
 
 }
 

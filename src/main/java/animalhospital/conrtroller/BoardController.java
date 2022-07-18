@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
@@ -19,6 +20,10 @@ public class BoardController {
 
     @Autowired
     private BoardService boardService;
+
+    @Autowired
+    private HttpServletRequest request;
+
 
     @GetMapping("/list")
     public String list(){ return "board/mypetlist";}
@@ -134,5 +139,16 @@ public class BoardController {
             System.out.println("getrereply error : "+e);
         }
     }
+    @GetMapping("/gettipboard")
+    public void gettipboard( HttpServletResponse response){
+        int bno =  (Integer) request.getSession().getAttribute("bno");
 
+        try {
+            response.setCharacterEncoding("UTF-8");
+            response.setContentType("application/json");
+            response.getWriter().print(boardService.getboard(  bno   ));
+        }catch( Exception e ){
+            System.out.println( e );
+        }
+    }
 }

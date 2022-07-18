@@ -43,6 +43,10 @@ public class MemberEntity {
 
     @Builder.Default    // 빌더 사용시 초기값 설정
     @OneToMany( mappedBy ="member" , cascade = CascadeType.ALL)  // 1:M
-    List<ShopEntity> shopEntityList = new ArrayList<>();
+    List<ShopEntity> shopEntityList = new ArrayList<>(); // 올린상품 리스트
+
+    @Builder.Default    // 빌더 사용시 초기값 설정
+    @OneToMany( mappedBy ="member" , cascade = CascadeType.ALL)  // 1:M
+    List<ShopEntity> shoplikeEntityList = new ArrayList<>(); //  관심상품 리스트
 
 }

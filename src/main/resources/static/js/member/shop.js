@@ -29,7 +29,7 @@ $.ajax({
             '<td>'+ json.itemlist[i].bdate + '</td>' +
             '<td>'+ json.itemlist[i].sprice + '</td>' +
             '<td>'+ json.itemlist[i].mid + '</td>' +
-            '<td> <button type="button" onclick="showitem('+json.itemlist[i].sno+')">상품 상세보기</button>' +
+            '<td> <button type="button" onclick="itemview('+json.itemlist[i].sno+')">상품 상세보기</button>' +
              '</td></tr>';
              }
                ////////////////////////////////////// 이전 /////////////////////////////////////////////
@@ -80,50 +80,18 @@ $.ajax({
             processData : false,
             success : function(re) {
             console.log(re);
-           if(re == true) {alert("등록 성공"); getitemlist(0);}
+           if(re == true) {alert("등록 성공"); getitemlist(0);
+           $("#sprcie").val('');
+           $("#stitle").val('');
+           $("#scontent").val('');
+           }
            else { alert("등록 실패");}
            }
     });
-    $("#btitle").val("");
-    $("#bcontent").val("");
+
 }
 
+function itemview(sno) {
 
-function bnosave(bno) {
-updatebno = bno;
-console.log(updatebno);
-}
-function itemupdate(updatebno) {
-console.log(updatebno);
-$.ajax({
-            url : '/member/itemupdate',
-            type: "PUT",
-            data : {"sno" : updatebno, "stitle" : $("#stitle2").val(),"scontent" : $("#scontent2").val()} ,
-            success : function(re) {
-            console.log(re);
-           if(re == true) {alert("수정 성공"); getitem(0);}
-           else { alert("수정 실패");}
-           }
-    });
-        $("#btitle2").val() = "";
-        $("#bcontent2").val() = "";
-}
-
-function itemdelete(sno) {
-if(confirm("정말 상품을 삭제하시겠습니까?")) {
-$.ajax({
-            url : '/member/deleteitem',
-            type: "DELETE",
-            data : {"sno" : sno } ,
-            success : function(re) {
-            console.log(re);
-           if(re == true) {alert("삭제 성공"); getitem(0);}
-           else { alert("삭제 실패");}
-           }
-    });
-}
-}
-
-function showitem(sno) {
-alert(sno);
+location.href = '/member/itemview?sno='+ sno;
 }

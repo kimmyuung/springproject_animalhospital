@@ -61,9 +61,9 @@ public class MemberController {
 
     @PutMapping("/itemupdate")
     @ResponseBody
-    public boolean itemupdate( @RequestParam("sno") int sno, ShopDto shopDto)
+    public boolean itemupdate( ShopDto shopDto)
     {
-        return itemService.itemupdate(sno, shopDto);
+        return itemService.itemupdate(shopDto);
     }
 
     @DeleteMapping("/deleteitem")
@@ -72,6 +72,14 @@ public class MemberController {
         return itemService.itemdelete(sno);
     }
 
+    @GetMapping("/itemview{sno}")
+    public String itemview(@PathVariable("sno") String sno) {return "member/itemview";}
+
+    @GetMapping("/idcheck")
+    @ResponseBody
+    public boolean idcheck(@RequestParam("sno") int sno) {
+        return itemService.idcheck(sno);
+    }
 
 
 }

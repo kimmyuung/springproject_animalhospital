@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ShopRepository extends JpaRepository<ShopEntity, Integer> {
 
@@ -17,6 +18,8 @@ public interface ShopRepository extends JpaRepository<ShopEntity, Integer> {
     @Query( value = "select * from shop where sno = :sno" , nativeQuery = true )
     List<ShopEntity> findbynoticelist(int sno, Pageable pageable);
 
+    @Query( value = "select * from shop where mno = :mno" , nativeQuery = true )
+    List<ShopEntity> findbymno(int mno);
 
 
 }

@@ -19,10 +19,21 @@ public class MessageEntity extends BaseTime {
     private int msgno;
 
     private String msg;
+    private int msgtype;
+    // 메시지 타입 : 1번 (병원과 회원 간의 메시지) 2번 (회원과 회원 간의 메시지)
 
     @ManyToOne // 메시지 받는 사람
-    @JoinColumn(name = "frommno")
+    @JoinColumn(name = "tomno")
     MemberEntity toentity;
+
+    @ManyToOne // 병원 관리자
+    @JoinColumn(name="hospital")
+    MemberEntity hospitalEntity;
+
+
+    @ManyToOne // 메시지 보내는 사람
+    @JoinColumn(name = "frommno")
+    MemberEntity fromentity;
 
     // 보내는 사람은 운영자로 고정되어 있으므로 굳이 컬럼으로 잡지 않음
 

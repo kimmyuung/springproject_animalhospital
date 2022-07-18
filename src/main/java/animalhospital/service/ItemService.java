@@ -1,5 +1,7 @@
 package animalhospital.service;
 
+import animalhospital.domain.board.BoardEntity;
+import animalhospital.domain.board.BoardimgEntity;
 import animalhospital.domain.member.MemberEntity;
 import animalhospital.domain.member.MemberRepository;
 import animalhospital.domain.shop.ShopEntity;
@@ -76,7 +78,9 @@ public class ItemService {
                         UUID uuid = UUID.randomUUID();
 
                         uuidfile = uuid.toString() + "_" + file.getOriginalFilename().replaceAll("_", "-");
-                        String dir = "C:\\Users\\504\\springproject_animalhospital\\src\\main\\resources\\static\\upload\\";
+                     //   String dir = "C:\\Users\\504\\springproject_animalhospital\\src\\main\\resources\\static\\upload\\";
+                        String dir = "C:\\Users\\82104\\git\\springproject_-animalhospital\\src\\main\\resources\\static\\upload\\"; // my notebook
+
                         String filepath = dir + uuidfile;
 
                         try {
@@ -86,11 +90,13 @@ public class ItemService {
                                     .simg(uuidfile)
                                     .shopEntity(shopEntity)
                                     .build();
+                            System.out.println(shopImgEntity.toString());
 
                             shopImgRepository.save(shopImgEntity);
 
                             shopEntity.getShopimgEntities().add(shopImgEntity);
 
+                            System.out.println(shopEntity.getShopimgEntities().toString());
                         } catch (Exception e) {
                             System.out.println("파일저장실패 : " + e);
                         }
@@ -161,6 +167,7 @@ public class ItemService {
         Optional<ShopEntity> optional =  shopRepository.findById(sno );
         ShopEntity shopEntity =  optional.get();
         String same = null;
+
         if(loginDto == null){
             same = "false";
         }else if(shopEntity.getMember().getMid().equals(loginDto.getMid())){
@@ -176,13 +183,15 @@ public class ItemService {
         object.put("bcontent" , shopEntity.getScontent());
         object.put("mid" , shopEntity.getMember().getMid());
         object.put("same" , same);
-
+        object.put("price" , shopEntity.getPrice());
+        object.put("status" , shopEntity.isItemstatus());
         JSONArray jsonArray = new JSONArray();
         for(  ShopImgEntity temp : shopEntity.getShopimgEntities() ) { //  룸별로 이미지 여러개
             jsonArray.put( temp.getSimg());
         }
         // 3. jsonarray를 json객체 포함
         object.put("bimglist" , jsonArray) ;
+
         // 3. 반한
         return object;
     }
@@ -192,6 +201,9 @@ public class ItemService {
         ShopEntity shopEntity =  shopRepository.findById( sno ).get();
         if( shopEntity != null ){
             // 해당 엔티티를 삭제
+            for(ShopImgEntity temp : shopEntity.getShopimgEntities()){
+                shopImgRepository.delete( temp );
+            }
             shopRepository.delete( shopEntity );
             return true;
         }else{
@@ -200,15 +212,95 @@ public class ItemService {
     }
 
     @Transactional
-    public boolean itemupdate(int bno, ShopDto shopDto) {
-        Optional<ShopEntity> optional = shopRepository.findById(bno);
+    public boolean itemupdate(ShopDto shopDto) {
+        Optional<ShopEntity> optional = shopRepository.findById(shopDto.getSno());
+        String dir = "C:\\Users\\82104\\git\\springproject_-animalhospital\\src\\main\\resources\\static\\upload\\"; // my notebook
+
         if(optional.isPresent()) {
             ShopEntity shopEntity = optional.get(); // 새로운 내용을 인수로 보내야 함
+            if(shopEntity.getShopimgEntities().size() != 0) {
+                for (ShopImgEntity temp : shopEntity.getShopimgEntities()) {
+                    try{
+                        File oldfile = new File(dir + temp.getSimg());
+                        if(oldfile.exists()) {
+                            oldfile.delete();
+                            shopEntity.setShopimgEntities(null);
+                            shopImgRepository.deleteById(temp.getSimgno());
+                        }
+                    }catch(Exception e){e.printStackTrace();}
+                }
+            }
             shopEntity.setScontent(shopDto.getScontent());
             shopEntity.setPrice(shopDto.getPrice());
             shopEntity.setStitle(shopDto.getStitle());
-            shopEntity.setShopimgEntities(shopDto.toentity().getShopimgEntities());
+            String uuidfile = null;
+
+            if (shopDto.getSimg().size() != 0) {
+                for (MultipartFile file : shopDto.getSimg()) {
+
+                    UUID uuid = UUID.randomUUID();
+
+                    uuidfile = uuid.toString() + "_" + file.getOriginalFilename().replaceAll("_", "-");
+                  //  String dir = "C:\\Users\\504\\springproject_animalhospital\\src\\main\\resources\\static\\upload\\";
+
+                    String filepath = dir + uuidfile;
+
+                    try {
+
+                        file.transferTo(new File(filepath));
+
+                        ShopImgEntity shopImgEntity = ShopImgEntity.builder()
+                                .simg(uuidfile)
+                                .shopEntity(shopEntity)
+                                .build();
+
+                        shopImgRepository.save(shopImgEntity);
+
+                        shopEntity.getShopimgEntities().add(shopImgEntity);
+
+                        System.out.println(shopEntity.getShopimgEntities().toString());
+
+                    } catch (Exception e) {
+
+                    }
+                }
+
+            }
             return true;
+        }
+        return false;
+    }
+
+    public boolean idcheck(int sno) {
+        Optional<ShopEntity> optional = shopRepository.findById(sno);
+        if(optional.isPresent()) {
+            ShopEntity shopEntity = optional.get();
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            Object principal = authentication.getPrincipal();
+            String mid = null;
+            if( principal instanceof UserDetails){
+                mid = ((UserDetails) principal).getUsername();
+            }else if( principal instanceof DefaultOAuth2User){
+                Map<String , Object> map =  ((DefaultOAuth2User) principal).getAttributes();
+                if( map.get("response") != null ){
+                    Map< String , Object> map2  = (Map<String, Object>) map.get("response"); // 네이버
+                    mid = map2.get("email").toString().split("@")[0];
+                }else if(map.get("kakao_account") != null){
+                    Map< String , Object> map2  = (Map<String, Object>) map.get("kakao_account"); // 카카오
+                    mid = map2.get("email").toString().split("@")[0];
+                }else if(map.get("kakao_account") == null && map.get("response") == null ) { // 구글, 깃허브
+                    mid = map.get("email").toString().split("@")[0];
+                }
+            }else{
+                return false;
+            }
+            if( mid != null  ) {
+                Optional<MemberEntity> optionalMember = memberRepository.findBymid(mid);
+                if(optionalMember.isPresent()) {
+                    return true;
+                }
+            }
+            else {return false;}
         }
         return false;
     }

@@ -33,4 +33,5 @@ public class ShopEntity extends BaseTime {
     private MemberEntity member;
 
 
+
 }
