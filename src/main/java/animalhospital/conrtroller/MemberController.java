@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 @RequestMapping("/member")
 @Controller
@@ -53,6 +54,15 @@ public class MemberController {
         return result;
     }
 
-
+    @GetMapping("/getmid")
+    @ResponseBody
+    public void getmid(HttpServletRequest request, HttpServletResponse response){
+        try {
+            System.out.println("mid : " + request.getSession().getAttribute("login"));
+//            response.getWriter().println();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
 }

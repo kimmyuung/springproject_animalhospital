@@ -22,11 +22,11 @@ public class MessageEntity extends BaseTime {
     private boolean isread;
 
     @ManyToOne
-    @JoinColumn(name="hospital")
-    MemberEntity hospitalEntity;
+    @JoinColumn(name="fromentity")
+    MemberEntity fromentity;
 
     @ManyToOne
-    @JoinColumn(name="member")
-    MemberEntity memberEntity;
+    @JoinColumn(name="toentity")
+    MemberEntity toentity;
 
 }

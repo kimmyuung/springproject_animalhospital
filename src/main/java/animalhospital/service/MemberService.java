@@ -1,9 +1,8 @@
 package animalhospital.service;
 
-import animalhospital.domain.member.MemberEntity;
-import animalhospital.domain.member.MemberRepository;
-import animalhospital.domain.member.RequestEntity;
-import animalhospital.domain.member.RequestRepository;
+import animalhospital.domain.member.*;
+import animalhospital.domain.message.MessageEntity;
+import animalhospital.domain.message.MessageRepository;
 import animalhospital.dto.LoginDto;
 import animalhospital.dto.OauthDto;
 import animalhospital.dto.RequestDto;
@@ -24,6 +23,7 @@ import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 
@@ -202,7 +202,7 @@ public class MemberService implements OAuth2UserService<OAuth2UserRequest ,OAuth
                 int mno = optionalMember.get().getMno();
                 RequestEntity requestEntity = requestDto.toentity();
                 requestEntity.setMid(mid);
-
+                requestEntity.setMno(mno);
                 String uuidfile = null;
                 UUID uuid = UUID.randomUUID();
                 MultipartFile file = requestDto.getBinimg();
@@ -236,9 +236,71 @@ public class MemberService implements OAuth2UserService<OAuth2UserRequest ,OAuth
             object.put("hname", entity.getHname());
             object.put("hdate", entity.getHdate());
             object.put("mid", entity.getMid());
+            object.put("mno", entity.getMno());
             object.put("binimg", entity.getBinimg());
             jsonArray.put(object);
         }
         return jsonArray;
     }
+
+    @Transactional
+    public boolean setrole(int mno, String hname, String hdate, String bin) {
+        System.out.println(mno + hname + hdate + bin);
+        if(bin !=null){
+            String hospital = "HOSPITAL";
+            MemberEntity memberEntity = memberRepository.findBymno(mno);
+            memberEntity.setRole(Role.HOSPITAL);
+            memberRepository.save(memberEntity);
+            System.out.println(memberEntity.getRole().getKey());
+            RequestEntity requestEntity = requestRepository.findBymno(mno);
+            requestEntity.setBin(bin);
+            requestEntity.setActive(true);
+            requestRepository.save(requestEntity);
+            return  true;
+        }else {
+            return false;
+        }
+    }
+
+    //쪽지
+    //메시지 전송
+    @Autowired
+    private MessageRepository messageRepository;
+
+    @Transactional
+    public boolean messagesend(JSONObject object){
+        String from = (String) object.get("from");
+        String to = (String) object.get("to");
+        String msg = (String) object.get("msg");
+
+        MemberEntity fromentity = null;
+        Optional<MemberEntity> optionalMember1 = memberRepository.findBymid(from);
+        if(optionalMember1.isPresent()){
+            fromentity = optionalMember1.get();
+        }else {
+            return false;
+        }
+        MemberEntity toentity = null;
+        Optional<MemberEntity> optionalMember2 = memberRepository.findBymid(to);
+        if(optionalMember2.isPresent()){
+            toentity =optionalMember2.get();
+        }else {
+            return false;
+        }
+
+        MessageEntity messageEntity = MessageEntity.builder()
+                .msg(msg)
+                .fromentity(fromentity)
+                .toentity(toentity)
+                .build();
+
+        messageRepository.save(messageEntity);
+
+        fromentity.getFromentitylist().add(messageEntity);
+        toentity.getToentitylist().add(messageEntity);
+        return true;
+
+    }
+
+
 }

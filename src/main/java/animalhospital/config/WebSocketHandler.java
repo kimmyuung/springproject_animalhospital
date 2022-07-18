@@ -6,19 +6,19 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
-import java.util.ArrayList;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+
 @Component
 public class WebSocketHandler extends TextWebSocketHandler {
 
-    private static List<WebSocketSession> list = new ArrayList<>();
+    private Map<WebSocketSession, String> list = new HashMap<>();
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
         System.out.println("서버에 접속했습니다." + session);
-        list.add(session);
+        String path = session.getUri().getPath();
+        String mid = path.substring(path.lastIndexOf("/")+1);
+        list.put(session, mid);
 //        super.afterConnectionEstablished(session);
     }
 

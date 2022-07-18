@@ -2,6 +2,7 @@ package animalhospital.domain.member;
 
 
 import animalhospital.domain.BaseTime;
+import animalhospital.domain.message.MessageEntity;
 import lombok.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -25,8 +26,6 @@ public class MemberEntity {
     private String mname;
     private String memail;
     private String oauth;   // 일반회원=인증  /oauth 구분용
-    private String hname;
-    private String hdate;
 
     // DB에 저장될 enum 타입 설정
     // @Enumerated( EnumType.ORDINAL ) //열거형 인덱스 번호
@@ -36,5 +35,13 @@ public class MemberEntity {
     public String getrolekey() {  //시큐리티에서 인증허가 된 리스트에 보관하기 위해서
         return role.getKey();
     }
+
+    @Builder.Default    // 빌더 사용시 초기값 설정
+    @OneToMany( mappedBy ="fromentity" , cascade = CascadeType.ALL)  // 1:M
+    List<MessageEntity> fromentitylist = new ArrayList<>();
+
+    @Builder.Default    // 빌더 사용시 초기값 설정
+    @OneToMany( mappedBy ="toentity" , cascade = CascadeType.ALL)  // 1:M
+    List<MessageEntity> toentitylist = new ArrayList<>();
 
 }

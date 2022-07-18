@@ -161,6 +161,7 @@ avg();
 function avg(){
     cavg=((ckind+cfac+cprice)/3).toFixed(1);
     $("#avg").html(cavg);
+    int i;
     if(i==1){
         document.getElementById("avg1").src =  "/img/star2.png";
         document.getElementById("avg2").src = "/img/star1.png";
@@ -223,3 +224,4 @@ function file1(){
 function file2(){
     document.all.file2.click();
 }
+
