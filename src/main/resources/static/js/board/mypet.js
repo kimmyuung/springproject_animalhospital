@@ -1,4 +1,5 @@
 function save(){
+
         if($("#bimg").val()==""){
             alert("이미지를 하나 이상 등록해주세요");
         }else if($("#btitle").val()==""){
@@ -99,7 +100,7 @@ function boardlist( page){
                              '</li>';
                       }
                       console.log(boardlist.blists);
-                     for( let i = boardlist.blists[0].startbtn ; i<=boardlist.blists[0].endbtn; i++ ){
+                     for( let i = boardlist.blists[0].startbtn ; i<=boardlist.blists[0].endhtn; i++ ){
                         pagehtml +=
                               '<li class="page-item"> '+
                                 '<button class="page-link" onclick="boardlist('+(i-1)+')"> '+i+' </button>'+
@@ -121,8 +122,8 @@ function boardlist( page){
                 $("#pagebtnbox").html( pagehtml);
     		}
     	});
-
 }
+
 let bno = 0;
 let bnum;
 function bview(bno){
@@ -181,12 +182,12 @@ alert(bno);
                      if( i == 0 ){  // 첫번째 이미지만 active 속성 추가
                         imgtag +=
                                      '<div class="carousel-item active">'+
-                                         '<img id="img_preview" src="/upload/'+board.bimglist[i]+'" class="d-block w-100" alt="...">'+
+                                         '<img id="img_preview2" src="/upload/'+board.bimglist[i]+'" class="d-block w-100" alt="...">'+
                                     '</div>';
                      }else{
                         imgtag +=
                                  '<div class="carousel-item">'+
-                                     '<img id="img_preview" src="/upload/'+board.bimglist[i]+'" class="d-block w-100" alt="...">'+
+                                     '<img id="img_preview2" src="/upload/'+board.bimglist[i]+'" class="d-block w-100" alt="...">'+
                                 '</div>';
                      }
                 }
@@ -200,7 +201,7 @@ function tipupdate(){
     let form = $("#updateform")[0];
             let formdata = new FormData( form);
             $.ajax({
-                url: "/board/tipupdate",
+                url: "/board/mypetupdate",
                 method: "PUT",
                 data : formdata ,
                 contentType: false,
@@ -253,33 +254,21 @@ $(function() {
     });
 });
 
+
 $(function() {
-    // Multiple images preview in browser
-    var imagesPreview = function(input, placeToInsertImagePreview) {
-
-        if (input.files) {
-            var filesAmount = input.files.length;
-//               $(".preview").html("");
-        console.log(filesAmount);
-            for (i = 0; i < filesAmount; i++) {
-                var reader = new FileReader();
-
-                reader.onload = function(event) {
-                  $($("#img_preview")).attr('src', event.target.result).appendTo(placeToInsertImagePreview);
-//
-                     $($.parseHTML('<img>')).attr('style', 'width:80%');
-                }
-
-                reader.readAsDataURL(input.files[i]);
-            }
-        }
-    };
-
-    $('#bimg2').on('change', function() {
-        imagesPreview(this, 'div.preview');
+    $("#bimg2").on('change', function(){
+    readURL(this);
     });
 });
-
+function readURL(input) {
+    if (input.files && input.files[0]) {
+        var reader = new FileReader();
+        reader.onload = function (e) {
+        $('#img_preview2').attr('src', e.target.result);
+        }
+        reader.readAsDataURL(input.files[0]);
+    }
+}
 
 
 function replysave(){

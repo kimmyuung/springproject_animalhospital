@@ -68,6 +68,18 @@ public class BoardController {
         return result;
     }
 
+    @PutMapping("/mypetupdate")
+    @ResponseBody
+    public boolean mypetupdate( BoardDto boardDto ){
+        boardDto.setCno(2);
+        int bno =  (Integer) request.getSession().getAttribute("bno");
+        boardDto.setBno(bno);
+        boolean result = boardService.save( boardDto );
+
+        return result;
+    }
+
+
     @PostMapping("/blist")
     @ResponseBody
     public Map< String , List<Map<String , String >>>

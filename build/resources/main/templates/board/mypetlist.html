@@ -10,7 +10,7 @@
 
 <div th:replace="board/boardmenu.html :: boardmenu"></div>
 
-<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal">
+<button sec:authorize="isAuthenticated()" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal">
     사진올리기
 </button>
 <div id="table" class="container">
@@ -121,7 +121,7 @@
                     <div class="row">
                         <div class="col-md-6 modal_left">
                             <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
-                                <div class="carousel-inner" id="preview2">
+                                <div class="carousel-inner preview2" id="preview2">
                                 </div>
                             </div>
                             <div>

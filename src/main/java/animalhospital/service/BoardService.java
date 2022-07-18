@@ -154,6 +154,7 @@ public class BoardService {
         return false;
     }
 
+
     public Map< String , List<Map<String , String >>> boardlist(int page ) // 인수
     {
 
@@ -191,7 +192,7 @@ public class BoardService {
         Map< String , List<  Map<String , String >  > > object = new HashMap<>();
 
         object.put( "blists" , Maplist );
-
+        System.out.println(object);
         return  object;
     }
 
