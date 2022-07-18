@@ -9,38 +9,53 @@
     <link rel="stylesheet" type="text/css" href="/css/login.css">
 </head>
 <body>
-<h3> 로그인 페이지 </h3>
+<div th:replace="header.html :: header"></div>
 
-<div class="container">
+<div class="login_wrap">
+    <h3> 로그인 페이지 </h3>
 
-    <div class="col-md-6 offset-md-3 signupbox" >
-        <div class="row">
-
-            <div class="col-md-6 p-4">
-                <img src="/img/logo.png" width="100%"> </div>
-                <div class="col-md-6 p-4">
-                    <h5 class="text-center"> SNS 간편 회원가입 </h5>
-                    <button onclick="location.href='/oauth2/authorization/naver'" class="mb-2 w-100 btn btn-lg rounded-4 btn naverbtn"> 네이버 로그인 </button>
-                    <button onclick="location.href='/oauth2/authorization/kakao'" class="mb-2 w-100 btn btn-lg rounded-4 btn kakaobtn"> 카카오 로그인 </button>
-                    <button onclick="location.href='/oauth2/authorization/google'" class="mb-2 w-100 btn btn-lg rounded-4 btn kakaobtn"> 구글 로그인 </button>
-                    <button onclick="location.href='/oauth2/authorization/github'" class="mb-2 w-100 btn btn-lg rounded-4 btn kakaobtn"> 깃 로그인 </button>
+    <div >
+        <div>
+            <h3>개발자에게 받은 관리자 아이디와 비밀번호를 입력해주세요</h3>
+            <h6>관리자 모드 로그인</h6>
+            <!-- DB에 아이디 : admin 비밀번호 : {noop}1234 role : ADMIN oauth : ADMIN!-->
+            <form method="post" action="/member/adminlogincontroller">
+                <div>
+                    <input type="text" name="mid" placeholder="admin id" id="mid">
                 </div>
-                <button onclick="location.href='/'" class="btn"> 뒤로가기 </button>
+                <div>
+                    <input type="password" name ="mpassword" placeholder="admin password" id="mpassword">
+                </div>
+                <div>
+                    <input type="submit" value="AdminLogin">
+                </div>
+
+            </form>
+        </div>
+
+        <div>
+            <div>
+                <button onclick="location.href='/oauth2/authorization/naver'" > 네이버 로그인 </button>
+            </div>
+            <div>
+                <button onclick="location.href='/oauth2/authorization/kakao'" > 카카오 로그인 </button>
+            </div>
+            <div>
+                <button onclick="location.href='/oauth2/authorization/google'" > 구글 로그인 </button>
+            </div>
+            <div>
+                <button onclick="location.href='/oauth2/authorization/github'" > 깃 로그인 </button>
+            </div>
+
+            <button onclick="location.href='/'" > 뒤로가기 </button>
         </div>
     </div>
-</div>
+
+
 </div>
 
-<div>
-    <h3>개발자에게 받은 관리자 아이디와 비밀번호를 입력해주세요</h3>
-    <h6>관리자 모드 로그인</h6>
-    <!-- DB에 아이디 : admin 비밀번호 : {noop}1234 role : ADMIN oauth : ADMIN!-->
-    <form method="post" action="/member/adminlogincontroller">
-        <input type="text" name="mid" placeholder="admin id" id="mid">
-        <input type="password" name ="mpassword" placeholder="admin password" id="mpassword">
-        <input type="submit" value="AdminLogin">
-    </form>
-</div>
+
+
 
 
 
