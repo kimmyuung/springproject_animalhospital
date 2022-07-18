@@ -19,7 +19,9 @@ public interface MemberRepository extends JpaRepository<MemberEntity , Integer> 
 
 
 
-    Optional<MemberEntity>findBymno (String mno);
+    MemberEntity findBymno (int mno);
+
+
 
 }
 
