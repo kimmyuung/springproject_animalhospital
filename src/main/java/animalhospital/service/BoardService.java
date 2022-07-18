@@ -86,8 +86,7 @@ public class BoardService {
                         UUID uuid = UUID.randomUUID();
 
                         uuidfile = uuid.toString() + "_" + file.getOriginalFilename().replaceAll("_", "-");
-                        //String dir = "C:\\Users\\504\\springproject_animalhospital\\src\\main\\resources\\static\\upload\\";
-                            String dir  = "D:\\sdy\\springproject_animalhospital\\src\\main\\resources\\static\\upload\\";
+                        String dir = "C:\\Users\\504\\springproject_animalhospital\\src\\main\\resources\\static\\upload\\";
                         String filepath = dir + uuidfile;
 
                         try {
@@ -591,31 +590,40 @@ public class BoardService {
     @Transactional
     public boolean bupdate(BoardDto boardDto) {
 
-        Optional<BoardEntity> optional
-                =  boardRepository.findById( boardDto.getBno() );
-        BoardEntity boardEntity =  optional.get();
+        Optional<BoardEntity> optional = boardRepository.findById(boardDto.getBno());
+        String dir = "C:\\Users\\504\\springproject_animalhospital\\src\\main\\resources\\static\\upload\\"; // my notebook
 
-        boardEntity.setBtitle(boardDto.getBtitle());
-        boardEntity.setBcontent(boardDto.getBcontent());
-        if( boardDto.getBimg()!=null){
-            List<BoardimgEntity> boardimgEntityList = boardimgRespository.getboardimgEntities(boardDto.getBno());
-            for(BoardimgEntity boardimgEntity: boardimgEntityList){
-                boardimgRespository.delete(boardimgEntity);
+        if(optional.isPresent()) {
+            BoardEntity boardEntity = optional.get(); // 새로운 내용을 인수로 보내야 함
+            if(boardEntity.getBoardimgEntities().size() != 0) {
+                for (BoardimgEntity temp : boardEntity.getBoardimgEntities()) {
+                    try{
+                        File oldfile = new File(dir + temp.getBimg());
+                        if(oldfile.exists()) {
+                            oldfile.delete();
+                            boardEntity.setBoardimgEntities(null);
+                            boardimgRespository.deleteById(temp.getBimgno());
+                        }
+                    }catch(Exception e){e.printStackTrace();}
+                }
             }
-
+            boardEntity.setBcontent(boardDto.getBcontent());
+            boardEntity.setBtitle(boardDto.getBtitle());
             String uuidfile = null;
+
             if (boardDto.getBimg().size() != 0) {
                 for (MultipartFile file : boardDto.getBimg()) {
+
                     UUID uuid = UUID.randomUUID();
 
                     uuidfile = uuid.toString() + "_" + file.getOriginalFilename().replaceAll("_", "-");
-                    String dir = "C:\\Users\\504\\springproject_animalhospital\\src\\main\\resources\\static\\upload\\";
                     String filepath = dir + uuidfile;
 
                     try {
+
                         file.transferTo(new File(filepath));
 
-                        BoardimgEntity boardimgEntity = BoardimgEntity.builder()
+                        BoardimgEntity boardimgEntity =  BoardimgEntity.builder()
                                 .bimg(uuidfile)
                                 .boardEntity(boardEntity)
                                 .build();
@@ -624,16 +632,19 @@ public class BoardService {
 
                         boardEntity.getBoardimgEntities().add(boardimgEntity);
 
+                        System.out.println(boardEntity.getBoardimgEntities().toString());
+
                     } catch (Exception e) {
-                        System.out.println("파일저장실패 : " + e);
+
                     }
                 }
 
             }
+            return true;
         }
-
-                return true;
+        return false;
     }
+
 
 
 }

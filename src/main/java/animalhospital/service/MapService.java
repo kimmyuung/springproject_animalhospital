@@ -253,28 +253,7 @@ public class MapService {
         return jo;
     }
 
-    public JSONObject getreviewstarlist( String hname,String hdate){
-        JSONObject jo = new JSONObject();
-        List<ReviewEntity> reviewEntity =  reviewRepository.findBylist(hname, hdate);
-        JSONArray jsonArray = new JSONArray();
-        for (ReviewEntity entity : reviewEntity ) {
-            JSONObject object = new JSONObject();
-            object.put("rno", entity.getRno());
-            object.put("rcontent", entity.getRcontent());
-            object.put("rmodifiedate", entity.getModifiedate());
-            object.put("rcreatedate", entity.getCreatedate());
-            object.put("rkind", entity.getRkind());
-            object.put("rfac", entity.getRfac());
-            object.put("rprice", entity.getRprice());
-            object.put("rimg1", entity.getRimg1());
-            object.put("rimg2", entity.getRimg2());
-            object.put("mid", entity.getMemberEntity().getMid());
-            jsonArray.put(object);
-        }
-        jo.put("data", jsonArray);
-        System.out.println(jo);
-        return jo;
-    }
+
     public JSONObject getreview( int rno ){
 
         Optional<ReviewEntity> optionalReviewEntity =  reviewRepository.findById(rno );

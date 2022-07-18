@@ -120,7 +120,7 @@ public class BoardController {
     @PostMapping("/search")
     @ResponseBody
     public void videosearch(@RequestParam("search") String search
-                            , HttpServletResponse response )
+            , HttpServletResponse response )
     {
         try{
 

@@ -1,6 +1,7 @@
 package animalhospital.domain.board;
 
 
+import animalhospital.domain.BaseTime;
 import lombok.*;
 
 import javax.persistence.*;
@@ -12,7 +13,7 @@ import javax.persistence.*;
 @Getter
 @Setter
 @ToString( exclude="boardEntity" )@Builder
-public class BoardimgEntity {
+public class BoardimgEntity{
     @Id
     @GeneratedValue( strategy = GenerationType.IDENTITY )
     private int bimgno;

@@ -8,7 +8,7 @@
 <body>
 <div th:replace="board/boardmenu.html :: boardmenu"></div>
 
-<button  sec:authorize="isAuthenticated()" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal">
+<button sec:authorize="isAuthenticated()" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal">
     글쓰기
 </button>
 <table class="table" id="noticetable"></table>
@@ -32,24 +32,24 @@
             <div class="modal-body">
                 <form id="saveform">
                     <div class="row">
-                            <div class="col-md-6 modal_left">
-                                <div class="preview"><img id="img_preview" src="/img/no-image.png" ></div>
-                                <div>
-                                    <input type="file" id="bimg" name="bimg" multiple>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div>
-                                    <input type="text" placeholder="제목을 입력하세요" id="btitle" name="btitle">
-                                </div>
-                                <div>
-                                    <textarea placeholder="내용을 입력하세요" name="bcontent"></textarea>
-                                </div>
-                                <div>
-                                    <button type="button" onclick="tipsave()">등록하기</button>
-                                </div>
+                        <div class="col-md-6 modal_left">
+                            <div class="preview"><img id="img_preview" src="/img/no-image.png" ></div>
+                            <div>
+                                <input type="file" id="bimg" name="bimg" multiple>
                             </div>
                         </div>
+                        <div class="col-md-6">
+                            <div>
+                                <input type="text" placeholder="제목을 입력하세요" id="btitle" name="btitle">
+                            </div>
+                            <div>
+                                <textarea placeholder="내용을 입력하세요" name="bcontent"></textarea>
+                            </div>
+                            <div>
+                                <button type="button" onclick="tipsave()">등록하기</button>
+                            </div>
+                        </div>
+                    </div>
                 </form>
             </div>
         </div>
