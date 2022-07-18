@@ -34,8 +34,8 @@ public class ShopEntity extends BaseTime {
     private MemberEntity member;
 
 
-    @Builder.Default    // 빌더 사용시 초기값 설정
-    @OneToMany(mappedBy = "shoplike", cascade = CascadeType.ALL)
-    private List<ShopLikeEntity> shoplikeList = new ArrayList<>();
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name = "mnolike" )
+    private MemberEntity memberlike;
 
 }

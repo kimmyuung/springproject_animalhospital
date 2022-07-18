@@ -334,7 +334,20 @@ public class ItemService {
                 Optional<MemberEntity> optionalMember = memberRepository.findBymid(mid);
                 if(optionalMember.isPresent()) {
                     MemberEntity memberEntity = optionalMember.get();
-
+                    for(ShopEntity temp : memberEntity.getMemberlikeEntityList()) {
+                        if(temp.getMemberlike().equals(memberEntity)) {
+                            memberEntity.getMemberlikeEntityList().remove(shopEntity);
+                            shopEntity.setMemberlike(null);
+                            System.out.println(memberEntity.getMemberlikeEntityList().toString() + "제거");
+                            return false;
+                        }
+                    }
+                    System.out.println(shopEntity.getShopimgEntities().toString() + "추가");
+                    memberEntity.getMemberlikeEntityList().add(shopEntity);
+                    shopEntity.setMemberlike(memberEntity);
+                    memberRepository.save(memberEntity);
+                    shopRepository.save(shopEntity);
+                    return true;
                 }
             }
         }

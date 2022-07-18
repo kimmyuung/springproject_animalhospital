@@ -1,6 +1,10 @@
 let list;
 let lat;
 let logt;
+let address;
+let score;
+let tel;
+let link;
 info(0);
  출력()
 let page = 0;
@@ -18,7 +22,16 @@ function info(page){
         console.log(re)
         lat = re.lat
         logt = re.logt
+        address = re.haddress
+        tel = re.htel
+        score = re.score
+        link = re.link
             $("#hname").html(re.hname);
+            $("#address_data").html(
+            '<p>'+re.haddress+'</p>'+
+            '<p>TEL : '+re.htel+'</p>'
+            )
+
             getreviewlist(page,re.hname,re.hdate);
             getreviewstarlist(re.hname,re.hdate);
       }
@@ -54,15 +67,15 @@ function modal(){
 
     for(let i=1; i<6;i++){
    kind +=
-       '<img class="star" id="star'+i+'" src="/img/star2.png" onclick="kind('+i+')">';
+       '<img class="mstar" id="star'+i+'" src="/img/star2.png" onclick="kind('+i+')">';
              }
      for(let i=1; i<6;i++){
         fac +=
-            '<img class="star" id="fac'+i+'" src="/img/star2.png" onclick="fac('+i+')">';
+            '<img class="mstar" id="fac'+i+'" src="/img/star2.png" onclick="fac('+i+')">';
       }
       for(let i=1; i<6;i++){
          price +=
-              '<img class="star" id="price'+i+'" src="/img/star2.png" onclick="price('+i+')">';
+              '<img class="mstar" id="price'+i+'" src="/img/star2.png" onclick="price('+i+')">';
                   }
     $("#kind").html(kind);
     $("#fac").html(fac);
@@ -513,6 +526,9 @@ function getreviewstarlist(hname,hdate){
                                    }
                                     $("#ravg").html(ravg);
                                     $("#totalavg").html(avg);
+                                    $("#daumscore").html(
+                                    '<a href="'+link+'">'+score+'</a>'
+                                    )
                                     }
             });
 }
@@ -601,14 +617,15 @@ function getreviewlist(page,hname,hdate){
                                                      html +=
                                                      ' <div class="user_review">'+
                                                          '<div class="writer_area">'+
-                                                          '<span><i class="fas fa-user-alt"></i></span> <span class="id">'+reviewlist.data[i].mid+'</span> <span class="date">2022-07-15</span>'+
-                                                            '<div id="mstar'+reviewlist.data[i].rno+'"></div> '+
+                                                          '<span><i class="fas fa-user-alt"></i></span> <span class="id">'+reviewlist.data[i].mid+'</span>'+
+                                                            '<div id="mstar'+reviewlist.data[i].rno+'"    style = "margin-top:20px; margin-bottom:20px; "></div> '+
                                                             '<div id="mupdate'+reviewlist.data[i].rno+'"></div> '+
                                                          '</div>'+
                                                          '<div class="user_content">'+
 
                                                              '<div class="u_content">'+
                                                                '<div class="c1"> '+reviewlist.data[i].rcontent+'</div>'+
+                                                               '<div class="c2" style="margin-top:20px">날짜 들어갈공간</div>'+
                                                              '</div>'+
                                                          '</div>'+
                                                      '  </div>'
@@ -617,8 +634,8 @@ function getreviewlist(page,hname,hdate){
                                                     html +=
                                                         ' <div class="user_review">'+
                                                             '<div class="writer_area">'+
-                                                             '<span><i class="fas fa-user-alt"></i></span> <span class="id">'+reviewlist.data[i].mid+'</span> <span class="date">2022-07-15</span>'+
-                                                               '<div id="mstar'+reviewlist.data[i].rno+'"></div> '+
+                                                             '<span><i class="fas fa-user-alt"></i></span> <span class="id">'+reviewlist.data[i].mid+'</span> '+
+                                                               '<div id="mstar'+reviewlist.data[i].rno+'"  style = "margin-top:20px; margin-bottom:20px;"></div> '+
                                                                '<div id="mupdate'+reviewlist.data[i].rno+'"></div> '+
                                                             '</div>'+
                                                             '<div class="user_content">'+
@@ -631,6 +648,7 @@ function getreviewlist(page,hname,hdate){
                                                                 '</div>'+
                                                                 '<div class="u_content">'+
                                                                   '<div class="c1"> '+reviewlist.data[i].rcontent+'</div>'+
+                                                                  '<div class="c2" style="margin-top:20px">날짜 들어갈공간</div>'+
                                                                 '</div>'+
                                                             '</div>'+
                                                         '  </div>'
@@ -639,8 +657,8 @@ function getreviewlist(page,hname,hdate){
                                                     html +=
                                                          ' <div class="user_review">'+
                                                              '<div class="writer_area">'+
-                                                              '<span><i class="fas fa-user-alt"></i></span> <span class="id">'+reviewlist.data[i].mid+'</span> <span class="date">2022-07-15</span>'+
-                                                                '<div id="mstar'+reviewlist.data[i].rno+'"></div> '+
+                                                              '<span><i class="fas fa-user-alt"></i></span> <span class="id">'+reviewlist.data[i].mid+'</span> '+
+                                                                '<div id="mstar'+reviewlist.data[i].rno+'"  style = "margin-top:20px; margin-bottom:20px;"></div> '+
                                                                 '<div id="mupdate'+reviewlist.data[i].rno+'"></div> '+
                                                              '</div>'+
                                                              '<div class="user_content">'+
@@ -653,6 +671,7 @@ function getreviewlist(page,hname,hdate){
                                                                  '</div>'+
                                                                  '<div class="u_content">'+
                                                                    '<div class="c1"> '+reviewlist.data[i].rcontent+'</div>'+
+                                                                   '<div class="c2" style="margin-top:20px">날짜 들어갈공간</div>'+
                                                                  '</div>'+
                                                              '</div>'+
                                                          '  </div>'
@@ -661,8 +680,8 @@ function getreviewlist(page,hname,hdate){
                                                      html +=
                                                       ' <div class="user_review">'+
                                                           '<div class="writer_area">'+
-                                                           '<span><i class="fas fa-user-alt"></i></span> <span class="id">'+reviewlist.data[i].mid+'</span> <span class="date">2022-07-15</span>'+
-                                                             '<div id="mstar'+reviewlist.data[i].rno+'"></div> '+
+                                                           '<span><i class="fas fa-user-alt"></i></span> <span class="id">'+reviewlist.data[i].mid+'</span> '+
+                                                             '<div id="mstar'+reviewlist.data[i].rno+'"  style = "margin-top:20px; margin-bottom:20px;"></div> '+
                                                              '<div id="mupdate'+reviewlist.data[i].rno+'"></div> '+
                                                           '</div>'+
                                                           '<div class="user_content">'+
@@ -676,6 +695,7 @@ function getreviewlist(page,hname,hdate){
                                                               '</div>'+
                                                               '<div class="u_content">'+
                                                                 '<div class="c1"> '+reviewlist.data[i].rcontent+'</div>'+
+                                                                '<div class="c2" style="margin-top:20px">날짜 들어갈공간</div>'+
                                                               '</div>'+
                                                           '</div>'+
                                                       '  </div>'
@@ -736,15 +756,15 @@ function updatemodal(rno){
 
     for(let i=1; i<6;i++){
    kind +=
-       '<img class="star" id="star'+i+'" src="/img/star2.png" onclick="kind('+i+')">';
+       '<img class="mstar2" id="star'+i+'" src="/img/star2.png" onclick="kind('+i+')">';
              }
      for(let i=1; i<6;i++){
         fac +=
-            '<img class="star" id="fac'+i+'" src="/img/star2.png" onclick="fac('+i+')">';
+            '<img class="mstar2" id="fac'+i+'" src="/img/star2.png" onclick="fac('+i+')">';
       }
       for(let i=1; i<6;i++){
          price +=
-              '<img class="star" id="price'+i+'" src="/img/star2.png" onclick="price('+i+')">';
+              '<img class="mstar2" id="price'+i+'" src="/img/star2.png" onclick="price('+i+')">';
                   }
         $("#kind").html(kind);
         $("#fac").html(fac);

@@ -1,7 +1,6 @@
 var sno = getParameterByName('sno');
 getitem(sno);
 idcheck(sno);
-
 function getitem(sno) {
 $.ajax({
 url : '/member/getitem',
@@ -34,7 +33,7 @@ function getParameterByName(sno) {
 }
 
 function likesave() {
-alert(sno);
+
 $.ajax({
     url : '/member/likesave',
     data : {"sno" : sno},
@@ -44,7 +43,7 @@ $.ajax({
     $("#unlikesave").css("display", "block");
     }
     else {
-    alert("관심 상품 등록 취소");
+    alert("관심 상품 성공 ");
     $("#likesave").css("display", "block");
     $("#unlikesave").css("display", "none");
     }
