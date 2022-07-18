@@ -168,4 +168,7 @@ public class MemberService implements OAuth2UserService<OAuth2UserRequest ,OAuth
 
         return new LoginDto(memberEntity, authorityList); // 회원엔티티, 인증된 리스트를 인증세션 부여
     }
+
+
+
 }
