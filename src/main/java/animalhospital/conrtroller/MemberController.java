@@ -81,5 +81,10 @@ public class MemberController {
         return itemService.idcheck(sno);
     }
 
+    @GetMapping("/likesave")
+    @ResponseBody
+    public boolean likesave(@RequestParam("sno") int sno) {
+        return itemService.likesave(sno);
+    }
 
 }

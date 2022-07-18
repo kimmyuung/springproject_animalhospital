@@ -39,12 +39,14 @@ $.ajax({
     url : '/member/likesave',
     data : {"sno" : sno},
     success : function(re) {
-    if(re == true) {alert("등록 성공 ");
+    if(re == true) {alert("관심 상품 성공 ");
     $("#likesave").css("display", "none");
     $("#unlikesave").css("display", "block");
     }
     else {
-    alert("등록 실패");
+    alert("관심 상품 등록 취소");
+    $("#likesave").css("display", "block");
+    $("#unlikesave").css("display", "none");
     }
     }
 })
@@ -114,6 +116,4 @@ $.ajax({
            }
            }
     });
-
-
 }
