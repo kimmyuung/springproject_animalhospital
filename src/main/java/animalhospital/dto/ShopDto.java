@@ -1,7 +1,5 @@
 package animalhospital.dto;
 
-import animalhospital.domain.board.BoardEntity;
-
 import animalhospital.domain.shop.ShopEntity;
 
 import lombok.*;
@@ -15,7 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ItemDto {
+public class ShopDto {
 
     private int sno; // 상품 번호
     private String stitle; // 상품 제목

@@ -6,6 +6,7 @@ import animalhospital.domain.member.MemberEntity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -28,9 +29,13 @@ public class ShopEntity extends BaseTime {
     @OneToMany( mappedBy = "shopEntity" , cascade = CascadeType.ALL )
     private List<ShopImgEntity> shopimgEntities;
 
-    @ManyToOne
-    @JoinColumn(name = "mno")
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name = "mnoitem" )
     private MemberEntity member;
+
+    @Builder.Default
+    @OneToMany(mappedBy = "shoplike", cascade = CascadeType.ALL)
+    List<ShopLikeEntity> shopLikeEntityList = new ArrayList<>();
 
 
 }

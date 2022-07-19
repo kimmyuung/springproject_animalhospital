@@ -76,6 +76,7 @@ public class MapController {
             object.put("link", crawlDto.getLink());
         }
         try {
+
             response.setCharacterEncoding("UTF-8");
             response.setContentType("application/json");
             response.getWriter().print(object);
@@ -87,7 +88,6 @@ public class MapController {
 
         @GetMapping("/search")
     public void search(HttpServletResponse response, @RequestParam("keyword") String keyword){
-
         try {
             response.setCharacterEncoding("UTF-8");
             response.setContentType("application.json");
