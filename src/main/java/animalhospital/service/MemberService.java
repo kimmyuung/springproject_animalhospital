@@ -1,8 +1,11 @@
 package animalhospital.service;
 
+import animalhospital.domain.CountEntity;
+import animalhospital.domain.CountingRepository;
 import animalhospital.domain.member.*;
 import animalhospital.domain.message.MessageEntity;
 import animalhospital.domain.message.MessageRepository;
+import animalhospital.dto.CountDto;
 import animalhospital.dto.LoginDto;
 import animalhospital.dto.OauthDto;
 import animalhospital.dto.RequestDto;
@@ -30,6 +33,10 @@ import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Service
@@ -48,6 +55,11 @@ public class MemberService implements OAuth2UserService<OAuth2UserRequest ,OAuth
 
     @Autowired
     MemberRepository memberRepository;
+
+    @Autowired
+    CountingRepository countingRepository;
+
+
 
 
     public String authenticationget() {
@@ -111,6 +123,31 @@ public class MemberService implements OAuth2UserService<OAuth2UserRequest ,OAuth
         }
 
         httpSession.setAttribute("login", oauthDto);
+        httpSession.setAttribute("date", LocalDate.now());
+        LocalDate nowdate  = (LocalDate) httpSession.getAttribute("date");
+
+        String date = nowdate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+//        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+//        //원하는 데이터 포맷 지정
+//        String date = simpleDateFormat.format(nowdate);
+        System.out.println("dddd"+date);
+        OauthDto csession = (OauthDto) httpSession.getAttribute("login");
+
+
+       if(httpSession.getAttribute(csession.getMemail()+date)==null){
+           CountDto cdto = CountDto.builder()
+                   .createdate(LocalDate.now())
+                   .build();
+
+           // 엔티티를 이용한 조회수 증가
+
+           // 방문자수 중복방지 [ 세션 생성 ]
+           httpSession.setAttribute(csession.getMemail()+date,true);
+           System.out.println("중복방지"+httpSession.getAttribute(csession.getMemail()+date));
+           httpSession.setMaxInactiveInterval(60*60*24);
+           countingRepository.save(cdto.toentity());
+       }
+
 
         // 반환타입 DefaultOAuth2User ( 권한(role)명 , 회원인증정보 , 회원정보 호출키 )
         // DefaultOAuth2User , UserDetails : 반환시 인증세션 자동 부여 [ SimpleGrantedAuthority : (권한) 필수~  ]
@@ -303,5 +340,7 @@ public class MemberService implements OAuth2UserService<OAuth2UserRequest ,OAuth
         return true;
 
     }
+
+
 
 }
