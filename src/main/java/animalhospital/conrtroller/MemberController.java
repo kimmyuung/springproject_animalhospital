@@ -47,7 +47,6 @@ public class MemberController {
     @PostMapping("/requestsave")
     @ResponseBody
     public boolean requestsave (RequestDto requestDto) {
-        System.out.println("save");
         System.out.println(requestDto.toString());
         boolean result = memberService.requestsave(requestDto);
 
@@ -58,8 +57,9 @@ public class MemberController {
     @ResponseBody
     public void getmid(HttpServletRequest request, HttpServletResponse response){
         try {
-            System.out.println("mid : " + request.getSession().getAttribute("login"));
-//            response.getWriter().println();
+            OauthDto oauthDto = (OauthDto)request.getSession().getAttribute("login");
+            String mid = oauthDto.getMid();
+            response.getWriter().println(mid);
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -1,4 +1,5 @@
 info();
+
 function info(){
     $.ajax({
         url: "/map/info",
@@ -6,6 +7,7 @@ function info(){
         contentType : 'application/json' ,
         success: function(re){
         console.log(re)
+
             $("#hname").html(re.hname);
       }
     });

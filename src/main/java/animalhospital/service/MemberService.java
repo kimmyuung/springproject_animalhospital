@@ -203,6 +203,7 @@ public class MemberService implements OAuth2UserService<OAuth2UserRequest ,OAuth
                 RequestEntity requestEntity = requestDto.toentity();
                 requestEntity.setMid(mid);
                 requestEntity.setMno(mno);
+                requestEntity.setHospital(requestEntity.getHname()+requestEntity.getHdate());
                 String uuidfile = null;
                 UUID uuid = UUID.randomUUID();
                 MultipartFile file = requestDto.getBinimg();
