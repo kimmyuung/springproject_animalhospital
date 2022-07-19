@@ -7,7 +7,11 @@
     <link  href="/css/special/videosearch.css" rel="stylesheet">
 </head>
 <body>
-<h1>애완동물을 키우는데 필요한 정보를 찾아볼 수 있습니다.</h1>
+<div th:replace="header.html :: header"></div>
+
+<div class="bgc">
+    <h1>반려동물 꿀팁</h1>
+</div>
 <div id="searcharea">
 <select id="searchbox">
     <option value="강아지 키우기">강아지 키우기</option>
@@ -24,6 +28,8 @@
 
 
 </div>
+
+<div th:replace="footer.html :: footer"></div>
 
 
 <script  src="http://code.jquery.com/jquery-latest.min.js"></script>
