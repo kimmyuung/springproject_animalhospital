@@ -8,7 +8,7 @@
 <body>
 <div th:replace="board/boardmenu.html :: boardmenu"></div>
 
-<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal">
+<button sec:authorize="isAuthenticated()" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal">
   글쓰기
 </button>
 <table class="table" id="noticetable"></table>
