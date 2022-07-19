@@ -6,15 +6,25 @@ import org.springframework.web.socket.config.annotation.EnableWebSocket;
 import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
 import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
 
+
 @Configuration
 @EnableWebSocket
 public class WebSocketConfig implements WebSocketConfigurer {
 
     @Autowired
-    WebSocketHandler webSocketHandler;
+    private WebSocketHandler webSocketHandler;
+
+    @Autowired
+    private WebMsgSocketHandler webMsgSocketHandler;
+
+    @Autowired
+    private AnswerWebSocketHandler answerWebSocketHandler;
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        registry.addHandler(webSocketHandler ,"ws/message/*" ).setAllowedOrigins("*");
+        registry.addHandler(webSocketHandler ,"ws/message/*" ).setAllowedOrigins("*")
+                .addHandler(webMsgSocketHandler, "/ws/member/shopchat").setAllowedOrigins("*")
+                .addHandler(answerWebSocketHandler, "/ws/member/shopchat").setAllowedOrigins("*");
+
     }
 }

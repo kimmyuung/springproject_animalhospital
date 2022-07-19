@@ -2,6 +2,7 @@ var sno = getParameterByName('sno');
 getitem(sno);
 idcheck(sno);
 likecheck();
+let pass;
 function getitem(sno) {
 $.ajax({
 url : '/member/getitem',
@@ -74,11 +75,9 @@ $.ajax({
     }
 });
 
-
 }
-function sendmsg() {
 
-}
+
 
 function itemdelete() {
 
@@ -137,12 +136,50 @@ $.ajax({
            if(re == 1) {
            $("#itemupdate").css("display", "block");
            $("#itemdelete").css("display", "block");
+           pass = true;
            }
-           else if(re == 2 || re == 3) {
+           else if(re == 2) {
             $("#itemupdate").css("display", "none");
             $("#itemdelete").css("display", "none");
+            pass = true;
            }
-           else if(re == 4) {alert("아이디 체크 오류 관리자에게 문의"); }
+           else if(re == 3) {pass = false;}
+           else if(re == 4) {alert("아이디 체크 오류 관리자에게 문의"); pass = false; }
            }
     });
 }
+
+$(document).ready(function{
+let shopsocket = new Websocket("ws://localhost:8082/ws/member/shopmessage"); // 배포 시 변경
+    shopsocket.onmessage = onMessage;
+    shopsocket.onopen = onOpen;
+    shopsocket.onclose = onClose;
+
+       function onClose() {
+        shopsocket.send("메시지 보내기를 종료합니다.");
+        }
+
+       function onOpen() {
+
+       shopsocket.send("메세지를 보냅니다.");
+       }
+
+        function sendmsg() {
+        if(pass) {
+        let msg = $("#msg").val();
+        if(msg == '') {alert("메시지 내용을 입력해주세요"); return;}
+        shopsocket.send(msg);
+        }
+        else {
+        alert("로그인 후에 이용이 가능합니다."); return;
+        }
+        }
+
+       function onMessage() {
+       alert("메시지 ");
+
+       }
+
+
+    });
+

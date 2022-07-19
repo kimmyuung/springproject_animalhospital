@@ -15,7 +15,7 @@
             <li sec:authorize="isAnonymous()" class="nav-item"> <a class="nav-link text-dark" href="/member/login"> 로그인 </a> </li>
             <li sec:authorize="isAuthenticated()" class="nav-item"> <a class="nav-link text-dark" href ="/member/logout"> 로그아웃 </a> </li>
             <li sec:authorize="isAuthenticated()" class="nav-item"><button onclick="mdelete()">회원탈퇴</button> </li>
-            <li sec:authorize="hasRole('ADMIN')" class="nav-item"> <a class="nav-link text-dark" href ="/"> 관리자모드 </a> </li>
+            <li sec:authorize="hasRole('ADMIN')" class="nav-item"> <a class="nav-link text-dark" href ="/admin/binlist"> 관리자모드 </a> </li>
         </ul>
     </div>
 

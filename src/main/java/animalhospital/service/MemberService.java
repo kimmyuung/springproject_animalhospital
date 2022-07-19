@@ -51,33 +51,27 @@ public class MemberService implements OAuth2UserService<OAuth2UserRequest ,OAuth
 
 
     public String authenticationget() {
-        Authentication authentication // 인가된 객체를 불러옴 시큐리티컨택스트 홀더안에 컨택스트안의 인가 호출
-                = SecurityContextHolder.getContext().getAuthentication();
-        Object principal = authentication.getPrincipal(); // 인가된 클래스안의 객체 호출
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Object principal = authentication.getPrincipal();
         String mid = null;
-        if(principal != null) {
-            // 인증(로그인)이 되어 있는 상태
-           if(principal instanceof OAuth2User){ // 소셜회원이라면
-                Map<String, Object> attributes = ((OAuth2User) principal).getAttributes();
-                // 객체속 회원정보가 저장된 속성들의 값 호출
-                if(attributes.get("response") != null) { // 네이버 라면
-                    Map<String, Object> map = (Map<String, Object>) attributes.get("response");
-                    // 네이버는 회원정보가 저장된 객체를 respone으로 설정했기 때문
-                    mid = map.get("email").toString();
-
-                } else { // 카카오라면
-                    Map<String, Object> map = (Map<String, Object>) attributes.get("kakao_account");
-                    // 카카오는  kakao_account로 객체 이름을 설정
-                    mid = map.get("email").toString();
-                }
+        if( principal instanceof UserDetails){
+            mid = ((UserDetails) principal).getUsername(); return mid;
+        }else if( principal instanceof DefaultOAuth2User){
+            Map<String , Object> map =  ((DefaultOAuth2User) principal).getAttributes();
+            if( map.get("response") != null ){
+                Map< String , Object> map2  = (Map<String, Object>) map.get("response"); // 네이버
+                mid = map2.get("email").toString().split("@")[0]; return mid;
+            }else if(map.get("kakao_account") != null){
+                Map< String , Object> map2  = (Map<String, Object>) map.get("kakao_account"); // 카카오
+                mid = map2.get("email").toString().split("@")[0]; return mid;
+            }else if(map.get("kakao_account") == null && map.get("response") == null ) { // 구글, 깃허브
+                mid = map.get("email").toString().split("@")[0]; return mid;
             }
-            return mid;
-        }else {
-            // 인증 (로그인)이 안되어 있는 상태
-            return null;
+        }else{
+            return null; // 로그인이 안되어 있음
         }
+        return null;
     }
-
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
         // 인증[로그인] 결과 정보 요청
@@ -186,16 +180,18 @@ public class MemberService implements OAuth2UserService<OAuth2UserRequest ,OAuth
         if( principal instanceof UserDetails){
             mid = ((UserDetails) principal).getUsername();
         }else if( principal instanceof DefaultOAuth2User){
-            Map<String , Object>  map =  ((DefaultOAuth2User) principal).getAttributes();
+            Map<String , Object> map =  ((DefaultOAuth2User) principal).getAttributes();
             if( map.get("response") != null ){
-                Map< String , Object> map2  = (Map<String, Object>) map.get("response");
+                Map< String , Object> map2  = (Map<String, Object>) map.get("response"); // 네이버
                 mid = map2.get("email").toString().split("@")[0];
-            }else{
-                Map< String , Object> map2  = (Map<String, Object>) map.get("kakao_account");
+            }else if(map.get("kakao_account") != null){
+                Map< String , Object> map2  = (Map<String, Object>) map.get("kakao_account"); // 카카오
                 mid = map2.get("email").toString().split("@")[0];
+            }else if(map.get("kakao_account") == null && map.get("response") == null ) { // 구글, 깃허브
+                mid = map.get("email").toString().split("@")[0];
             }
         }else{
-            return false;
+            return false; // 로그인이 안되어 있음
         }
         if( mid != null  ) {
             Optional<MemberEntity> optionalMember = memberRepository.findBymid(mid);
