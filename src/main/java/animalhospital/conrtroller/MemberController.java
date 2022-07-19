@@ -54,10 +54,7 @@ public class MemberController {
 
     @PostMapping("/itemsave")
     @ResponseBody
-    public boolean itemsave(ShopDto shopDto) {
-        System.out.println(shopDto.getStitle() +" :  "+ shopDto.getScontent());
-        return itemService.itemsave(shopDto);
-    }
+    public boolean itemsave(ShopDto shopDto) {return itemService.itemsave(shopDto);}
 
     @PutMapping("/itemupdate")
     @ResponseBody
@@ -77,14 +74,15 @@ public class MemberController {
 
     @GetMapping("/idcheck")
     @ResponseBody
-    public boolean idcheck(@RequestParam("sno") int sno) {
+    public int idcheck(@RequestParam("sno") int sno) {
         return itemService.idcheck(sno);
     }
 
     @GetMapping("/likesave")
     @ResponseBody
-    public boolean likesave(@RequestParam("sno") int sno) {
-        return itemService.likesave(sno);
-    }
+    public int likesave(@RequestParam("sno") int sno) {return itemService.likesave(sno);}
 
+    @GetMapping("/likecheck")
+    @ResponseBody
+    public int likecheck(@RequestParam("sno") int sno) {return itemService.likecheck(sno);}
 }

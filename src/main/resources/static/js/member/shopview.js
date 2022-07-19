@@ -1,6 +1,7 @@
 var sno = getParameterByName('sno');
 getitem(sno);
 idcheck(sno);
+likecheck();
 function getitem(sno) {
 $.ajax({
 url : '/member/getitem',
@@ -38,19 +39,43 @@ $.ajax({
     url : '/member/likesave',
     data : {"sno" : sno},
     success : function(re) {
-    if(re == true) {alert("관심 상품 성공 ");
+    if(re == 1) {
+    alert("관심 상품 추가");
+    likecheck();
+    }
+    else if(re == 2){
+    alert("관심 상품 삭제");
+    likecheck();
+    }
+    else if(re == 3){
+    alert("로그인 후에 관심 상품 기능 이용이 가능합니다.");
+    }
+    else if(re == 4){
+    alert("프로그램 오류 : 관리자에게 문의");
+    }
+    }
+});
+}
+function likecheck() {
+$.ajax({
+    url : '/member/likecheck',
+    data : {"sno" : sno},
+    success : function(re) {
+    if(re == 1) {
     $("#likesave").css("display", "none");
     $("#unlikesave").css("display", "block");
     }
-    else {
-    alert("관심 상품 성공 ");
+    else if(re == 2){
     $("#likesave").css("display", "block");
     $("#unlikesave").css("display", "none");
     }
+    else if(re == 3){ }
+    else if(re == 4){ alert("프로그램 오류 : 관리자에게 문의"); }
     }
-})
-}
+});
 
+
+}
 function sendmsg() {
 
 }
@@ -109,10 +134,15 @@ $.ajax({
             url : '/member/idcheck',
             data : {"sno" : sno } ,
             success : function(re) {
-           if(re == true) {
+           if(re == 1) {
            $("#itemupdate").css("display", "block");
            $("#itemdelete").css("display", "block");
            }
+           else if(re == 2 || re == 3) {
+            $("#itemupdate").css("display", "none");
+            $("#itemdelete").css("display", "none");
+           }
+           else if(re == 4) {alert("아이디 체크 오류 관리자에게 문의"); }
            }
     });
 }

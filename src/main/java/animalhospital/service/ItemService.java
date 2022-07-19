@@ -4,10 +4,7 @@ import animalhospital.domain.board.BoardEntity;
 import animalhospital.domain.board.BoardimgEntity;
 import animalhospital.domain.member.MemberEntity;
 import animalhospital.domain.member.MemberRepository;
-import animalhospital.domain.shop.ShopEntity;
-import animalhospital.domain.shop.ShopImgEntity;
-import animalhospital.domain.shop.ShopImgRepository;
-import animalhospital.domain.shop.ShopRepository;
+import animalhospital.domain.shop.*;
 import animalhospital.dto.ShopDto;
 import animalhospital.dto.OauthDto;
 import org.json.JSONArray;
@@ -50,6 +47,7 @@ public class ItemService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Object principal = authentication.getPrincipal();
         String mid = null;
+
         if( principal instanceof UserDetails){
             mid = ((UserDetails) principal).getUsername();
         }else if( principal instanceof DefaultOAuth2User){
@@ -67,6 +65,7 @@ public class ItemService {
             return false;
         }
         if( mid != null  ) {
+
             Optional<MemberEntity> optionalMember = memberRepository.findBymid(mid);
             if (optionalMember.isPresent()) { // null 아니면
                 ShopEntity shopEntity = shopDto.toentity();
@@ -78,14 +77,14 @@ public class ItemService {
                         UUID uuid = UUID.randomUUID();
 
                         uuidfile = uuid.toString() + "_" + file.getOriginalFilename().replaceAll("_", "-");
-                     //   String dir = "C:\\Users\\504\\springproject_animalhospital\\src\\main\\resources\\static\\upload\\";
-                        String dir = "C:\\Users\\82104\\git\\springproject_-animalhospital\\src\\main\\resources\\static\\upload\\"; // my notebook
+                        String dir = "C:\\Users\\504\\git\\springproject_-animalhospital\\src\\main\\resources\\static\\upload\\";
+                      //  String dir = "C:\\Users\\82104\\git\\springproject_-animalhospital\\src\\main\\resources\\static\\upload\\"; // my notebook
 
                         String filepath = dir + uuidfile;
 
                         try {
                             file.transferTo(new File(filepath));
-
+                            System.out.println("저장 들어옴");
                             ShopImgEntity shopImgEntity = ShopImgEntity.builder()
                                     .simg(uuidfile)
                                     .shopEntity(shopEntity)
@@ -117,7 +116,7 @@ public class ItemService {
     public Map< String , List<Map<String , String >>> itemlist(int page ) // 인수
     {
 
-        System.out.println( "페이지 :"+ page );
+
 
         int itemstatus = 0; // 상품 판매 상태가 판매 중인거만 리스트로 출력하기 위해서
         Pageable pageable = PageRequest.of( page , 5 , Sort.by( Sort.Direction.DESC , "sno")    );
@@ -214,8 +213,9 @@ public class ItemService {
     @Transactional
     public boolean itemupdate(ShopDto shopDto) {
         Optional<ShopEntity> optional = shopRepository.findById(shopDto.getSno());
-        String dir = "C:\\Users\\82104\\git\\springproject_-animalhospital\\src\\main\\resources\\static\\upload\\"; // my notebook
-        //  String dir = "C:\\Users\\504\\springproject_animalhospital\\src\\main\\resources\\static\\upload\\";
+        System.out.println(shopDto.toString());
+       // String dir = "C:\\Users\\82104\\git\\springproject_-animalhospital\\src\\main\\resources\\static\\upload\\"; // my notebook
+          String dir = "C:\\Users\\504\\git\\springproject_-animalhospital\\src\\main\\resources\\static\\upload\\";
         // 배포용 String dir = "/home/ec2-user/app/springproject_-animalhospital/build/resources/main/static/upload/";
         if(optional.isPresent()) {
             ShopEntity shopEntity = optional.get(); // 새로운 내용을 인수로 보내야 함
@@ -271,7 +271,7 @@ public class ItemService {
         return false;
     }
 
-    public boolean idcheck(int sno) {
+    public int idcheck(int sno) {
         Optional<ShopEntity> optional = shopRepository.findById(sno);
         if(optional.isPresent()) {
             ShopEntity shopEntity = optional.get();
@@ -292,65 +292,122 @@ public class ItemService {
                     mid = map.get("email").toString().split("@")[0];
                 }
             }else{
-                return false;
-            }
-            if( mid != null  ) {
-                Optional<MemberEntity> optionalMember = memberRepository.findBymid(mid);
-                if(optionalMember.isPresent()) {
-                    return true;
-                }
-            }
-            else {return false;}
-        }
-        return false;
-    }
-
-    @Transactional
-    public boolean likesave(int sno) {
-
-        Optional<ShopEntity> optional = shopRepository.findById(sno);
-        if(optional.isPresent()) {
-            ShopEntity shopEntity = optional.get();
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            Object principal = authentication.getPrincipal();
-            String mid = null;
-            if( principal instanceof UserDetails){
-                mid = ((UserDetails) principal).getUsername();
-            }else if( principal instanceof DefaultOAuth2User){
-                Map<String , Object> map =  ((DefaultOAuth2User) principal).getAttributes();
-                if( map.get("response") != null ){
-                    Map< String , Object> map2  = (Map<String, Object>) map.get("response"); // 네이버
-                    mid = map2.get("email").toString().split("@")[0];
-                }else if(map.get("kakao_account") != null){
-                    Map< String , Object> map2  = (Map<String, Object>) map.get("kakao_account"); // 카카오
-                    mid = map2.get("email").toString().split("@")[0];
-                }else if(map.get("kakao_account") == null && map.get("response") == null ) { // 구글, 깃허브
-                    mid = map.get("email").toString().split("@")[0];
-                }
-            }else{
-                return false;
+                return 3; // 아이디 없음(=로그인이 안되어 있음)
             }
             if( mid != null  ) {
                 Optional<MemberEntity> optionalMember = memberRepository.findBymid(mid);
                 if(optionalMember.isPresent()) {
                     MemberEntity memberEntity = optionalMember.get();
-                    for(ShopEntity temp : memberEntity.getMemberlikeEntityList()) {
-                        if(temp.getMemberlike().equals(memberEntity)) {
-                            memberEntity.getMemberlikeEntityList().remove(shopEntity);
-                            shopEntity.setMemberlike(null);
-                            System.out.println(memberEntity.getMemberlikeEntityList().toString() + "제거");
-                            return false;
-                        }
+                    Optional<ShopEntity> shopid = shopRepository.findbymnoitem(memberEntity.getMno());
+                    if(shopid.isPresent()) {
+
+                        return 1; // 로그인된 회원과 상품을 등록한 회원이 일치
                     }
-                    System.out.println(shopEntity.getShopimgEntities().toString() + "추가");
-                    memberEntity.getMemberlikeEntityList().add(shopEntity);
-                    shopEntity.setMemberlike(memberEntity);
-                    memberRepository.save(memberEntity);
-                    shopRepository.save(shopEntity);
-                    return true;
+                    return 2;   // 로그인된 회원과 상품을 등록한 회원이 일치하지 않는 경우
+                }
+
+            }
+
+        }
+        return 4; // 프로그램 자체 오류
+    }
+
+    @Autowired
+    ShopLikeRepository shopLikeRepository;
+
+    @Transactional
+    public int likesave(int sno) {
+
+        Optional<ShopEntity> optional = shopRepository.findById(sno);
+        if(optional.isPresent()) {
+            ShopEntity shopEntity = optional.get();
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            Object principal = authentication.getPrincipal();
+            String mid = null;
+            if( principal instanceof UserDetails){
+                mid = ((UserDetails) principal).getUsername();
+            }else if( principal instanceof DefaultOAuth2User){
+                Map<String , Object> map =  ((DefaultOAuth2User) principal).getAttributes();
+                if( map.get("response") != null ){
+                    Map< String , Object> map2  = (Map<String, Object>) map.get("response"); // 네이버
+                    mid = map2.get("email").toString().split("@")[0];
+                }else if(map.get("kakao_account") != null){
+                    Map< String , Object> map2  = (Map<String, Object>) map.get("kakao_account"); // 카카오
+                    mid = map2.get("email").toString().split("@")[0];
+                }else if(map.get("kakao_account") == null && map.get("response") == null ) { // 구글, 깃허브
+                    mid = map.get("email").toString().split("@")[0];
+                }
+            }else{
+                return 3; // 로그인이 안되어 있음
+            }
+            if( mid != null  ) {
+                Optional<MemberEntity> optionalMember = memberRepository.findBymid(mid);
+                if(optionalMember.isPresent()) {
+                    MemberEntity memberEntity = optionalMember.get();
+                    int mno = memberEntity.getMno();
+                    Optional<ShopLikeEntity>  optionalShopLike = shopLikeRepository.existbyMemberandShop(mno, sno);
+                    if(optionalShopLike.isPresent()) {
+                        ShopLikeEntity shopLikeEntity = optionalShopLike.get();
+                        memberEntity.getMemberlikeEntityList().remove(shopLikeEntity);
+                        shopEntity.getShopLikeEntityList().remove(shopLikeEntity);
+                        shopLikeRepository.delete(shopLikeEntity);
+                        System.out.println("관심 상품 제거");
+                        return 2; // 관심 상품 제거
+                    }
+                    ShopLikeEntity shopLikeEntity = ShopLikeEntity.builder()
+                                    .memberlike(memberEntity)
+                                            .shoplike(shopEntity)
+                                                    .build();
+                    shopLikeRepository.save(shopLikeEntity);
+                    memberEntity.getMemberlikeEntityList().add(shopLikeEntity);
+                    shopEntity.getShopLikeEntityList().add(shopLikeEntity);
+                    System.out.println("관심 상품 추가");
+
+                    return 1; // 관심 상품 추가
                 }
             }
         }
-        return false;
+        return 4; // 프로그램 오류
+    }
+
+
+    public int likecheck(int sno) {
+
+        Optional<ShopEntity> optional = shopRepository.findById(sno);
+        if(optional.isPresent()) {
+            ShopEntity shopEntity = optional.get();
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            Object principal = authentication.getPrincipal();
+            String mid = null;
+            if( principal instanceof UserDetails){
+                mid = ((UserDetails) principal).getUsername();
+            }else if( principal instanceof DefaultOAuth2User){
+                Map<String , Object> map =  ((DefaultOAuth2User) principal).getAttributes();
+                if( map.get("response") != null ){
+                    Map< String , Object> map2  = (Map<String, Object>) map.get("response"); // 네이버
+                    mid = map2.get("email").toString().split("@")[0];
+                }else if(map.get("kakao_account") != null){
+                    Map< String , Object> map2  = (Map<String, Object>) map.get("kakao_account"); // 카카오
+                    mid = map2.get("email").toString().split("@")[0];
+                }else if(map.get("kakao_account") == null && map.get("response") == null ) { // 구글, 깃허브
+                    mid = map.get("email").toString().split("@")[0];
+                }
+            }else{
+                return 3; // 로그인이 안되어 있음
+            }
+            if( mid != null  ) {
+                Optional<MemberEntity> optionalMember = memberRepository.findBymid(mid);
+                if(optionalMember.isPresent()) {
+                    MemberEntity memberEntity = optionalMember.get();
+                    int mno = memberEntity.getMno();
+                    Optional<ShopLikeEntity>  optionalShopLike = shopLikeRepository.existbyMemberandShop(mno, sno);
+                    if(optionalShopLike.isPresent()) {
+                        return 2; // 관심 상품이 등록 되어 있음
+                    }
+                    return 1; // 관심 상품에 등록되어 있지 않음
+                }
+            }
+        }
+        return 4; // 프로그램 오류
     }
 }

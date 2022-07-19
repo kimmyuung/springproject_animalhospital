@@ -33,9 +33,9 @@ public class ShopEntity extends BaseTime {
     @JoinColumn(name = "mnoitem" )
     private MemberEntity member;
 
+    @Builder.Default
+    @OneToMany(mappedBy = "shoplike", cascade = CascadeType.ALL)
+    List<ShopLikeEntity> shopLikeEntityList = new ArrayList<>();
 
-    @ManyToOne(fetch=FetchType.LAZY)
-    @JoinColumn(name = "mnolike" )
-    private MemberEntity memberlike;
 
 }
