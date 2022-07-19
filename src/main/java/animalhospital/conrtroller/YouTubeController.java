@@ -1,26 +1,30 @@
 package animalhospital.conrtroller;
 
-import animalhospital.domain.youtube.YoutubeProvider;
-import animalhospital.dto.YouTubeDto;
+import animalhospital.service.YoutubeService;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletResponse;
+
 
 @RestController
 public class YouTubeController {
-    private YoutubeProvider youTubeProvider;
 
     @Autowired
-    public YouTubeController(
-            final YoutubeProvider youTubeProvider
-    ) {
-        this.youTubeProvider = youTubeProvider;
-    }
+    YoutubeService youtubeService;
+
+
 
     @GetMapping("/videosearch")
-    public YouTubeDto Index(@RequestParam("search") String text) {
+    public void videosearch(@RequestParam("search") String text, HttpServletResponse response){
 
-        return youTubeProvider.get();
+        try{
+            JSONObject jo = new JSONObject(youtubeService.videosearch(text));
+           response.setCharacterEncoding("UTF-8");
+           response.setContentType("application/json");
+           response.getWriter().print(jo);
+        }catch(Exception e){e.printStackTrace();}
+
     }
 }

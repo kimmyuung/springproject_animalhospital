@@ -3,6 +3,7 @@ package animalhospital;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 
 
 @EnableJpaAuditing // JPA 매핑된 엔티티(테이블)의 변화감지 [ 웹 시작시 JPA 감지 기능 ]

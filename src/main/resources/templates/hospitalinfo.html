@@ -8,7 +8,7 @@
 </head>
 <body>
 
-<div>
+<div class="container">
   <div id="info">
     <h3 id="hname"></h3>
 
@@ -17,86 +17,96 @@
         리얼후기 등록하기
       </button>
     </div>
-  </div>
-</div>
-
-
-<div class="modal" id="myModal">
-  <div class="modal-dialog modal-xl">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">후기남기기</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <div>
-          친절
-          <div id="kind">
-
-          </div>
-          시설
-          <div id="fac"></div>
-          가격
-          <div id="price"></div>
+    <div>
+      <div class="row">
+        <div class="col-md-4">
+          <h5>친절</h5>
+          <div id="rkind"></div>
         </div>
-        <div>
-          <div>
-            <h3>전체평점: <span id="avg"></span></h3>
-            <img class="star" id="avg1" src="/img/star2.png">
-            <img class="star" id="avg2" src="/img/star2.png">
-            <img class="star" id="avg3" src="/img/star2.png">
-            <img class="star" id="avg4" src="/img/star2.png">
-            <img class="star" id="avg5" src="/img/star2.png">
-          </div>
+        <div class="col-md-4">
+          <h5>시설</h5>
+          <div id="rfac"></div>
         </div>
-        <div>
-          <textarea id="rcontent" cols="40" rows="5"></textarea>
-        </div>
-        <div>
-          <input type=file name='file1' style='display: none;'>
-          <img class="preview" id="preview1" src='/img/plusimg.jpg' onclick='file1()'>
+        <div class="col-md-4">
+          <h5>가격</h5>
+          <div id="rprice"></div>
         </div>
       </div>
-      <div>
-        <input type=file id="file2" name='file2' style='display: none;'>
-        <img id="preview2" src='/img/plusimg.jpg' onclick='file2()'>
-      </div>
+      <h5>전체평점</h5>
+      <span id="totalavg"></span>
+      <div id="ravg"></div>
     </div>
+    <div class="row" id="table">
+      <div class="col-md-8">
+        <h5><span>작성자</span><span>등록일</span></h5>
+        <div>별</div>
+        <div>내용</div>
+      </div>
+      <div class="col-md-2">이미지</div>
+      <div class="col-md-2">이미지</div>
+    </div>
+    <div>
+      <ul id="pagebtnbox" class="pagination justify-content-center">
 
+      </ul>
+    </div>
   </div>
-</div>
-</div>
-</div>
-<div>
+  <span id="loginmidbox" sec:authentication="name"></span>
 
-  <!-- Button trigger modal -->
-  <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-    병원에 문의하기
-  </button>
-
-  <!-- Modal -->
-  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+  <div class="modal" id="myModal">
+    <div class="modal-dialog modal-xl">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel2">Modal title</h5>
+          <h5 class="modal-title" id="exampleModalLabel">후기남기기</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <input type="text" class="form-control" id="msginput">
-          <button id="sendmsg">전송</button>
-        </div>
-        <div class="modal-footer">
-          <button type="button" id="close" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <div>
+            친절
+            <div id="kind">
+
+            </div>
+            시설
+            <div id="fac"></div>
+            가격
+            <div id="price"></div>
+          </div>
+          <div>
+            <div>
+              <h3>전체평점: <span id="avg"></span></h3>
+              <img class="star" id="avg1" src="/img/star2.png">
+              <img class="star" id="avg2" src="/img/star2.png">
+              <img class="star" id="avg3" src="/img/star2.png">
+              <img class="star" id="avg4" src="/img/star2.png">
+              <img class="star" id="avg5" src="/img/star2.png">
+            </div>
+          </div>
+          <div>
+            <textarea id="rcontent" name='rcontent' cols="40" rows="5"></textarea>
+          </div>
+          <h3>후기사진등록</h3>
+          <div>
+            <input type=file id="file1" name='file1' style='display: none;'>
+            <img class="preview" id="preview1" src='/img/plusimg.jpg' onclick='file1()'>
+          </div>
+          <h3>영수증사진등록<span>(개인정보유출에 유의해 등록해주세요)</span></h3>
+          <div>
+            <input type=file id="file2" name='file2' style='display: none;'>
+            <img id="preview2" src='/img/plusimg.jpg' onclick='file2()'>
+          </div>
+          <div>
+            <button type="button" onclick="addreview()">등록하기</button>
+          </div>
         </div>
       </div>
+
     </div>
   </div>
-
 </div>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" ></script>
-<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+<script  src="http://code.jquery.com/jquery-latest.min.js"></script>
 <script src="/js/hospitalinfo.js"></script>
-<script src="/js/member/message.js"></script>
 </body>
 </html>

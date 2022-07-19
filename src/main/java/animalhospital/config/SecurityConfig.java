@@ -1,6 +1,7 @@
 package animalhospital.config;
 
 import animalhospital.service.MemberService;
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.boot.autoconfigure.security.ConditionalOnDefaultWebSecurity;
@@ -13,6 +14,8 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+
+
 
 
 @EnableWebSecurity
@@ -34,7 +37,6 @@ public class SecurityConfig {
                 .antMatchers("/admin/**").hasRole("ADMIN")
                 .antMatchers("/member/info").hasRole("MEMBER")
                 .antMatchers("/board/write").hasRole("MEMBER")
-                .antMatchers("/member/binrequest").hasRole("MEMBER")
                 .antMatchers("/**").permitAll()
                 .antMatchers("member/login").permitAll()
                 .antMatchers("board/blist").permitAll()
@@ -68,13 +70,15 @@ public class SecurityConfig {
                 .ignoringAntMatchers("/admin/deletenotice")
                 .ignoringAntMatchers("/special/specialanimal")
                 .ignoringAntMatchers("/map/info")
+                .ignoringAntMatchers("/map/addreview")
+                .ignoringAntMatchers("/map/getreviewlist")
+                .ignoringAntMatchers("/videosearch")
                 .ignoringAntMatchers("/board/replysave")
                 .ignoringAntMatchers("/board/reupdate")
                 .ignoringAntMatchers("/board/rereply")
                 .ignoringAntMatchers("/board/getboard")
                 .ignoringAntMatchers("/board/getreply")
                 .ignoringAntMatchers("/board/getrereply")
-                .ignoringAntMatchers("/member/requestsave")
                 .ignoringAntMatchers("/")
                 .and()
                 .exceptionHandling()

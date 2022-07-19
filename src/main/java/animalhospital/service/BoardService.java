@@ -11,6 +11,7 @@ import org.json.JSONObject;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -27,6 +28,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import java.io.File;
+import java.io.IOException;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
@@ -48,6 +50,7 @@ public class BoardService {
     @Autowired
     private ReplyRepository replyRepository;
 
+
     @Transactional
     public boolean save(BoardDto boardDto) {
 
@@ -59,11 +62,13 @@ public class BoardService {
         }else if( principal instanceof DefaultOAuth2User){
             Map<String , Object>  map =  ((DefaultOAuth2User) principal).getAttributes();
             if( map.get("response") != null ){
-                Map< String , Object> map2  = (Map<String, Object>) map.get("response");
+                Map< String , Object> map2  = (Map<String, Object>) map.get("response"); // 네이버
                 mid = map2.get("email").toString().split("@")[0];
-            }else{
-                Map< String , Object> map2  = (Map<String, Object>) map.get("kakao_account");
+            }else if(map.get("kakao_account") != null){
+                Map< String , Object> map2  = (Map<String, Object>) map.get("kakao_account"); // 카카오
                 mid = map2.get("email").toString().split("@")[0];
+            }else if(map.get("kakao_account") == null && map.get("response") == null ) { // 구글, 깃허브
+                mid = map.get("email").toString().split("@")[0];
             }
         }else{
             return false;
@@ -80,7 +85,7 @@ public class BoardService {
                         UUID uuid = UUID.randomUUID();
 
                         uuidfile = uuid.toString() + "_" + file.getOriginalFilename().replaceAll("_", "-");
-                        String dir = "C:\\Users\\504\\Desktop\\springproject_animalhospital\\src\\main\\resources\\static\\upload\\";
+                        String dir = "C:\\Users\\504\\springproject_animalhospital\\src\\main\\resources\\static\\upload\\";
                         String filepath = dir + uuidfile;
 
                         try {
@@ -92,7 +97,7 @@ public class BoardService {
                                     .build();
 
                             boardimgRespository.save(boardimgEntity);
-                            System.out.println(boardimgEntity);
+
                             boardEntity.getBoardimgEntities().add(boardimgEntity);
 
                         } catch (Exception e) {
@@ -150,6 +155,7 @@ public class BoardService {
 
     public Map< String , List<Map<String , String >>> boardlist(int page ) // 인수
     {
+
         System.out.println( "페이지 :"+ page );
 
         Page<BoardEntity> boardEntitylist = null ;
@@ -163,21 +169,18 @@ public class BoardService {
 
         int btncount = 5;
         int startbtn  = ( page / btncount ) * btncount + 1;
-        int endbtn = startbtn + btncount -1;
-        if( endbtn > boardEntitylist.getTotalPages() ) endbtn = boardEntitylist.getTotalPages();
+        int endhtn = startbtn + btncount -1;
+        if( endhtn > boardEntitylist.getTotalPages() ) endhtn = boardEntitylist.getTotalPages();
 
 
         for( BoardEntity entity : boardEntitylist ){
-            System.out.println(entity);
             // 3. map 객체 생성
             Map<String, String> map = new HashMap<>();
             map.put("bno", entity.getBno()+"" );
             map.put("btitle", entity.getBtitle());
-            map.put("mid", entity.getMemberEntity().getMid());
-            map.put("bdate",  entity.getCreatedate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
             map.put("bimg", entity.getBoardimgEntities().get(0).getBimg());
             map.put( "startbtn" , startbtn+"" );
-            map.put( "endbtn" , endbtn+"" );
+            map.put( "endhtn" , endhtn+"" );
             map.put( "totalpages" , boardEntitylist.getTotalPages()+"" );
             // 4. 리스트 넣기
             Maplist.add(map);
@@ -185,6 +188,7 @@ public class BoardService {
         Map< String , List<  Map<String , String >  > > object = new HashMap<>();
 
         object.put( "blists" , Maplist );
+
         return  object;
     }
 
@@ -240,7 +244,6 @@ public class BoardService {
         }else{
             same =  "false";
         }
-
         // 2.  해당 엔티티 -> json 객체 변환
         JSONObject object = new JSONObject();
         // 1. json에 엔티티 필드 값 넣기
@@ -255,10 +258,8 @@ public class BoardService {
             jsonArray.put( boardimgEntity.getBimg());
         }
         // 3. jsonarray를 json객체 포함
-        System.out.println(jsonArray);
         object.put("bimglist" , jsonArray) ;
         // 3. 반한
-
         return object;
     }
 
@@ -326,33 +327,24 @@ public class BoardService {
         String inflearnUrl = "https://search.daum.net/search?nil_suggest=btn&w=tot&DA=SBC&q="+code;
         Connection conn = Jsoup.connect(inflearnUrl);
         try {
-            Document document = conn.get();
-            Elements title = document.getElementsByClass("inner_tit").first().select("b");
-            Elements score = document.getElementsByClass("f_eb");
-//            String title2 = title.text().replaceAll(" ","");
-            String score2 = score.first().text();
-            String link = score.attr("href");
             CrawlDto crawlDto = new CrawlDto();
-            crawlDto.setScroe(score2);
-            crawlDto.setLink(link);
-//            String link = score.attr("href");
+            Document document = conn.get();
+            // Elements title = document.getElementsByClass("inner_tit").first().select("b");
+            try{ // try catch 두번 쓴 이유 크롤링 null값 예외처리 위해서
+                Elements score = document.getElementsByClass("txt_info ").first().getElementsByClass("f_eb");
+//            String title2 = title.text().replaceAll(" ","");
+                String  score2 = score.first().text();
+                String  link = score.attr("href");
+                crawlDto.setScroe(score2);
+                crawlDto.setLink(link);
+            }catch (NullPointerException e){}
             return  crawlDto;
-            //  System.out.println(code);
-
-//            if(name.equals(title2)) {
-//                Elements score = document.getElementsByClass("f_eb");
-//                String score2 = score.first().text();
-//                String link = score.attr("href");
-//            }
-
-
-//
-
-        } catch (Exception e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
         return  null;
     }
+
     @Transactional
     public boolean replysave(int bno, String reply) {
 
@@ -395,10 +387,11 @@ public class BoardService {
     }
 
     public JSONArray getreply(int bno){
+        System.out.println("getreply");
 //        System.out.println("login : " + request.getSession().getAttribute("login"));
         OauthDto oauthDto= (OauthDto) request.getSession().getAttribute("login");
+        System.out.println(oauthDto);
         boolean same;
-
         JSONArray jsonArray = new JSONArray();
         List<ReplyEntity> replyEntities = replyRepository.findreply(bno);
         for(ReplyEntity replyEntity : replyEntities){
@@ -447,6 +440,7 @@ public class BoardService {
     }
 
     public boolean rereplysave(int bno, int rindex, String reply) {
+        System.out.println(rindex);
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Object principal = authentication.getPrincipal();
         String mid = null;

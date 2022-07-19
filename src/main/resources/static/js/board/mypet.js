@@ -3,92 +3,50 @@ function save(){
             alert("이미지를 하나 이상 등록해주세요");
         }else if($("#btitle").val()==""){
                      alert("제목을 입력해주세요");
-            }else{
-            let form = $("#saveform")[0];
-            let formdata = new FormData( form);
-            $.ajax({
-                url: "/board/write",
-                method: "POST",
-                data : formdata ,
-                contentType: false,
-                processData: false ,
-                success: function( re ){
-                    if(re){
-                         location.href ="list"
-                    }else{
-                        alert("로그인 후 이용해주세요!")
-                    }
-                }
-            });
+          }else{
+     let form = $("#saveform")[0];
+        let formdata = new FormData( form);
+        $.ajax({
+            url: "/board/write",
+            method: "POST",
+            data : formdata ,
+            contentType: false,
+            processData: false ,
+            success: function( re ){
+                alert("등록완료");
+                location.reload();
+            }
+        });
         }
 }
-
 let current_page = 0;
 boardlist(0);
 
 
 function boardlist( page){
-    this.current_page = page;
-    console.log(this.current_page);
+     this.current_page = page;
+     console.log(this.current_page);
     $.ajax({
     		url: "/board/blist",
     		 method: "POST",
     		 data: {"page":this.current_page},
     		success: function(boardlist){
     		console.log(boardlist);
-    		    html ="";
-//    		    '<div><div>번호</div><div>제목</div><div>이미지</div></div>';
+    		    html = '<div><div>번호</divh><div>제목</div><div>이미지</div></div>';
                 if( boardlist.blists.length == 0 ){ // 검색 결과가 존재하지 않으면
-                      html +=
-                        '<div>'+
-                            '<div colspan="5">검색 결과가 존재하지 않습니다.</div> '+
-                        '</div>';
-                      }else{
-                                for( let i = 0 ; i<boardlist.blists.length ; i++ ){
-                                    if(i%3 ==0){
-
-                                         html +=
-                                            '<div class="row">'+
-                                                '<div class="card" style="width: 18rem;" >'+
-                                                '  <img src="/upload/'+boardlist.blists[i].bimg+'" class="card-img-top"  data-bs-toggle="modal" data-bs-target="#myModal2" onclick="bview('+boardlist.blists[i].bno+')">'+
-                                                '  <div class="card-body">'+
-                                                '    <h5 class="card-title">'+boardlist.blists[i].btitle+'</h5>'+
-                                                '    <p class="card-text d-flex justify-content-end">'+boardlist.blists[i].bdate+'</p>'+
-//                                                '    <p class="card-text">'+boardlist.blists[i].mid+boardlist.blists[i].bdate+'</p>'+
-//                                                '    <a href="#" class="btn btn-primary">Go somewhere</a>'+
-                                                '  </div>'+
-                                                '</div>';
-//                                                '<div class="col-md-3" type="button" data-bs-toggle="modal" data-bs-target="#myModal2" onclick="bview('+boardlist.blists[i].bno+')">'+
-//                                                '   <div>'+boardlist.blists[i].bno+'</div>'+
-//                                                '   <div>'+boardlist.blists[i].btitle+'</div>'+
-//                                                '   <div><img width="100%" height="30vh" src="/upload/'+boardlist.blists[i].bimg+'"></div>'+
-//                                                '</div>';
-
-                                    }else if(i %3 ==1){
-                                        html +=
-                                            '<div class="card" style="width: 18rem;" >'+
-                                                '  <img src="/upload/'+boardlist.blists[i].bimg+'" class="card-img-top"  data-bs-toggle="modal" data-bs-target="#myModal2" onclick="bview('+boardlist.blists[i].bno+')">'+
-                                                '  <div class="card-body">'+
-                                                '    <h5 class="card-title">'+boardlist.blists[i].btitle+'</h5>'+
-                                                '    <p class="card-text d-flex justify-content-end">'+boardlist.blists[i].bdate+'</p>'+
-//                                                '    <p class="card-text">'+boardlist.blists[i].mid+boardlist.blists[i].bdate+'</p>'+
-//                                                '    <a href="#" class="btn btn-primary">Go somewhere</a>'+
-                                                '  </div>'+
-                                                '</div>';
-                                    }else if(i %3 ==2){
-                                        html +=
-                                                '<div class="card" style="width: 18rem;" >'+
-                                                '  <img src="/upload/'+boardlist.blists[i].bimg+'" class="card-img-top"  data-bs-toggle="modal" data-bs-target="#myModal2" onclick="bview('+boardlist.blists[i].bno+')">'+
-                                                '  <div class="card-body">'+
-                                                '    <h5 class="card-title">'+boardlist.blists[i].btitle+'</h5>'+
-                                                '    <p class="card-text d-flex justify-content-end">'+boardlist.blists[i].bdate+'</p>'+
-//                                                '    <p class="card-text">'+boardlist.blists[i].mid+boardlist.blists[i].bdate+'</p>'+
-//                                                '    <a href="#" class="btn btn-primary">Go somewhere</a>'+
-                                                '  </div>'+
-                                                '</div>';
-                                            '</div>';
-                                    }
-                                }
+                                          html +=
+                                                '<div>'+
+                                                        '<div colspan="5">검색 결과가 존재하지 않습니다.</div> '+
+                                                 '</div>';
+                                }else{
+                                        for( let i = 0 ; i<boardlist.blists.length ; i++ ){
+                                            html +=
+                                                    '<div type="button" data-bs-toggle="modal" data-bs-target="#myModal2" onclick="bview('+boardlist.blists[i].bno+')">'+
+                                                            '<div>'+boardlist.blists[i].bno+'</div> '+
+                                                            '<div>'+boardlist.blists[i].btitle+'</div> '+
+                                                            '<div><img src="/upload/'+boardlist.blists[i].bimg+'"></div> '+
+                                                     '</div>';
+                                        }
                     }
                      let pagehtml = "";
                      if( page == 0 ){
@@ -102,8 +60,8 @@ function boardlist( page){
                                         '<button class="page-link" onclick="boardlist('+ (page-1)  +')"> 이전 </button>'+
                              '</li>';
                       }
-                      console.log(boardlist.blists);
-                     for( let i = boardlist.blists[0].startbtn ; i<=boardlist.blists[0].endbtn; i++ ){
+                        alert(boardlist.blists[0].endhtn);
+                     for( let i = boardlist.blists[0].startbtn ; i<=boardlist.blists[0].endhtn; i++ ){
                         pagehtml +=
                               '<li class="page-item"> '+
                                 '<button class="page-link" onclick="boardlist('+(i-1)+')"> '+i+' </button>'+
@@ -130,8 +88,7 @@ function boardlist( page){
 let bno = 0;
 let bnum;
 function bview(bno){
-
-        bnum = bno;
+    bnum = bno;
         $.ajax({
             url : "/board/getboard" ,
             method : "GET",
@@ -139,8 +96,8 @@ function bview(bno){
             success: function( board ){
                 let imgtag = "";
                 // 응답받은 데이터를 모달에 데이터 넣기
-                console.log( board );
-                getreply();
+                console.log( board.mid  );
+                 getreply();
                 for( let i = 0 ; i<board.bimglist.length ; i++ ){
                      if( i == 0 ){  // 첫번째 이미지만 active 속성 추가
                         imgtag +=
@@ -156,10 +113,9 @@ function bview(bno){
                 }
                 if(board.same="true"){
                     $("#deletebutton").html(
-                    '<button type="button" class="btn btn-primary" onclick="bdelete('+board.bno+')">삭제</button>'
-                 );
+                                        '<button type="button" class="btn btn-primary" onclick="bdelete('+board.bno+')">삭제</button>'
+                                     );
                 }
-
                 $("#bwiter").html( board.mid );
                  $("#btitl").html( board.btitle );
                  $("#bcontent").html( board.bcontent );
@@ -362,7 +318,6 @@ function getrereply(rno){
                         '</div>';
                 }
             }
-            console.log(rereplyhtml);
             $("#"+ rindex).html(rereplyhtml);
         }
     });

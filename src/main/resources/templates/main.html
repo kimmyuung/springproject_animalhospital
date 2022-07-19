@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
@@ -10,13 +10,12 @@
 <div class="main_wrap">
     <div class="header_menu">
         <ul class="header_ul">
-            <li th:if= "${session.admin != null}" th:text="${session.admin.role}" class="header_li"> </li>
-            <li th:if="${ session.login == null && session.admin == null}"class="header_li"><a href="/member/login">로그인 </a>  </li>
-            <li th:if="${ session.login == null && session.admin == null}"class="header_li"><a href="/member/login">회원가입</a></li>
-            <li th:if="${ session.login != null || session.admin != null}" class="header_li"><a href="/member/memberinfo">회원정보</a></li>
-            <li th:if="${ session.login != null || session.admin != null}" class="header_li"><a href="/member/logout">로그아웃</a></li>
-            <li th:if="${ session.login != null }" class="header_li"><button onclick="mdelete()">회원탈퇴</button> </li>
-            <li> <a href="/admin/binlist">관리</a> </li>
+            <p th:text="${#authentication.principal}"></p> <!-- 인증정보 객체 -->
+            <p sec:authentication="name"></p> <!-- 인증정보 객체 지저분하면 지워도 상관 없음 -->
+            <li sec:authorize="isAnonymous()" class="nav-item"> <a class="nav-link text-dark" href="/member/login"> 로그인 </a> </li>
+            <li sec:authorize="isAuthenticated()" class="nav-item"> <a class="nav-link text-dark" href ="/member/logout"> 로그아웃 </a> </li>
+            <li sec:authorize="isAuthenticated()" class="nav-item"><button onclick="mdelete()">회원탈퇴</button> </li>
+            <li sec:authorize="hasRole('ADMIN')" class="nav-item"> <a class="nav-link text-dark" href ="/"> 관리자모드 </a> </li>
         </ul>
     </div>
     <div class="header_wrap">
@@ -25,14 +24,9 @@
             <ul class="header_ul_menu">
                 <li class="menu_li">
                     <div class="menu bb">
-
-                        <img id="logo" src="/img/logo.png">
-
+                       <a href="/"> <img id="logo" src="/img/logo.png"> </a>
                     </div>
-
-
                 </li>
-
                 <li class="menu_li">
                     <div class="menu b">
                         <a href="/board/notice">고객센터</a>
@@ -99,18 +93,18 @@
             </div>
             <div class="modal-body">
                 <div class="search_area ">
-                    <input id="searchbar" type="text" placeholder="병원이름을 입력해주세요" onKeypress="javascript:if(event.keyCode==13) {search()}">
+                    <input id="searchbar" type="text" placeholder="병원이름을 입력해주세요" onKeypress="javascript:if(event.keyCode==13) {search()}" minlength="3" maxlength="15">
 
                 </div>
                 <div class="btn_area">
                     <button onclick="search()">찾기</button>
                 </div>
-                <div id="searchlist">
+                <div id="searchlist" style="overflow: auto">
 
                 </div>
             </div>
             <div class="modal-footer">
-                <button id="closebtn" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
 
             </div>
         </div>
