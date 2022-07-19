@@ -15,6 +15,10 @@ public interface MemberRepository extends JpaRepository<MemberEntity , Integer> 
     @Query( value = "select * from member where memail = :memail" , nativeQuery = true )
     Optional< MemberEntity > findBymemail( String memail );
 
+    MemberEntity findBymno (int mno);
+
+
+
 }
 
 //  특정 필드 검색 메소드 만들기 : findBy필드명

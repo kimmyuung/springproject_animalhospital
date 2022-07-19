@@ -15,7 +15,8 @@ public enum Role {      // p.178
 
     // 열거형!!! =  MEMBER[0] , INTERME[1] , ADMIN[2]
     MEMBER("ROLE_MEMBER" , "회원") ,
-    ADMIN("ROLE_ADMIN" , "관리자");
+    ADMIN("ROLE_ADMIN" , "관리자"),
+    HOSPITAL("ROLE_HOSPITAL" , "병원");
 
     // 열거형 들어가는 필드 항목들
     private final String key ;   // final[상수] : 데이터 고정

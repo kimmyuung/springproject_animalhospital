@@ -94,6 +94,7 @@ public class SecurityConfig {
                 .ignoringAntMatchers("/member/getitem")
                 .ignoringAntMatchers("/member/idcheck")
                 .ignoringAntMatchers("/member/itemview{sno}")
+                .ignoringAntMatchers("/board/mypetupdate")
                 .ignoringAntMatchers("/")
                 .and()
                 .exceptionHandling()

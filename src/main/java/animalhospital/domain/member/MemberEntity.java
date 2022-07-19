@@ -44,6 +44,10 @@ public class MemberEntity {
     List<MessageEntity> toentitylist = new ArrayList<>();
 
     @Builder.Default    // 빌더 사용시 초기값 설정
+    @OneToMany( mappedBy ="fromentity" , cascade = CascadeType.ALL)  // 1:M
+    List<MessageEntity> fromentitylist = new ArrayList<>();
+
+    @Builder.Default    // 빌더 사용시 초기값 설정
     @OneToMany( mappedBy ="member" , cascade = CascadeType.ALL)  // 1:M
     List<ShopEntity> shopEntityList = new ArrayList<>(); // 올린상품 리스트
 

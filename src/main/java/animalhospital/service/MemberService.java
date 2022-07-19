@@ -1,9 +1,13 @@
 package animalhospital.service;
 
-import animalhospital.domain.member.MemberEntity;
-import animalhospital.domain.member.MemberRepository;
+import animalhospital.domain.member.*;
+import animalhospital.domain.message.MessageEntity;
+import animalhospital.domain.message.MessageRepository;
 import animalhospital.dto.LoginDto;
 import animalhospital.dto.OauthDto;
+import animalhospital.dto.RequestDto;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -19,9 +23,13 @@ import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 
 import javax.servlet.http.HttpSession;
+import javax.transaction.Transactional;
+import java.io.File;
+import java.io.IOException;
 import java.util.*;
 
 @Service
@@ -169,6 +177,131 @@ public class MemberService implements OAuth2UserService<OAuth2UserRequest ,OAuth
         return new LoginDto(memberEntity, authorityList); // 회원엔티티, 인증된 리스트를 인증세션 부여
     }
 
+    @Autowired
+    RequestRepository requestRepository;
+    public boolean requestsave(RequestDto requestDto) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Object principal = authentication.getPrincipal();
+        String mid = null;
+        if( principal instanceof UserDetails){
+            mid = ((UserDetails) principal).getUsername();
+        }else if( principal instanceof DefaultOAuth2User){
+            Map<String , Object>  map =  ((DefaultOAuth2User) principal).getAttributes();
+            if( map.get("response") != null ){
+                Map< String , Object> map2  = (Map<String, Object>) map.get("response");
+                mid = map2.get("email").toString().split("@")[0];
+            }else{
+                Map< String , Object> map2  = (Map<String, Object>) map.get("kakao_account");
+                mid = map2.get("email").toString().split("@")[0];
+            }
+        }else{
+            return false;
+        }
+        if( mid != null  ) {
+            Optional<MemberEntity> optionalMember = memberRepository.findBymid(mid);
+            if (optionalMember.isPresent()) {
+                int mno = optionalMember.get().getMno();
+                RequestEntity requestEntity = requestDto.toentity();
+                requestEntity.setMid(mid);
+                requestEntity.setMno(mno);
+                requestEntity.setHospital(requestEntity.getHname()+requestEntity.getHdate());
+                String uuidfile = null;
+                UUID uuid = UUID.randomUUID();
+                MultipartFile file = requestDto.getBinimg();
+                uuidfile = uuid.toString() + "_" + file.getOriginalFilename().replaceAll("_", "-");
+                String dir = "C:\\Users\\504\\Desktop\\springproject_animalhospital\\src\\main\\resources\\static\\upload\\";
+                String filepath = dir + uuidfile;
+                try {
 
+                    file.transferTo(new File(filepath));
+                    requestEntity.setBinimg(uuidfile);
+                    requestRepository.save(requestEntity);
+
+                } catch (IOException e) {
+                    System.out.println("requestsave error : " + e);
+                }
+
+            }else {
+                return false;
+            }
+        }
+        return false;
+    }
+
+    public JSONArray getbinlist() {
+        JSONArray jsonArray = new JSONArray();
+        List<RequestEntity> entities = requestRepository.findAll();
+        System.out.println(entities);
+        for (RequestEntity entity : entities ){
+            JSONObject object = new JSONObject();
+            object.put("hno", entity.getHno());
+            object.put("hname", entity.getHname());
+            object.put("hdate", entity.getHdate());
+            object.put("mid", entity.getMid());
+            object.put("mno", entity.getMno());
+            object.put("binimg", entity.getBinimg());
+            jsonArray.put(object);
+        }
+        return jsonArray;
+    }
+
+    @Transactional
+    public boolean setrole(int mno, String hname, String hdate, String bin) {
+        System.out.println(mno + hname + hdate + bin);
+        if(bin !=null){
+            String hospital = "HOSPITAL";
+            MemberEntity memberEntity = memberRepository.findBymno(mno);
+            memberEntity.setRole(Role.HOSPITAL);
+            memberRepository.save(memberEntity);
+            System.out.println(memberEntity.getRole().getKey());
+            RequestEntity requestEntity = requestRepository.findBymno(mno);
+            requestEntity.setBin(bin);
+            requestEntity.setActive(true);
+            requestRepository.save(requestEntity);
+            return  true;
+        }else {
+            return false;
+        }
+    }
+
+    //쪽지
+    //메시지 전송
+    @Autowired
+    private MessageRepository messageRepository;
+
+    @Transactional
+    public boolean messagesend(JSONObject object){
+        String from = (String) object.get("from");
+        String to = (String) object.get("to");
+        String msg = (String) object.get("msg");
+
+        MemberEntity fromentity = null;
+        Optional<MemberEntity> optionalMember1 = memberRepository.findBymid(from);
+        if(optionalMember1.isPresent()){
+            fromentity = optionalMember1.get();
+        }else {
+            return false;
+        }
+        MemberEntity toentity = null;
+        Optional<MemberEntity> optionalMember2 = memberRepository.findBymid(to);
+        if(optionalMember2.isPresent()){
+            toentity =optionalMember2.get();
+        }else {
+            return false;
+        }
+
+        MessageEntity messageEntity = MessageEntity.builder()
+                .msg(msg)
+                .fromentity(fromentity)
+                .toentity(toentity)
+                .build();
+
+        messageRepository.save(messageEntity);
+
+        fromentity.getFromentitylist().add(messageEntity);
+        toentity.getToentitylist().add(messageEntity);
+        return true;
+
+    }
 
 }

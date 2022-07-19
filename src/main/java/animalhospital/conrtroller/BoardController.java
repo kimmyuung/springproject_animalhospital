@@ -39,12 +39,50 @@ public class BoardController {
 
         return result;
     }
+    @PostMapping("/tipwrite")
+    @ResponseBody
+    public boolean tipwrite_save( BoardDto boardDto ){
+        boardDto.setCno(3);
+        boolean result = boardService.save( boardDto );
+
+        return result;
+    }
+
+    @PutMapping("/tipupdate")
+    @ResponseBody
+    public boolean tipwrite_update( BoardDto boardDto ){
+        boardDto.setCno(3);
+        int bno =  (Integer) request.getSession().getAttribute("bno");
+        boardDto.setBno(bno);
+        boolean result = boardService.save( boardDto );
+
+        return result;
+    }
+
+    @PutMapping("/mypetupdate")
+    @ResponseBody
+    public boolean mypetupdate( BoardDto boardDto ){
+        boardDto.setCno(2);
+        int bno =  (Integer) request.getSession().getAttribute("bno");
+        boardDto.setBno(bno);
+        boolean result = boardService.save( boardDto );
+
+        return result;
+    }
+
 
     @PostMapping("/blist")
     @ResponseBody
     public Map< String , List<Map<String , String >>>
     blist(HttpServletResponse response, @RequestParam("page") int page ){
         return boardService.boardlist(page);
+    }
+
+    @PostMapping("/btiplist")
+    @ResponseBody
+    public Map< String , List<Map<String , String >>>
+    btiplist(HttpServletResponse response, @RequestParam("page") int page ){
+        return boardService.boartiplist(page);
     }
 
     @GetMapping("/getboard")

@@ -19,8 +19,10 @@ public class MessageEntity extends BaseTime {
     private int msgno;
 
     private String msg;
+    private boolean isread;
+    // 읽음 여부
     private int msgtype;
-    // 메시지 타입 : 1번 (병원과 회원 간의 메시지) 2번 (회원과 회원 간의 메시지)
+    // 메시지 타입 : 1번 (병원과 회원 간의 메시지)  2번 (회원과 회원 간의 메시지)
 
     @ManyToOne // 메시지 받는 사람
     @JoinColumn(name = "tomno")
