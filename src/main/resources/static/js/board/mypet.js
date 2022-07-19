@@ -47,12 +47,12 @@ function boardlist( page){
                         '</div>';
                       }else{
                                 for( let i = 0 ; i<boardlist.blists.length ; i++ ){
-                                    if(i%3 ==0){
+                                    if(i%4 ==0){
 
                                          html +=
                                             '<div class="row">'+
-                                                '<div class="card" style="width: 18rem;" >'+
-                                                '  <img src="/upload/'+boardlist.blists[i].bimg+'" class="card-img-top"  data-bs-toggle="modal" data-bs-target="#myModal2" onclick="bview('+boardlist.blists[i].bno+')">'+
+                                                '<div class="card" style="width: 20rem;"   data-bs-toggle="modal" data-bs-target="#myModal2" onclick="bview('+boardlist.blists[i].bno+')">'+
+                                                '  <img src="/upload/'+boardlist.blists[i].bimg+'" class="card-img-top">'+
                                                 '  <div class="card-body">'+
                                                 '    <h5 class="card-title">'+boardlist.blists[i].btitle+'</h5>'+
                                                 '    <p class="card-text d-flex justify-content-end">'+boardlist.blists[i].bdate+'</p>'+
@@ -61,10 +61,10 @@ function boardlist( page){
                                                 '  </div>'+
                                                 '</div>';
 
-                                    }else if(i %3 ==1){
+                                    }else if(i %4 ==1){
                                         html +=
-                                            '<div class="card" style="width: 18rem;" >'+
-                                                '  <img src="/upload/'+boardlist.blists[i].bimg+'" class="card-img-top"  data-bs-toggle="modal" data-bs-target="#myModal2" onclick="bview('+boardlist.blists[i].bno+')">'+
+                                            '<div class="card" style="width: 20rem;"   data-bs-toggle="modal" data-bs-target="#myModal2" onclick="bview('+boardlist.blists[i].bno+')">'+
+                                                '  <img src="/upload/'+boardlist.blists[i].bimg+'" class="card-img-top">'+
                                                 '  <div class="card-body">'+
                                                 '    <h5 class="card-title">'+boardlist.blists[i].btitle+'</h5>'+
                                                 '    <p class="card-text d-flex justify-content-end">'+boardlist.blists[i].bdate+'</p>'+
@@ -72,10 +72,10 @@ function boardlist( page){
 //                                                '    <a href="#" class="btn btn-primary">Go somewhere</a>'+
                                                 '  </div>'+
                                                 '</div>';
-                                    }else if(i %3 ==2){
+                                    }else if(i %4 ==2){
                                         html +=
-                                                '<div class="card" style="width: 18rem;" >'+
-                                                '  <img src="/upload/'+boardlist.blists[i].bimg+'" class="card-img-top"  data-bs-toggle="modal" data-bs-target="#myModal2" onclick="bview('+boardlist.blists[i].bno+')">'+
+                                                '<div class="card" style="width: 20rem;"   data-bs-toggle="modal" data-bs-target="#myModal2" onclick="bview('+boardlist.blists[i].bno+')">'+
+                                                '  <img src="/upload/'+boardlist.blists[i].bimg+'" class="card-img-top">'+
                                                 '  <div class="card-body">'+
                                                 '    <h5 class="card-title">'+boardlist.blists[i].btitle+'</h5>'+
                                                 '    <p class="card-text d-flex justify-content-end">'+boardlist.blists[i].bdate+'</p>'+
@@ -85,6 +85,19 @@ function boardlist( page){
                                                 '</div>';
                                             '</div>';
                                     }
+                                    else if(i %4 ==3){
+                                                html +=
+                                                        '<div class="card" style="width: 20rem;"   data-bs-toggle="modal" data-bs-target="#myModal2" onclick="bview('+boardlist.blists[i].bno+')">'+
+                                                        '  <img src="/upload/'+boardlist.blists[i].bimg+'" class="card-img-top">'+
+                                                        '  <div class="card-body">'+
+                                                        '    <h5 class="card-title">'+boardlist.blists[i].btitle+'</h5>'+
+                                                        '    <p class="card-text d-flex justify-content-end">'+boardlist.blists[i].bdate+'</p>'+
+        //                                                '    <p class="card-text">'+boardlist.blists[i].mid+boardlist.blists[i].bdate+'</p>'+
+        //                                                '    <a href="#" class="btn btn-primary">Go somewhere</a>'+
+                                                        '  </div>'+
+                                                        '</div>';
+                                                    '</div>';
+                                            }
                                 }
                     }
                      let pagehtml = "";
@@ -142,19 +155,19 @@ function bview(bno){
                      if( i == 0 ){  // 첫번째 이미지만 active 속성 추가
                         imgtag +=
                                      '<div class="carousel-item active">'+
-                                         '<img id="preview" src="/upload/'+board.bimglist[i]+'" class="d-block w-100" alt="...">'+
+                                         '<img id="preview" src="/upload/'+board.bimglist[i]+'" class="d-block w-100 modalimg" alt="...">'+
                                     '</div>';
                      }else{
                         imgtag +=
                                  '<div class="carousel-item">'+
-                                     '<img  id="preview" src="/upload/'+board.bimglist[i]+'" class="d-block w-100" alt="...">'+
+                                     '<img  id="preview" src="/upload/'+board.bimglist[i]+'" class="d-block w-100 modalimg" alt="...">'+
                                 '</div>';
                      }
                 }
                 if(board.same=="true"){
                     $("#deletebutton").html(
-                    '<button type="button" class="btn btn-primary" onclick="bdelete('+board.bno+')">삭제</button>'+
-                    '<button type="button" class="btn btn-primary" onclick="bupdate('+board.bno+')"   data-bs-toggle="modal" data-bs-target="#myModal3">수정</button>'
+                    '<button type="button" class="btn btn-primary mypetupdate" onclick="bdelete('+board.bno+')">삭제</button>'+
+                    '<button type="button" class="btn btn-primary mypetupdate" onclick="bupdate('+board.bno+')"   data-bs-toggle="modal" data-bs-target="#myModal3">수정</button>'
                  );
                 }
 
@@ -197,7 +210,7 @@ alert(bno);
             }
     })
 }
-function tipupdate(){
+function mypetupdate(){
     let form = $("#updateform")[0];
             let formdata = new FormData( form);
             $.ajax({
@@ -302,12 +315,12 @@ function getreply(){
                         replyhtml +=
                             '<div>'+
                                 '<div class="row">'+
-                                    '<div class="col-md-6">'+result[i].mid+'</div>'+
+                                    '<div class="col-md-6"><h4>'+result[i].mid+'</h4></div>'+
                                     '<div class="col-md-6 d-flex justify-content-end">'+result[i].createdate+'</div>'+
                                 '</div>'+
                                 '<div>'+result[i].rcontent+'</div>'+
-                                '<div id="repltbtn">'+
-                                    '<button type="button" onclick="rereplyinput('+result[i].rno+')">답글</button><button type="button" onclick="replyupdate('+result[i].rno+')">수정</button><button type="button" onclick="replydelete('+result[i].rno+')">삭제</button>'+
+                                '<div id="repltbtn" class="replyupdate">'+
+                                    '<button class="replyupdatebtn" type="button" onclick="rereplyinput('+result[i].rno+')">답글</button><button type="button" class="replyupdatebtn" onclick="replyupdate('+result[i].rno+')">수정</button><button  class="replyupdatebtn" type="button" onclick="replydelete('+result[i].rno+')">삭제</button>'+
                                 '</div>'+
                                 '<div id = "'+result[i].rno+'"></div>'+
                             '</div>';
@@ -315,12 +328,12 @@ function getreply(){
                         replyhtml +=
                             '<div>'+
                                 '<div class="row">'+
-                                    '<div class="col-md-6">'+result[i].mid+'</div>'+
+                                    '<div class="col-md-6"><h5>'+result[i].mid+'</h5></div>'+
                                     '<div class="col-md-6 d-flex justify-content-end">'+result[i].createdate+'</div>'+
                                 '</div>'+
                                 '<div>'+result[i].rcontent+'</div>'+
-                                '<div id="repltbtn">'+
-                                    '<button type="button" onclick="rereply('+result[i].rno+')">답글</button>'+
+                                '<div id="repltbtn" class="replyupdate">'+
+                                    '<button  class="replyupdatebtn" type="button" onclick="rereply('+result[i].rno+')">답글</button>'+
                                 '</div>'+
                                 '<div id="'+result[i].rno+'"></div>'+
                             '</div>';
@@ -388,6 +401,7 @@ function rereply(rno){
             if(result){
                 $('#reply').val('');
                 getreply();
+                location.reload();
             }else{
                 alert("로그인 후 이용해주세요!")
             }

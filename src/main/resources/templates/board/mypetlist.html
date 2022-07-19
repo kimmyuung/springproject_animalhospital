@@ -7,13 +7,20 @@
     <link rel="stylesheet" href="/css/board/mypetlist.css">
 </head>
 <body>
-
-<div th:replace="board/boardmenu.html :: boardmenu"></div>
-
-<button sec:authorize="isAuthenticated()" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal">
+<div th:replace="header.html :: header"></div>
+<div class="bgc">
+    <div class="title">
+        <h1>커뮤니티</h1>
+    </div><br>
+    <div class="menubar">
+        <button type="button" class="menu2"  onclick="location.href='/board/tiplist'">꿀팁 공유하기</button>
+        <button type="button" class="menu1" onclick="location.href='/board/list'">반려동물 자랑대회</button>
+    </div>
+</div>
+<button sec:authorize="isAuthenticated()" type="button" class="btn btn-primary addbtn" data-bs-toggle="modal" data-bs-target="#myModal">
     사진올리기
 </button>
-<div id="table" class="container">
+<div id="table" class="container table">
 
 </div>
 <ul id="pagebtnbox" class="pagination justify-content-center">
@@ -33,7 +40,7 @@
                         <div class="col-md-6 modal_left">
                             <div class="preview"><img id="img_preview" src="/img/no-image.png" ></div>
                             <div>
-                                <input type="file" id="bimg" multiple="multiple" name="bimg">
+                                <input type="file" id="bimg" multiple="multiple" name="bimg" accept="image/*">
                             </div>
                         </div>
                         <div class="col-md-6">
@@ -65,7 +72,7 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
-                            <div class="carousel-inner" id="modalimglist">
+                            <div class="carousel-inner modalimg" id="modalimglist">
 
                                 <!-- 이미지가 표시되는 구역 -->
 
@@ -82,9 +89,8 @@
                     </div>
                     <div class="col-md-6">
                         <div id="viewcontent">
-                            <div><h5>제목: <span id="btitl"></span></h5></div>
-                            <div><h6>작성자: <span id="bwiter"></span></h6></div>
-                            <div>내용</div>
+                            <div><h5>작성자: <span id="bwiter"></span></h5></div>
+                            <div><h4><span id="btitl"></span></h4></div>
                             <span id="bcontent"></span>
                             <hr>
                             <div id="replydiv">
@@ -96,10 +102,10 @@
                             </div>
                         </div>
                         <div id="replyinput">
-                            <input type="text" id="reply" placeholder="댓글을 입력해주세요">
-                            <button type="button" onclick="replysave()">등록</button>
+                            <input type="text" class="mypetreply" id="reply" placeholder="댓글을 입력해주세요">
+                            <button type="button" class="replybtn" onclick="replysave()">등록</button>
                         </div>
-                        <div id="deletebutton">
+                        <div id="deletebutton" class="deletebutton">
 
                         </div>
                     </div>
@@ -125,7 +131,7 @@
                                 </div>
                             </div>
                             <div>
-                                <input type="file" id="bimg2" name="bimg" multiple>
+                                <input type="file" id="bimg2" name="bimg" multiple accept="image/*">
                             </div>
                         </div>
                         <div class="col-md-6">
@@ -136,7 +142,7 @@
                                 <textarea placeholder="내용을 입력하세요" name="bcontent"  id="bcontent2" ></textarea>
                             </div>
                             <div>
-                                <button type="button" onclick="tipupdate()">수정하기</button>
+                                <button type="button" onclick="mypetupdate()">수정하기</button>
                             </div>
                         </div>
                     </div>

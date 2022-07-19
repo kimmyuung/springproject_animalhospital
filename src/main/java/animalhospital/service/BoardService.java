@@ -85,8 +85,8 @@ public class BoardService {
                         UUID uuid = UUID.randomUUID();
 
                         uuidfile = uuid.toString() + "_" + file.getOriginalFilename().replaceAll("_", "-");
-                        //String dir = "C:\\Users\\504\\springproject_animalhospital\\src\\main\\resources\\static\\upload\\";
-                            String dir  = "D:\\sdy\\springproject_animalhospital\\src\\main\\resources\\static\\upload\\";
+                        String dir = "C:\\Users\\504\\springproject_animalhospital\\src\\main\\resources\\static\\upload\\";
+
                         String filepath = dir + uuidfile;
 
                         try {
@@ -160,7 +160,7 @@ public class BoardService {
         System.out.println( "페이지 :"+ page );
 
         Page<BoardEntity> boardEntitylist = null ;
-        Pageable pageable = PageRequest.of( page , 5 , Sort.by( Sort.Direction.DESC , "bno")    );
+        Pageable pageable = PageRequest.of( page , 12 , Sort.by( Sort.Direction.DESC , "bno")    );
 
         int cno=2;
         List<  Map<String , String >  > Maplist = new ArrayList<>();
@@ -594,7 +594,7 @@ public class BoardService {
        Optional<BoardEntity> optional
                =  boardRepository.findById( boardDto.getBno() );
        BoardEntity boardEntity =  optional.get();
-
+        boardEntity.setCreatedate(boardEntity.getCreatedate());
        boardEntity.setBtitle(boardDto.getBtitle());
        boardEntity.setBcontent(boardDto.getBcontent());
        if( boardDto.getBimg()!=null){

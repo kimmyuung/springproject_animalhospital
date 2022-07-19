@@ -28,6 +28,14 @@ public class BoardController {
     @GetMapping("/list")
     public String list(){ return "board/mypetlist";}
 
+    @GetMapping("/tiplist")
+    public String tiplist(){ return "board/tiplist";}
+
+    @GetMapping("/tipview/{bno}")
+    public String tipview( @PathVariable("bno") int bno){
+        request.getSession().setAttribute("bno", bno);
+        System.out.println(bno);
+        return "board/tipview";}
 
 
     @PostMapping("/write")
@@ -54,7 +62,7 @@ public class BoardController {
         boardDto.setCno(3);
         int bno =  (Integer) request.getSession().getAttribute("bno");
         boardDto.setBno(bno);
-        boolean result = boardService.save( boardDto );
+        boolean result = boardService.bupdate( boardDto );
 
         return result;
     }
@@ -65,7 +73,7 @@ public class BoardController {
         boardDto.setCno(2);
         int bno =  (Integer) request.getSession().getAttribute("bno");
         boardDto.setBno(bno);
-        boolean result = boardService.save( boardDto );
+        boolean result = boardService.bupdate( boardDto );
 
         return result;
     }
@@ -88,6 +96,7 @@ public class BoardController {
     @GetMapping("/getboard")
     public void getboard( @RequestParam("bno") int bno ,
                           HttpServletResponse response  ){
+        request.getSession().setAttribute("bno", bno);
         try{
             JSONObject object =  boardService.getboard( bno );
             response.setCharacterEncoding("UTF-8");
