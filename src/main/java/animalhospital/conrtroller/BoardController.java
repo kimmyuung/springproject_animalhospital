@@ -24,17 +24,9 @@ public class BoardController {
     @Autowired
     private HttpServletRequest request;
 
+
     @GetMapping("/list")
     public String list(){ return "board/mypetlist";}
-
-    @GetMapping("/tiplist")
-    public String tiplist(){ return "board/tiplist";}
-
-    @GetMapping("/tipview/{bno}")
-    public String tipview( @PathVariable("bno") int bno){
-        request.getSession().setAttribute("bno", bno);
-        System.out.println(bno);
-        return "board/tipview";}
 
 
 
@@ -47,7 +39,6 @@ public class BoardController {
 
         return result;
     }
-
     @PostMapping("/tipwrite")
     @ResponseBody
     public boolean tipwrite_save( BoardDto boardDto ){
@@ -87,7 +78,6 @@ public class BoardController {
         return boardService.boardlist(page);
     }
 
-
     @PostMapping("/btiplist")
     @ResponseBody
     public Map< String , List<Map<String , String >>>
@@ -95,12 +85,9 @@ public class BoardController {
         return boardService.boartiplist(page);
     }
 
-
-
     @GetMapping("/getboard")
     public void getboard( @RequestParam("bno") int bno ,
                           HttpServletResponse response  ){
-        request.getSession().setAttribute("bno", bno);
         try{
             JSONObject object =  boardService.getboard( bno );
             response.setCharacterEncoding("UTF-8");
@@ -120,7 +107,7 @@ public class BoardController {
     @PostMapping("/search")
     @ResponseBody
     public void videosearch(@RequestParam("search") String search
-            , HttpServletResponse response )
+                            , HttpServletResponse response )
     {
         try{
 
@@ -190,8 +177,6 @@ public class BoardController {
             System.out.println("getrereply error : "+e);
         }
     }
-
-
     @GetMapping("/gettipboard")
     public void gettipboard( HttpServletResponse response){
         int bno =  (Integer) request.getSession().getAttribute("bno");
@@ -204,5 +189,4 @@ public class BoardController {
             System.out.println( e );
         }
     }
-
 }

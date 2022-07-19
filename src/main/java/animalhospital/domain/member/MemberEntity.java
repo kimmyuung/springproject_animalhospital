@@ -4,6 +4,8 @@ package animalhospital.domain.member;
 import animalhospital.domain.BaseTime;
 import animalhospital.domain.message.MessageEntity;
 import animalhospital.domain.shop.ShopEntity;
+
+import animalhospital.domain.shop.ShopLikeEntity;
 import lombok.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -42,7 +44,15 @@ public class MemberEntity {
     List<MessageEntity> toentitylist = new ArrayList<>();
 
     @Builder.Default    // 빌더 사용시 초기값 설정
+    @OneToMany( mappedBy ="fromentity" , cascade = CascadeType.ALL)  // 1:M
+    List<MessageEntity> fromentitylist = new ArrayList<>();
+
+    @Builder.Default    // 빌더 사용시 초기값 설정
     @OneToMany( mappedBy ="member" , cascade = CascadeType.ALL)  // 1:M
-    List<ShopEntity> shopEntityList = new ArrayList<>();
+    List<ShopEntity> shopEntityList = new ArrayList<>(); // 올린상품 리스트
+
+    @Builder.Default    // 빌더 사용시 초기값 설정
+    @OneToMany(mappedBy = "memberlike", cascade = CascadeType.ALL)
+    List<ShopLikeEntity> memberlikeEntityList = new ArrayList<>(); //  관심상품 리스트
 
 }

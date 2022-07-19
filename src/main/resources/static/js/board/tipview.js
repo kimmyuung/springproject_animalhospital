@@ -1,4 +1,3 @@
-
 gettip();
 
 function gettip(){

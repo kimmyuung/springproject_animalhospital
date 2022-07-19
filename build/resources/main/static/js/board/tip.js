@@ -78,7 +78,6 @@ function boardlist( page){
                                                 '    <h5 class="card-title">'+boardlist.blists[i].btitle+'</h5>'+
                                                 '    <p class="card-text d-flex justify-content-end">'+boardlist.blists[i].bdate+'</p>'+
                                                 '  </div>'+
-                                                '  </div>'+
                                                  '  </div>'+
                                                 '</div>';
                                 }
