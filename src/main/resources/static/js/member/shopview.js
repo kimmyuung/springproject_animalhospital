@@ -196,21 +196,9 @@ $(document).ready(function(){
             msgwebsocket.onclose = onClose;
             msgwebsocket.onmessage = onMessage;
 
-             function onOpen() {
-                    alert("소켓 시작~");
-
-             }
-             function onClose() {
-                    alert("소켓 종료~");
-
-             }
-            function onMessage() {
-                    alert("메시지 ");
-
-                    }
-             function send(jsonmsg){
-                msgwebsocket.send(JSON.stringify(jsonmsg));
-            }
-
+             function onOpen() { }
+             function onClose() { }
+             function onMessage() { }
+             function send(jsonmsg){  msgwebsocket.send(JSON.stringify(jsonmsg));  }
     });
 
