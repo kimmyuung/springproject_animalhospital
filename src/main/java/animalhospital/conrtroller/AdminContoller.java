@@ -6,6 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -41,6 +42,23 @@ public class AdminContoller {
             response.getWriter().print(memberService.setrole(mno, hname, hdate, bin));
         } catch (IOException e) {
             throw new RuntimeException(e);
+        }
+    }
+    @GetMapping("/getchart")
+    public String  getchart(){
+        System.out.println("dd"+memberService.todaycount());
+        return "admin/chart";
+    }
+
+    @GetMapping("/getchartview")
+    @ResponseBody
+    public void getchartview(HttpServletResponse response) {
+        try{
+            response.setCharacterEncoding("UTF-8");
+            response.setContentType("application/json");
+            response.getWriter().print(memberService.todaycount());
+        }catch (Exception e) {
+
         }
     }
 }

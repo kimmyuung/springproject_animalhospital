@@ -22,7 +22,7 @@ var map = new kakao.maps.Map(mapContainer, mapOption);
 var clusterer = new kakao.maps.MarkerClusterer({
             map: map,
             averageCenter: true, // 클러스터에 포함된 마커들의 평균 위치를 클러스터 마커 위치로 설정
-            minLevel: 8, // 클러스터 할 최소 지도 레벨
+            minLevel: 7, // 클러스터 할 최소 지도 레벨
             styles: [{
                 width : '53px', height : '52px',
                 borderRadius : '20px',
@@ -77,9 +77,8 @@ clusterer.clear(); // 클러스터 클리어
                                                      location.href = "/map/infopage";
                                                 }
                                             });
-                         clusterer.addMarker(marker);
-                                        });
 
+                                        });
                                         if(j<10){
                                             html +=
                                                 '<div class="hospital-box" onclick="hview('+i+')" >'+
@@ -88,6 +87,7 @@ clusterer.clear(); // 클러스터 클리어
                                                 '</div>';
                                             j++;
                                         }
+                                        clusterer.addMarker(marker);
                                     }//if end
 
      } //if end

@@ -1,8 +1,11 @@
 package animalhospital.service;
 
+import animalhospital.domain.CountEntity;
+import animalhospital.domain.CountingRepository;
 import animalhospital.domain.member.*;
 import animalhospital.domain.message.MessageEntity;
 import animalhospital.domain.message.MessageRepository;
+import animalhospital.dto.CountDto;
 import animalhospital.dto.LoginDto;
 import animalhospital.dto.OauthDto;
 import animalhospital.dto.RequestDto;
@@ -31,6 +34,8 @@ import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Service
@@ -49,6 +54,9 @@ public class MemberService implements OAuth2UserService<OAuth2UserRequest ,OAuth
 
     @Autowired
     MemberRepository memberRepository;
+
+    @Autowired
+    CountingRepository countingRepository;
 
 
     public String authenticationget() {
@@ -106,6 +114,26 @@ public class MemberService implements OAuth2UserService<OAuth2UserRequest ,OAuth
         }
 
         httpSession.setAttribute("login", oauthDto);
+        httpSession.setAttribute("date", LocalDate.now());
+        LocalDate nowdate  = (LocalDate) httpSession.getAttribute("date");
+        String date = nowdate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        OauthDto csession = (OauthDto) httpSession.getAttribute("login");
+
+        if(httpSession.getAttribute(csession.getMemail()+date)==null){
+            CountDto cdto = CountDto.builder()
+                    .cnum(csession.getMemail()+date)
+                    .count(1)
+                    .createdate(LocalDate.now())
+                    .build();
+
+            // 엔티티를 이용한 조회수 증가
+
+            // 방문자수 중복방지 [ 세션 생성 ]
+            httpSession.setAttribute(csession.getMemail()+date,true);
+            System.out.println("중복방지"+httpSession.getAttribute(csession.getMemail()+date));
+            httpSession.setMaxInactiveInterval(60*60*24);
+            countingRepository.save(cdto.toentity());
+        }
 
         // 반환타입 DefaultOAuth2User ( 권한(role)명 , 회원인증정보 , 회원정보 호출키 )
         // DefaultOAuth2User , UserDetails : 반환시 인증세션 자동 부여 [ SimpleGrantedAuthority : (권한) 필수~  ]
@@ -420,4 +448,33 @@ public class MemberService implements OAuth2UserService<OAuth2UserRequest ,OAuth
         messageRepository.findById(msgno).get().setIsread(true);
         return true;
     }
+
+    public JSONArray todaycount(){
+        JSONArray jsonArray = new JSONArray();
+        JSONArray child =   new JSONArray();
+        List<CountEntity> list = countingRepository.getcount();
+        System.out.println(list.toString());
+        JSONObject object2 = new JSONObject();
+        object2.put("date","1");
+        String od = object2.get("date").toString();
+        for(CountEntity dto : list) {
+            JSONObject object = new JSONObject();
+            object.put("date",dto.getCreatedate());
+            object.put("count",dto.getCount());
+            if((object.get("date").toString().equals(od))) {
+                child.put(object);
+
+            } else {
+                child = new JSONArray();
+                child.put(object);
+                jsonArray.put(child);
+            }
+            //jsonArray.put(object);
+            od = object.get("date").toString();
+
+        }
+        //System.out.println("ddd"+ jsonArray);
+        return jsonArray;
+    }
+
 }
