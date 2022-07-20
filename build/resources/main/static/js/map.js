@@ -1,14 +1,77 @@
 
-  $.ajax({
+var mapContainer = document.getElementById('map'), // 지도를 표시할 div
+    mapOption = {
+        center: new kakao.maps.LatLng(37.63457, 127.33838), // 지도의 중심좌표
+        level: 5, // 지도의 확대 레벨
+        mapTypeId : kakao.maps.MapTypeId.ROADMAP // 지도종류
+    };
+// 지도를 생성한다
+var map = new kakao.maps.Map(mapContainer, mapOption);
+
+//클러스터[ 마커 집합 ]  변수
+    var clusterer = new kakao.maps.MarkerClusterer({
+        map: map, // 마커들을 클러스터로 관리하고 표시할 지도 객체
+        averageCenter: true, // 클러스터에 포함된 마커들의 평균 위치를 클러스터 마커 위치로 설정
+        minLevel: 6, // 클러스터 할 최소 지도 레벨
+        disableClickZoom: true // 클러스터 마커를 클릭했을 때 지도가 확대되지 않도록 설정한다
+    });
+let html ="";
+var markers = [];
+//병원데이터 가져오기
+    for(let i = 1; i <4; i++){
+        kakao.maps.event.addListener(map, 'idle', function () {
+            // 클러스터 초기화
+            clusterer.clear();
+
+        });
+            $.ajax({
                 url : "https://openapi.gg.go.kr/Animalhosptl?" ,
-                data :{"KEY" :"47d367a4e715424e8c25f17ff85a81ea","type":"json" ,"pSize" : 2500},
-                async : false,
+                data :{"KEY" :"47d367a4e715424e8c25f17ff85a81ea","type":"json","pIndex":i,"pSize": "1000" },
                 dataType : "json",
                 success: function(re) {
-                     console.log(re)
-                                //mapevevt(list2);
+
+                    for(let i = 0; i < re.Animalhosptl[1].row.length; i++){
+                        if(re.Animalhosptl[1].row[i]["BSN_STATE_NM"] == "정상") {
+                            let hname = re.Animalhosptl[1].row[i]["BIZPLC_NM"];
+
+                            let lat = re.Animalhosptl[1].row[i]["REFINE_WGS84_LAT"];
+                            let logt = re.Animalhosptl[1].row[i]["REFINE_WGS84_LOGT"];
+                            // 마커목록 생성
+//                            var markers = $(re.Animalhosptl[1]).map(function(i, position) {
+
+                                // 지도에 마커를 생성하고 표시한다
+                                var marker = new kakao.maps.Marker({
+                                    position: new kakao.maps.LatLng(lat, logt), // 마커의 좌표
+                                    map: map // 마커를 표시할 지도 객체
+                                });
+                                markers.push(marker);
+                                // 마커에 클릭 이벤트를 등록한다 (우클릭 : rightclick)
+                                kakao.maps.event.addListener(marker, 'click', function() {
+                                    alert(hname);
+                                });
+                                html +=
+                                    '<div class="hospital-box">'+
+                                        '<div>'+hname+'</div>'+
+                                        '<div>'+re.Animalhosptl[1].row[i]["REFINE_ROADNM_ADDR"]+'</div>'+
+                                    '</div>';
+
+//                                return markers;
+//                            }); // markers end
+
+
                         }//if end
-
-
-                //success end
+                    }//for end
+                    // 클러스터에 마커 추가
+//                    clusterer.addMarkers(markers);
+                    //사이드바에 html 추가
+                    $("#sidebar").html( html );
+                }//success end
             }); //ajax end
+//        }); // 이벤트 end
+    kakao.maps.event.addListener(clusterer, 'clusterclick', function(cluster) {
+            // 현재 지도 레벨에서 1레벨 확대한 레벨
+            var level = map.getLevel()-1;
+            // 지도를 클릭된 클러스터의 마커의 위치를 기준으로 확대합니다
+            map.setLevel(level, {anchor: cluster.getCenter()});
+        });
+    }//for end

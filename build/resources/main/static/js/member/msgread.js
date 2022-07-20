@@ -1,20 +1,37 @@
 
+gettomsglist(1);
+$("#v-pills-home-tab").click(function(){
+    gettomsglist(1);
+});
+$("#v-pills-profile-tab").click(function(){
+    gettomsglist(2);
+});
+let today = new Date();
 
+let year = today.getFullYear()+"";
+let month = today.getMonth() + 1+"";
+if(month < 10){
+    month = 0 + month;
+}
+let date = today.getDate()+"";
+let gettoday = year + '-' + month + '-' + date;
+console.log(gettoday);
 let msg;
 function gettomsglist(type){
     $.ajax({
         url: '/member/gettomsglist',
         data :{"type" : type},
         success: function(object){
+
             msg = object;
             let html =
-                    '<tr>'+
-                        '<th>보낸사람</th><th>내용</th><th>받은 날짜/시간</th>'+
-                    '</tr>';
+                '<tr>'+
+                    '<th>선택</th><th>보낸사람</th><th>내용</th><th>받은 날짜/시간</th>'+
+                '</tr>';
             if(object.length == 0){
                 html +=
                     '<tr>'+
-                        '<th colspan="3">받은 쪽지가 없습니다.</th>'+
+                        '<th colspan="4" class="text-center">받은 쪽지가 없습니다.</th>'+
                     '</tr>';
             }
             for(let i=0; i<object.length; i++){
@@ -24,38 +41,58 @@ function gettomsglist(type){
                  }
                 let msgtitle ="";
                 if(object[i].msg.length > 20 ){
-                   msgtitle = object[i].msg.substr(0, 20)+"..."
+                   msgtitle = object[i].msg.substr(0, 20)+"...";
                 }else{
-                    msgtitle = object[i].msg
+                    msgtitle = object[i].msg;
+                }
+                let mdate ="";
+                let senddate = object[i].date.substr(0, 10);
+                if(senddate == gettoday){
+                    mdate = object[i].date.substr(11, 18)
+                }else{
+                    mdate = senddate;
                 }
                 html +=
-                    '<tr style="color: '+color+'" data-bs-toggle="modal" data-bs-target="#exampleModal" href="#exampleModal">'+
-                        '<td><input type="checkbox">'+object[i].from+'</td><td onclick="msgread('+i+')" >'+msgtitle+'</td><td>'+object[i].date+'</td>'+
+                    '<tr style="color: '+color+'">'+
+                        '<td><input name="checkbox" type="checkbox" value="'+object[i].msgno+'" onclick="oncheckbox()"></td><td>'+object[i].from+'</td><td onclick="tomsgread('+i+')" data-bs-toggle="modal" data-bs-target="#exampleModal" href="#exampleModal">'+msgtitle+'</td><td>'+mdate+'</td>'+
                     '</tr>';
             }
         $(".msgtable").html(html);
         }
     });
 }
+<<<<<<< HEAD
+=======
+
+>>>>>>> yhj2
 function getfrommsglist(type){
     $.ajax({
         url: '/member/getfrommsglist',
         data :{"type" : type},
         success: function(object){
+            msg = object;
             let html =
                     '<tr>'+
-                        '<th>받은사람</th><th>내용</th><th>보낸 날짜/시간</th>'+
+                        '<th>선택</th><th>받은사람</th><th>내용</th><th>보낸 날짜/시간</th>'+
                     '</tr>';
             for(let i=0; i<object.length; i++){
                 let msgtitle ="";
                 if(object[i].msg.length > 20 ){
-                   msgtitle = object[i].msg.substr(0, 20)+"..."
+                   msgtitle = object[i].msg.substr(0, 20)+"...";
                 }else{
-                    msgtitle = object[i].msg
+                    msgtitle = object[i].msg;
+                }
+                let mdate ="";
+                let senddate = object[i].date.substr(0, 10);
+                console.log(senddate);
+                if(senddate == gettoday){
+                    mdate = object[i].date.substr(11, 8);
+                }else{
+                    mdate = senddate;
                 }
                 html +=
                     '<tr>'+
-                        '<td><input type="checkbox">'+object[i].to+'</td><td onclick="msgread('+i+')" >'+msgtitle+'</td><td>'+object[i].date+'</td>'+
+                        '<td><input name="checkbox" type="checkbox" value="'+object[i].msgno+'" onclick="oncheckbox()"></td><td>'+object[i].to+'</td><td onclick="frommsgread('+i+')" data-bs-toggle="modal" data-bs-target="#exampleModal2">'+msgtitle+'</td><td>'+mdate+'</td>'+
                     '</tr>';
             }
             $(".msgtable").html(html);
@@ -64,7 +101,7 @@ function getfrommsglist(type){
 }
 
 let fromid = "";
-function msgread( i ){
+function tomsgread( i ){
     fromid = msg[i].from;
     let html =
         '<div><span>보낸사람</span><span> '+msg[i].from+'</span></div>'+
@@ -74,6 +111,16 @@ function msgread( i ){
 
     $("#msgcontent").html(html);
     isread(msg[i].msgno);
+}
+
+function frommsgread( i ){
+    let html =
+        '<div><span>받은사람</span><span> '+msg[i].from+'</span></div>'+
+        '<div><span>보낸시간</span><span> '+msg[i].date+'</span></div>'+
+        '<hr>'+
+        '<div>'+msg[i].msg+'</div>';
+
+    $("#msgcontent2").html(html);
 }
 
 let mid = "";
@@ -92,6 +139,33 @@ function isread(msgno){
         success: function(object){
             getisread();
             gettomsglist();
+        }
+    });
+}
+
+let deletelist = [];
+function oncheckbox(){
+    let checkbox = $("input[name='checkbox']");
+    deletelist = [];
+    for(let i = 0; i < checkbox.length; i++){
+        if(checkbox[i].checked == true){
+            deletelist.push(checkbox[i].value);
+        }
+    }
+    console.log(deletelist);
+}
+
+function msgdelete(){
+    $.ajax({
+        url: "/member/msgdelete",
+        data : JSON.stringify(deletelist),
+        method : "DELETE",
+        contentType : "application/json",
+        success: function(object){
+            if(object){
+                alert("삭제 성공");
+                deletelist=[];
+            }
         }
     });
 }

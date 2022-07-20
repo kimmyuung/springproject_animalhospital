@@ -1,5 +1,7 @@
 package animalhospital.domain.member;
 
+import animalhospital.domain.board.BoardEntity;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

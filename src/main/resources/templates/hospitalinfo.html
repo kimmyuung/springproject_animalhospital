@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="UTF-8">
   <title>Title</title>
@@ -136,6 +136,29 @@
   </div>
 </div>
 </div>
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+  병원에 문의하기
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel2">Modal title</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <input type="text" class="form-control" id="msginput">
+        <button id="sendmsg">전송</button>
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="close" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <div th:replace="footer.html :: footer"></div>
 
@@ -145,5 +168,6 @@
 <script  src="http://code.jquery.com/jquery-latest.min.js"></script>
 <script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=8b3a07d8d07edbf4917aee3d63a1b2a7&libraries=clusterer,services"></script>
 <script src="/js/hospitalinfo.js"></script>
+<script src="/js/member/message.js"></script>
 </body>
 </html>
