@@ -100,7 +100,7 @@ function boardlist( page){
                              '</li>';
                       }
                       console.log(boardlist.blists);
-                     for( let i = boardlist.blists[0].startbtn ; i<=boardlist.blists[0].endhtn; i++ ){
+                     for( let i = boardlist.blists[0].startbtn ; i< boardlist.blists[0].endhtn; i++ ){
                         pagehtml +=
                               '<li class="page-item"> '+
                                 '<button class="page-link" onclick="boardlist('+(i-1)+')"> '+i+' </button>'+

@@ -44,7 +44,6 @@ public class AdminContoller {
             throw new RuntimeException(e);
         }
     }
-
     @GetMapping("/getchart")
     public String  getchart(){
         System.out.println("dd"+memberService.todaycount());

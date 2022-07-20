@@ -36,6 +36,9 @@ public class ItemService {
     ShopImgRepository shopImgRepository;
 
     @Autowired
+    MemberService memberService;
+
+    @Autowired
     MemberRepository memberRepository;
 
     @Autowired
@@ -44,28 +47,8 @@ public class ItemService {
     @Transactional
     public boolean itemsave(ShopDto shopDto) {
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Object principal = authentication.getPrincipal();
-        String mid = null;
-
-        if( principal instanceof UserDetails){
-            mid = ((UserDetails) principal).getUsername();
-        }else if( principal instanceof DefaultOAuth2User){
-            Map<String , Object> map =  ((DefaultOAuth2User) principal).getAttributes();
-            if( map.get("response") != null ){
-                Map< String , Object> map2  = (Map<String, Object>) map.get("response"); // 네이버
-                mid = map2.get("email").toString().split("@")[0];
-            }else if(map.get("kakao_account") != null){
-                Map< String , Object> map2  = (Map<String, Object>) map.get("kakao_account"); // 카카오
-                mid = map2.get("email").toString().split("@")[0];
-            }else if(map.get("kakao_account") == null && map.get("response") == null ) { // 구글, 깃허브
-                mid = map.get("email").toString().split("@")[0];
-            }
-        }else{
-            return false;
-        }
+        String mid = memberService.authenticationget();
         if( mid != null  ) {
-
             Optional<MemberEntity> optionalMember = memberRepository.findBymid(mid);
             if (optionalMember.isPresent()) { // null 아니면
                 ShopEntity shopEntity = shopDto.toentity();
@@ -77,7 +60,7 @@ public class ItemService {
                         UUID uuid = UUID.randomUUID();
 
                         uuidfile = uuid.toString() + "_" + file.getOriginalFilename().replaceAll("_", "-");
-                        String dir = "C:\\Users\\504\\git\\springproject_-animalhospital\\src\\main\\resources\\static\\upload\\";
+                        String dir = "C:\\Users\\504\\git\\springproject_-animalhospital\\src\\main\\resources\\static\\shopupload\\";
                       //  String dir = "C:\\Users\\82104\\git\\springproject_-animalhospital\\src\\main\\resources\\static\\upload\\"; // my notebook
 
                         String filepath = dir + uuidfile;
@@ -128,6 +111,7 @@ public class ItemService {
 
         int btncount = 5;
         int startbtn  = ( page / btncount ) * btncount + 1;
+        System.out.println("시작" + startbtn);
         int endhtn = startbtn + btncount -1;
         if( endhtn > shopEntities.getTotalPages() ) endhtn = shopEntities.getTotalPages();
 
@@ -139,11 +123,11 @@ public class ItemService {
             map.put("stitle", entity.getStitle());
             map.put("scontent", entity.getScontent());
             map.put("sprice", entity.getPrice()+"");
-//            if(entity.getShopimgEntities().get(0).getSimg().equals("")){
-//                map.put("simg", "이미지가 없습니다.");
-//            } else {
-//                map.put("simg", entity.getShopimgEntities().get(0).getSimg());
-//            }
+            if(entity.getShopimgEntities().get(0).getSimg().equals("")){
+                map.put("simg", "이미지가 없습니다.");
+            } else {
+                map.put("simg", entity.getShopimgEntities().get(0).getSimg());
+            }
             // 경로가 달라 이미지가 저장되지 않음
             map.put( "startbtn" , startbtn+"" );
             map.put("mid", entity.getMember().getMid());
@@ -215,7 +199,7 @@ public class ItemService {
         Optional<ShopEntity> optional = shopRepository.findById(shopDto.getSno());
         System.out.println(shopDto.toString());
        // String dir = "C:\\Users\\82104\\git\\springproject_-animalhospital\\src\\main\\resources\\static\\upload\\"; // my notebook
-          String dir = "C:\\Users\\504\\git\\springproject_-animalhospital\\src\\main\\resources\\static\\upload\\";
+        String dir = "C:\\Users\\504\\git\\springproject_-animalhospital\\src\\main\\resources\\static\\shopupload\\";
         // 배포용 String dir = "/home/ec2-user/app/springproject_-animalhospital/build/resources/main/static/upload/";
         if(optional.isPresent()) {
             ShopEntity shopEntity = optional.get(); // 새로운 내용을 인수로 보내야 함
@@ -275,25 +259,7 @@ public class ItemService {
         Optional<ShopEntity> optional = shopRepository.findById(sno);
         if(optional.isPresent()) {
             ShopEntity shopEntity = optional.get();
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            Object principal = authentication.getPrincipal();
-            String mid = null;
-            if( principal instanceof UserDetails){
-                mid = ((UserDetails) principal).getUsername();
-            }else if( principal instanceof DefaultOAuth2User){
-                Map<String , Object> map =  ((DefaultOAuth2User) principal).getAttributes();
-                if( map.get("response") != null ){
-                    Map< String , Object> map2  = (Map<String, Object>) map.get("response"); // 네이버
-                    mid = map2.get("email").toString().split("@")[0];
-                }else if(map.get("kakao_account") != null){
-                    Map< String , Object> map2  = (Map<String, Object>) map.get("kakao_account"); // 카카오
-                    mid = map2.get("email").toString().split("@")[0];
-                }else if(map.get("kakao_account") == null && map.get("response") == null ) { // 구글, 깃허브
-                    mid = map.get("email").toString().split("@")[0];
-                }
-            }else{
-                return 3; // 아이디 없음(=로그인이 안되어 있음)
-            }
+            String mid = memberService.authenticationget();
             if( mid != null  ) {
                 Optional<MemberEntity> optionalMember = memberRepository.findBymid(mid);
                 if(optionalMember.isPresent()) {
@@ -321,25 +287,7 @@ public class ItemService {
         Optional<ShopEntity> optional = shopRepository.findById(sno);
         if(optional.isPresent()) {
             ShopEntity shopEntity = optional.get();
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            Object principal = authentication.getPrincipal();
-            String mid = null;
-            if( principal instanceof UserDetails){
-                mid = ((UserDetails) principal).getUsername();
-            }else if( principal instanceof DefaultOAuth2User){
-                Map<String , Object> map =  ((DefaultOAuth2User) principal).getAttributes();
-                if( map.get("response") != null ){
-                    Map< String , Object> map2  = (Map<String, Object>) map.get("response"); // 네이버
-                    mid = map2.get("email").toString().split("@")[0];
-                }else if(map.get("kakao_account") != null){
-                    Map< String , Object> map2  = (Map<String, Object>) map.get("kakao_account"); // 카카오
-                    mid = map2.get("email").toString().split("@")[0];
-                }else if(map.get("kakao_account") == null && map.get("response") == null ) { // 구글, 깃허브
-                    mid = map.get("email").toString().split("@")[0];
-                }
-            }else{
-                return 3; // 로그인이 안되어 있음
-            }
+            String mid = memberService.authenticationget();
             if( mid != null  ) {
                 Optional<MemberEntity> optionalMember = memberRepository.findBymid(mid);
                 if(optionalMember.isPresent()) {
@@ -376,25 +324,7 @@ public class ItemService {
         Optional<ShopEntity> optional = shopRepository.findById(sno);
         if(optional.isPresent()) {
             ShopEntity shopEntity = optional.get();
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            Object principal = authentication.getPrincipal();
-            String mid = null;
-            if( principal instanceof UserDetails){
-                mid = ((UserDetails) principal).getUsername();
-            }else if( principal instanceof DefaultOAuth2User){
-                Map<String , Object> map =  ((DefaultOAuth2User) principal).getAttributes();
-                if( map.get("response") != null ){
-                    Map< String , Object> map2  = (Map<String, Object>) map.get("response"); // 네이버
-                    mid = map2.get("email").toString().split("@")[0];
-                }else if(map.get("kakao_account") != null){
-                    Map< String , Object> map2  = (Map<String, Object>) map.get("kakao_account"); // 카카오
-                    mid = map2.get("email").toString().split("@")[0];
-                }else if(map.get("kakao_account") == null && map.get("response") == null ) { // 구글, 깃허브
-                    mid = map.get("email").toString().split("@")[0];
-                }
-            }else{
-                return 3; // 로그인이 안되어 있음
-            }
+            String mid = memberService.authenticationget();
             if( mid != null  ) {
                 Optional<MemberEntity> optionalMember = memberRepository.findBymid(mid);
                 if(optionalMember.isPresent()) {

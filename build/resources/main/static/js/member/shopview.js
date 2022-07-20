@@ -2,11 +2,14 @@ var sno = getParameterByName('sno');
 getitem(sno);
 idcheck(sno);
 likecheck();
+let pass;
+let seller;
 function getitem(sno) {
 $.ajax({
 url : '/member/getitem',
 data : {"sno" : sno},
 success : function(re) {
+    seller = re.mid;
     console.log(re);
     let html = '';
     html += '<div>상품 이름 : '+re.btitle+'</div>';
@@ -23,8 +26,11 @@ success : function(re) {
 }
 
 });
-
 }
+
+
+
+
 
 function getParameterByName(sno) {
     sno = sno.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
@@ -69,16 +75,13 @@ $.ajax({
     $("#likesave").css("display", "block");
     $("#unlikesave").css("display", "none");
     }
-    else if(re == 3){ }
-    else if(re == 4){ alert("프로그램 오류 : 관리자에게 문의"); }
+    else if(re == 3 || re == 4){ }
     }
 });
 
-
 }
-function sendmsg() {
 
-}
+
 
 function itemdelete() {
 
@@ -137,12 +140,63 @@ $.ajax({
            if(re == 1) {
            $("#itemupdate").css("display", "block");
            $("#itemdelete").css("display", "block");
+           pass = true;
            }
-           else if(re == 2 || re == 3) {
+           else if(re == 2) {
             $("#itemupdate").css("display", "none");
             $("#itemdelete").css("display", "none");
+            pass = true;
            }
-           else if(re == 4) {alert("아이디 체크 오류 관리자에게 문의"); }
+           else if(re == 3 || re == 4) {pass = false;}
            }
     });
 }
+
+$(document).ready(function(){
+
+      let mid ="";
+        $.ajax({
+            url: '/member/getmid',
+            async : false,
+            success: function(result){
+                mid= result;
+                console.log(mid);
+            }
+        });
+
+           $("#sendmsg").click(function(){
+             if(pass) {
+                   let msg = $("#msg").val();
+                   if(msg == '') {
+                   alert("메시지 내용을 입력해주세요");
+                   return;
+                   }
+                      let from = mid.replace(/\n|\r|\s*/g, "");
+                      let to = seller;
+                      alert(from);
+                      let jsonmsg = {
+                      "from" : from,
+                      "to" : to ,
+                      "msg" :msg,
+                      "type" : 1
+                      }
+                      console.log(jsonmsg);
+                      send(jsonmsg);
+                      msg = "";
+                   }
+                   else {
+                   alert("로그인 후에 이용이 가능합니다."); return;
+                   }
+            });
+
+            let msgwebsocket = new WebSocket("ws://localhost:8082/ws/message/"+mid);
+            msgwebsocket.onopen = onOpen;
+            msgwebsocket.onclose = onClose;
+            msgwebsocket.onmessage = onMessage;
+
+             function onOpen() { }
+             function onClose() { }
+             function onMessage() { }
+             function send(jsonmsg){  msgwebsocket.send(JSON.stringify(jsonmsg));  }
+    });
+
