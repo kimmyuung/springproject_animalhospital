@@ -5,10 +5,7 @@ import animalhospital.domain.CountingRepository;
 import animalhospital.domain.member.*;
 import animalhospital.domain.message.MessageEntity;
 import animalhospital.domain.message.MessageRepository;
-import animalhospital.dto.CountDto;
-import animalhospital.dto.LoginDto;
-import animalhospital.dto.OauthDto;
-import animalhospital.dto.RequestDto;
+import animalhospital.dto.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -125,17 +122,17 @@ public class MemberService implements OAuth2UserService<OAuth2UserRequest ,OAuth
         httpSession.setAttribute("login", oauthDto);
         httpSession.setAttribute("date", LocalDate.now());
         LocalDate nowdate  = (LocalDate) httpSession.getAttribute("date");
-
         String date = nowdate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-//        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-//        //원하는 데이터 포맷 지정
-//        String date = simpleDateFormat.format(nowdate);
         System.out.println("dddd"+date);
         OauthDto csession = (OauthDto) httpSession.getAttribute("login");
 
 
+
+
        if(httpSession.getAttribute(csession.getMemail()+date)==null){
            CountDto cdto = CountDto.builder()
+                   .cnum(csession.getMemail()+date)
+                   .count(1)
                    .createdate(LocalDate.now())
                    .build();
 
@@ -339,6 +336,33 @@ public class MemberService implements OAuth2UserService<OAuth2UserRequest ,OAuth
         toentity.getToentitylist().add(messageEntity);
         return true;
 
+    }
+    public JSONArray todaycount(){
+        JSONArray jsonArray = new JSONArray();
+        JSONArray child =   new JSONArray();
+        List<CountEntity> list = countingRepository.getcount();
+        System.out.println(list.toString());
+        JSONObject object2 = new JSONObject();
+        object2.put("date","1");
+        String od = object2.get("date").toString();
+        for(CountEntity dto : list) {
+            JSONObject object = new JSONObject();
+            object.put("date",dto.getCreatedate());
+            object.put("count",dto.getCount());
+            if((object.get("date").toString().equals(od))) {
+                child.put(object);
+
+            } else {
+                child = new JSONArray();
+                child.put(object);
+                jsonArray.put(child);
+            }
+            //jsonArray.put(object);
+            od = object.get("date").toString();
+
+        }
+        //System.out.println("ddd"+ jsonArray);
+        return jsonArray;
     }
 
 

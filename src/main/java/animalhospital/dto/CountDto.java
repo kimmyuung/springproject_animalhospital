@@ -15,11 +15,12 @@ import java.time.LocalDateTime;
 @Builder
 public class CountDto {
 
-    int cnum;
+    String cnum;
 
     int count ;
 
     private LocalDate createdate;
+
 
     public CountEntity toentity(){
 

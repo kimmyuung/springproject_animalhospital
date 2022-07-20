@@ -12,15 +12,13 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 @Builder
 @Entity
 @Table(name="count")
 public class CountEntity {
     @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
-    private int cnum;
+    private String cnum;
     private int count ;
-
     private LocalDate createdate;
-
 }
