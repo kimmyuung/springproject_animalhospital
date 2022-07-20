@@ -11,10 +11,13 @@ import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry
 public class WebSocketConfig implements WebSocketConfigurer {
 
     @Autowired
-    WebSocketHandler webSocketHandler;
+    private WebSocketHandler webSocketHandler;
 
+    @Autowired
+    private AnswerWebSocketHandler answerWebSocketHandler;
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        registry.addHandler(webSocketHandler ,"ws/message/*" ).setAllowedOrigins("*");
+        registry.addHandler(webSocketHandler ,"ws/message/*" ).setAllowedOrigins("*")
+                .addHandler(answerWebSocketHandler,"ws/answer/*").setAllowedOrigins("*");
     }
 }

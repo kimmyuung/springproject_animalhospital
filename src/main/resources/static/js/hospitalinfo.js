@@ -2,15 +2,18 @@ info();
 let page = 0;
 let hname = "";
 let hdate = "";
+
+let hinfo;
 function info(page){
     $.ajax({
         url: "/map/info",
         method: "POST",
         contentType : 'application/json' ,
         success: function(re){
+        hinfo =re;
         console.log(re)
             $("#hname").html(re.hname);
-      }
+        }
     });
 }
 

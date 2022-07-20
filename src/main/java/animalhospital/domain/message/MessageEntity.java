@@ -20,6 +20,7 @@ public class MessageEntity extends BaseTime {
     private int msgno;
     private String msg;
     private boolean isread;
+    private int msgtype;
 
     @ManyToOne
     @JoinColumn(name="fromentity")

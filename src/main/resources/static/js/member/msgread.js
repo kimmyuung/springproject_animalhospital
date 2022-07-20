@@ -1,9 +1,11 @@
 
-gettomsglist();
+getfrommsglist(1);
+ $("#sendmsg").click(function(){
 let msg;
-function gettomsglist(){
+function gettomsglist(type){
     $.ajax({
         url: '/member/gettomsglist',
+        data :{"type" : type},
         success: function(object){
             msg = object;
             let html =
@@ -17,8 +19,10 @@ function gettomsglist(){
                     '</tr>';
             }
             for(let i=0; i<object.length; i++){
-
-                let color ="";
+                 let color ="black";
+                 if(object[i].isread == true){
+                     color = "#d3d3d3";
+                 }
                 let msgtitle ="";
                 if(object[i].msg.length > 20 ){
                    msgtitle = object[i].msg.substr(0, 20)+"..."
@@ -26,14 +30,40 @@ function gettomsglist(){
                     msgtitle = object[i].msg
                 }
                 html +=
-                    '<tr data-bs-toggle="modal" data-bs-target="#exampleModal" href="#exampleModal">'+
-                        '<td >'+object[i].from+'</td><td onclick="msgread('+i+')" >'+msgtitle+'</td><td>'+object[i].date+'</td>'+
+                    '<tr style="color: '+color+'" data-bs-toggle="modal" data-bs-target="#exampleModal" href="#exampleModal">'+
+                        '<td><input type="checkbox">'+object[i].from+'</td><td onclick="msgread('+i+')" >'+msgtitle+'</td><td>'+object[i].date+'</td>'+
                     '</tr>';
             }
-        $("#tomsgtable").html(html);
+        $(".msgtable").html(html);
         }
     });
 }
+function getfrommsglist(type){
+    $.ajax({
+        url: '/member/getfrommsglist',
+        data :{"type" : type},
+        success: function(object){
+            let html =
+                    '<tr>'+
+                        '<th>받은사람</th><th>내용</th><th>보낸 날짜/시간</th>'+
+                    '</tr>';
+            for(let i=0; i<object.length; i++){
+                let msgtitle ="";
+                if(object[i].msg.length > 20 ){
+                   msgtitle = object[i].msg.substr(0, 20)+"..."
+                }else{
+                    msgtitle = object[i].msg
+                }
+                html +=
+                    '<tr>'+
+                        '<td><input type="checkbox">'+object[i].to+'</td><td onclick="msgread('+i+')" >'+msgtitle+'</td><td>'+object[i].date+'</td>'+
+                    '</tr>';
+            }
+            $(".msgtable").html(html);
+        }
+    });
+}
+
 let fromid = "";
 function msgread( i ){
     fromid = msg[i].from;
@@ -43,8 +73,8 @@ function msgread( i ){
         '<hr>'+
         '<div>'+msg[i].msg+'</div>';
 
-    $("#msgcontent").html(html)
-
+    $("#msgcontent").html(html);
+    isread(msg[i].msgno);
 }
 
 let mid = "";
@@ -55,7 +85,17 @@ $.ajax({
     }
 });
 
-
+function isread(msgno){
+    $.ajax({
+        url:"/member/isread",
+        method:"PUT",
+        data:{"msgno":msgno },
+        success: function(object){
+            getisread();
+            gettomsglist();
+        }
+    });
+}
 
 $(document).ready(function(){
 
