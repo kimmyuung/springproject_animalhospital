@@ -110,3 +110,31 @@ function itemview(sno) {
 
 location.href = '/member/itemview?sno='+ sno;
 }
+
+$(function() {
+    // Multiple images preview in browser
+    var imagesPreview = function(input, placeToInsertImagePreview) {
+
+        if (input.files) {
+            var filesAmount = input.files.length;
+//               $(".preview").html("");
+            for (i = 0; i < 1; i++) {
+                var reader = new FileReader();
+
+                reader.onload = function(event) {
+                  $($("#img_preview")).attr('src', event.target.result).appendTo(placeToInsertImagePreview);
+//                    $($.parseHTML('<img>')).attr('src', event.target.result).appendTo(placeToInsertImagePreview);
+                     $($.parseHTML('<img>')).attr('style', 'width:80%');
+                }
+
+                reader.readAsDataURL(input.files[i]);
+            }
+        }
+
+    };
+
+    $('#simg').on('change', function() {
+        imagesPreview(this, 'div.preview');
+    });
+});
+

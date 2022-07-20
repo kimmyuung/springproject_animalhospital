@@ -82,7 +82,7 @@ function getfrommsglist(type){
                 let senddate = object[i].date.substr(0, 10);
                 console.log(senddate);
                 if(senddate == gettoday){
-                    mdate = object[i].date.substr(11, 8);
+                    mdate = object[i].date.substr(11, 18);
                 }else{
                     mdate = senddate;
                 }
