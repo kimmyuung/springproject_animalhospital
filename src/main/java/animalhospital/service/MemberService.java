@@ -232,7 +232,6 @@ public class MemberService implements OAuth2UserService<OAuth2UserRequest ,OAuth
     public JSONArray getbinlist() {
         JSONArray jsonArray = new JSONArray();
         List<RequestEntity> entities = requestRepository.findAll();
-        System.out.println(entities);
         for (RequestEntity entity : entities ){
             JSONObject object = new JSONObject();
             object.put("hno", entity.getHno());
@@ -248,13 +247,11 @@ public class MemberService implements OAuth2UserService<OAuth2UserRequest ,OAuth
 
     @Transactional
     public boolean setrole(int mno, String hname, String hdate, String bin) {
-        System.out.println(mno + hname + hdate + bin);
         if(bin !=null){
             String hospital = "HOSPITAL";
             MemberEntity memberEntity = memberRepository.findBymno(mno);
             memberEntity.setRole(Role.HOSPITAL);
             memberRepository.save(memberEntity);
-            System.out.println(memberEntity.getRole().getKey());
             RequestEntity requestEntity = requestRepository.findBymno(mno);
             requestEntity.setBin(bin);
             requestEntity.setActive(true);
@@ -272,7 +269,6 @@ public class MemberService implements OAuth2UserService<OAuth2UserRequest ,OAuth
 
     @Transactional
     public boolean messagesend(JSONObject object){
-        System.out.println("messagesend : " + object);
         String from = (String) object.get("from");
         String to = (String) object.get("to");
         String msg = (String) object.get("msg");
@@ -284,7 +280,6 @@ public class MemberService implements OAuth2UserService<OAuth2UserRequest ,OAuth
         }else {
             return false;
         }
-        System.out.println("2");
         String tomid =requestRepository.findByhospital(to);
         MemberEntity toentity = null;
         Optional<MemberEntity> optionalMember2 = memberRepository.findBymid(tomid);
@@ -293,7 +288,6 @@ public class MemberService implements OAuth2UserService<OAuth2UserRequest ,OAuth
         }else {
             return false;
         }
-        System.out.println("3");
         MessageEntity messageEntity = MessageEntity.builder()
                 .msg(msg)
                 .fromentity(fromentity)
@@ -331,7 +325,6 @@ public class MemberService implements OAuth2UserService<OAuth2UserRequest ,OAuth
             object.put("date", msg.getCreatedate());
             jsonArray.put(object);
         }
-        System.out.println(jsonArray);
         return jsonArray;
 
     }
@@ -339,20 +332,16 @@ public class MemberService implements OAuth2UserService<OAuth2UserRequest ,OAuth
     public JSONArray getfrommsglist(int type){
         OauthDto oauthDto = (OauthDto)request.getSession().getAttribute("login");
         Optional<MemberEntity> optional =  memberRepository.findBymid(oauthDto.getMid());
-        System.out.println(optional);
         int mno=0;
         if(optional.isPresent()){
             MemberEntity memberEntity = optional.get();
             mno = memberEntity.getMno();
-            System.out.println(mno);
         }
-        System.out.println(type);
         List<MessageEntity>list = messageRepository.getfrommsglist(mno, type);
 
         //JSON형 변환
         JSONArray jsonArray = new JSONArray();
         for(MessageEntity msg : list){
-            System.out.println(msg);
             JSONObject object = new JSONObject();
 
             object.put("msgno", msg.getMsgno());
@@ -391,7 +380,7 @@ public class MemberService implements OAuth2UserService<OAuth2UserRequest ,OAuth
 
     @Transactional
     public boolean messageanswer(JSONObject object){
-        System.out.println(object);
+
         String from = (String) object.get("from");
         String to = (String) object.get("to");
         String msg = (String) object.get("msg");
@@ -403,7 +392,6 @@ public class MemberService implements OAuth2UserService<OAuth2UserRequest ,OAuth
         }else {
             return false;
         }
-        System.out.println("2");
         MemberEntity toentity = null;
         Optional<MemberEntity> optionalMember2 = memberRepository.findBymid(to);
         if(optionalMember2.isPresent()){
@@ -411,7 +399,6 @@ public class MemberService implements OAuth2UserService<OAuth2UserRequest ,OAuth
         }else {
             return false;
         }
-        System.out.println("3");
         MessageEntity messageEntity = MessageEntity.builder()
                 .msg(msg)
                 .fromentity(fromentity)
@@ -430,6 +417,15 @@ public class MemberService implements OAuth2UserService<OAuth2UserRequest ,OAuth
     @Transactional
     public boolean isread(int msgno){
         messageRepository.findById(msgno).get().setIsread(true);
+        return true;
+    }
+
+    @Transactional
+    public boolean msgdelete(List<Integer>deletelist){
+        for(int msgno : deletelist){
+            MessageEntity entity = messageRepository.findById(msgno).get();
+            messageRepository.delete(entity);
+        }
         return true;
     }
 }

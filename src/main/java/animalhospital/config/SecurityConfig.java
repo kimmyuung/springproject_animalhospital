@@ -79,6 +79,7 @@ public class SecurityConfig {
                 .ignoringAntMatchers("/board/getboard")
                 .ignoringAntMatchers("/board/getreply")
                 .ignoringAntMatchers("/board/getrereply")
+                .ignoringAntMatchers("/member/msgdelete")
                 .ignoringAntMatchers("/")
                 .and()
                 .exceptionHandling()

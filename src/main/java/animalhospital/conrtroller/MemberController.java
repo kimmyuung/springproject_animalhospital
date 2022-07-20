@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 @RequestMapping("/member")
 @Controller
@@ -48,7 +49,6 @@ public class MemberController {
     @PostMapping("/requestsave")
     @ResponseBody
     public boolean requestsave (RequestDto requestDto) {
-        System.out.println(requestDto.toString());
         boolean result = memberService.requestsave(requestDto);
 
         return result;
@@ -108,6 +108,12 @@ public class MemberController {
     @ResponseBody
     public boolean isread(@RequestParam ("msgno") int msgno){
         return memberService.isread(msgno);
+    }
+
+    @DeleteMapping("/msgdelete")
+    @ResponseBody
+    public boolean msgdelete(@RequestBody List<Integer> deletelist){
+        return memberService.msgdelete(deletelist);
     }
 
 
