@@ -99,6 +99,7 @@ public class MapController {
     @PostMapping("/addreview" )
     @ResponseBody
     public boolean addreview(HttpServletResponse response, ReviewDto reviewDto){
+        reviewDto.setRcontent(reviewDto.getRcontent().replace("\r\n", "<br>"));
         String hname =  (String) request.getSession().getAttribute("hname");
         String hdate =  (String) request.getSession().getAttribute("hdate");
         reviewDto.setHname(hname);

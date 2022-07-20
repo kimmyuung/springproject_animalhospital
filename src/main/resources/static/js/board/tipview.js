@@ -23,10 +23,10 @@ function gettip(){
 
                     }
                      if(board.same=="true"){
-                             $("#deletebutton").html(
+                             $("#deletebutton1").html(
                              '<input type="hidden" id="bno" value="'+board.bno+'">'+
-                             '<button type="button" class="btn btn-primary" onclick="bdelete('+board.bno+')">삭제</button>'+
-                             '<button type="button" class="btn btn-primary" onclick="bupdate('+board.bno+')"   data-bs-toggle="modal" data-bs-target="#myModal">수정</button>'
+                             '<button type="button" class="btn btn-primary myreplyupdate" onclick="bdelete('+board.bno+')">삭제</button>'+
+                             '<button type="button" class="btn btn-primary myreplyupdate" onclick="bupdate('+board.bno+')"   data-bs-toggle="modal" data-bs-target="#myModal">수정</button>'
                           );
 
                     }
@@ -34,7 +34,7 @@ function gettip(){
                      $("#getbtitle").html( board.btitle );
                      $("#getbcontent").html( board.bcontent );
                     $("#getbimg").html( imgtag );
-                    $("#bdate").html(  board.modifiedate );
+                    $("#bdate").html(  board.modifiedate.substring(0, 10));
                 }
             });
 
@@ -153,22 +153,22 @@ function getreply(bnum){
                 if(result[i].rindex == 0){
                     if(result[i].same == true){
                         replyhtml +=
-                            '<div>'+
+                            '<div class="replytable">'+
                                 '<div class="row">'+
-                                    '<div class="col-md-6">'+result[i].mid+'</div>'+
+                                    '<div class="col-md-6"><h5>'+result[i].mid+'</h5></div>'+
                                     '<div class="col-md-6 d-flex justify-content-end">'+result[i].createdate+'</div>'+
                                 '</div>'+
-                                '<div>'+result[i].rcontent+'</div>'+
-                                '<div id="repltbtn">'+
-                                    '<button type="button" onclick="replyupdate('+result[i].rno+')">수정</button><button type="button" onclick="replydelete('+result[i].rno+')">삭제</button>'+
-                                '</div>'+
+                                '<div class="row"><div class="col-md-8">'+result[i].rcontent+'</div>'+
+                                '<div id="repltbtn" class="col-md-4 d-flex justify-content-end">'+
+                                    '<button class="myreplyupdate" type="button" onclick="replyupdate('+result[i].rno+')">수정</button><button  class="myreplyupdate"  type="button" onclick="replydelete('+result[i].rno+')">삭제</button>'+
+                                '</div></div>'+
                                 '<div id = "'+result[i].rno+'"></div>'+
                             '</div>';
                     }else{
                         replyhtml +=
-                            '<div>'+
+                            '<div class="replytable">'+
                                 '<div class="row">'+
-                                    '<div class="col-md-6">'+result[i].mid+'</div>'+
+                                    '<div class="col-md-6"><h5>'+result[i].mid+'</h5></div>'+
                                     '<div class="col-md-6 d-flex justify-content-end">'+result[i].createdate+'</div>'+
                                 '</div>'+
                                 '<div>'+result[i].rcontent+'</div>'+
@@ -204,16 +204,16 @@ function replyupdate(rno) {
         data : { "rno": rno },
         success : function(result){
             let html =
-                '<input type="text" id="reply" value="'+result.rcontent+'">'+
-                '<button type="button" onclick="reupdate('+rno+')">수정</button>';
-            $("#replyinput").html(html);
+                '<input type="text" class="replyupdate" id="rereply" value="'+result.rcontent+'">'+
+                '<button type="button"  class="replyupdatebtn" onclick="reupdate('+rno+')">수정</button>';
+            $("#"+rno).html(html);
         }
     });
 }
 
 function reupdate(rno){
 let bno = $("#bno").val();
-    let reply = $("#reply").val();
+    let reply = $("#rereply").val();
         $.ajax({
             url:'/board/reupdate',
             method : "POST",

@@ -42,6 +42,7 @@ public class BoardController {
     @ResponseBody
     public boolean write_save( BoardDto boardDto ){
         boardDto.setCno(2);
+        boardDto.setBcontent(boardDto.getBcontent().replace("\r\n", "<br>"));
         System.out.println("컨트롤러"+boardDto);
         boolean result = boardService.save( boardDto );
 
@@ -51,6 +52,7 @@ public class BoardController {
     @ResponseBody
     public boolean tipwrite_save( BoardDto boardDto ){
         boardDto.setCno(3);
+        boardDto.setBcontent(boardDto.getBcontent().replace("\r\n", "<br>"));
         boolean result = boardService.save( boardDto );
 
         return result;
@@ -60,6 +62,7 @@ public class BoardController {
     @ResponseBody
     public boolean tipwrite_update( BoardDto boardDto ){
         boardDto.setCno(3);
+        boardDto.setBcontent(boardDto.getBcontent().replace("\r\n", "<br>"));
         int bno =  (Integer) request.getSession().getAttribute("bno");
         boardDto.setBno(bno);
         boolean result = boardService.bupdate( boardDto );
@@ -71,6 +74,7 @@ public class BoardController {
     @ResponseBody
     public boolean mypetupdate( BoardDto boardDto ){
         boardDto.setCno(2);
+        boardDto.setBcontent(boardDto.getBcontent().replace("\r\n", "<br>"));
         int bno =  (Integer) request.getSession().getAttribute("bno");
         boardDto.setBno(bno);
         boolean result = boardService.bupdate( boardDto );

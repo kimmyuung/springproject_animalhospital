@@ -7,38 +7,55 @@
   <link rel="stylesheet" href="/css/board/boardtip.css">
 </head>
 <body>
-
+<div th:replace="header.html :: header"></div>
+<div class="bg">
+  <div class="title">
+    <h1>커뮤니티</h1>
+  </div>
+</div>
 <div class="container">
-  <div class="row">
-    <div class="col-md-9">
-      <h4 id="getbtitle"></h4>
-      <h6 id="bwiter"></h6>
-    </div>
-    <div class="col-md-3">
-      <span id="bdate"></span>
-      <div id="deletebutton">
+  <div class="tipboard">
+    <div class="row tiptitle">
+      <div class="col-md-9">
+        <h3 id="getbtitle"></h3>
+        <h6 class="bwiter" id="bwiter"></h6>
+      </div>
+      <div class="col-md-3 d-flex justify-content-end">
+        <div class="row">
+          <div>
+            <h6 id="bdate"></h6>
+          </div>
+            <div>
+              <div id="deletebutton1">
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-    <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
-      <div class="carousel-inner" id="getbimg">
+    <div class="row">
+      <div class="offset-2 col-md-7 tipimg">
+        <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
+          <div class="carousel-inner" id="getbimg">
+          </div>
+          <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+          </button>
+          <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+          </button>
+        </div>
       </div>
-      <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
-        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Previous</span>
-      </button>
-      <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
-        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Next</span>
-      </button>
     </div>
     <div>
       <div id="getbcontent"></div>
     </div>
   </div>
-  <div class="row">
+  <div class="row tipreply">
     <div id="replyinput">
-      <input type="text" id="reply" placeholder="댓글을 입력해주세요">
-      <button type="button" onclick="replysave()">등록</button>
+      <input class="replyinput" type="text" id="reply" placeholder="댓글을 입력해주세요">
+      <button class="replybtn" type="button" onclick="replysave()">등록</button>
     </div>
     <div id="deletebutton">
 

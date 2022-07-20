@@ -75,7 +75,7 @@ function boardlist( page){
                                                 '<div class="row g-0"  onclick="bupdate('+boardlist.blists[i].bno+')"><div class="col-md-4">'+
                                                 '  <img src="/upload/'+boardlist.blists[i].bimg+'"  class="img-fluid rounded-start" alt="...">'+
                                                 '  </div><div class="col-md-8"><div class="card-body">'+
-                                                '    <h5 class="card-title">'+boardlist.blists[i].btitle+'</h5>'+
+                                                '    <h4 class="card-title">'+boardlist.blists[i].btitle+'</h4><span>'+boardlist.blists[i].mid+'</span>'+
                                                 '    <p class="card-text d-flex justify-content-end">'+boardlist.blists[i].bdate+'</p>'+
                                                 '  </div>'+
                                                 '  </div>'+

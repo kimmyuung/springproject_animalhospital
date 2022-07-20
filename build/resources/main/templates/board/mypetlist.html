@@ -17,9 +17,14 @@
         <button type="button" class="menu1" onclick="location.href='/board/list'">반려동물 자랑대회</button>
     </div>
 </div>
-<button sec:authorize="isAuthenticated()" type="button" class="btn btn-primary addbtn" data-bs-toggle="modal" data-bs-target="#myModal">
-    사진올리기
-</button>
+<div class="row">
+    <div class="col-md-8"></div>
+    <div class="col-md-4">
+    <button sec:authorize="isAuthenticated()" type="button" class="btn btn-primary addbtn" data-bs-toggle="modal" data-bs-target="#myModal">
+        사진올리기
+    </button>
+    </div>
+</div>
 <div id="table" class="container table">
 
 </div>
@@ -40,18 +45,22 @@
                         <div class="col-md-6 modal_left">
                             <div class="preview"><img id="img_preview" src="/img/no-image.png" ></div>
                             <div>
-                                <input type="file" id="bimg" multiple="multiple" name="bimg" accept="image/*">
+                                <div class="filebox">
+                                <input class="upload-name" value="첨부파일" placeholder="첨부파일">
+                                <label for="bimg">파일찾기</label>
+                                <input class="file" type="file" id="bimg" multiple name="bimg" accept="image/*">
+                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-6 offset-3 contenttable">
                             <div>
-                                <input type="text" placeholder="제목을 입력하세요" id="btitle" name="btitle">
+                                <input class="inputtxt" type="text" placeholder="제목을 입력하세요" id="btitle" name="btitle">
                             </div>
                             <div>
-                                <textarea placeholder="내용을 입력하세요"  name="bcontent" ></textarea>
+                                <textarea class="inputtxt" rows="18" placeholder="내용을 입력하세요"  name="bcontent" ></textarea>
                             </div>
                             <div>
-                                <button type="button" onclick="save()">등록하기</button>
+                                <button class="mypetadd" type="button" onclick="save()">등록하기</button>
                             </div>
                         </div>
                     </div>
@@ -126,23 +135,35 @@
                 <form id="updateform">
                     <div class="row">
                         <div class="col-md-6 modal_left">
-                            <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
+                            <div id="carouselExampleControls2" class="carousel slide carousel_area" data-bs-ride="carousel">
                                 <div class="carousel-inner preview2" id="preview2">
                                 </div>
+                                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls2" data-bs-slide="prev">
+                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Previous</span>
+                                </button>
+                                <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls2" data-bs-slide="next">
+                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Next</span>
+                                </button>
                             </div>
                             <div>
-                                <input type="file" id="bimg2" name="bimg" multiple accept="image/*">
+                                <div class="filebox">
+                                    <input class="upload-name2" value="첨부파일" placeholder="첨부파일" disabled>
+                                    <label for="bimg2">파일찾기</label>
+                                    <input type="file" id="bimg2" name="bimg" multiple accept="image/*">
+                                </div>
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-6 offset-3 contenttable">
                             <div>
-                                <input type="text" placeholder="제목을 입력하세요" id="btitle2" name="btitle">
+                                <input class="inputtxt" type="text" placeholder="제목을 입력하세요" id="btitle2" name="btitle">
                             </div>
                             <div>
-                                <textarea placeholder="내용을 입력하세요" name="bcontent"  id="bcontent2" ></textarea>
+                                <textarea class="inputtxt" rows="18"  placeholder="내용을 입력하세요" name="bcontent"  id="bcontent2" ></textarea>
                             </div>
                             <div>
-                                <button type="button" onclick="mypetupdate()">수정하기</button>
+                                <button class="mypetadd" type="button" onclick="mypetupdate()">수정하기</button>
                             </div>
                         </div>
                     </div>
