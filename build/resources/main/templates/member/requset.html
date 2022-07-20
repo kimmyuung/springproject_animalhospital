@@ -9,12 +9,11 @@
 <body>
 <div class="container">
   <h3>병원등록</h3>
-  #        name="requestform" action="/member/requestsave" method="post" enctype=”multipart/form-data”
   <form id="requestform" >
     <div>
       <label>어느 병원이신가요?</label>
-      <input type="text" id="hname" name="hname" >
-      <input type="hidden" id="hdate" name="hdate" >
+      <input type="text" id="hname" disabled>
+      <input type="hidden" id="hospital" name="hospital" >
       <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
         병원검색
       </button>
