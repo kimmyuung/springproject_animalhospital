@@ -69,7 +69,7 @@ public class MemberService implements OAuth2UserService<OAuth2UserRequest ,OAuth
                 mid = map.get("email").toString().split("@")[0]; return mid;
             }
         }else{
-            return null; // 로그인이 안되어 있음
+            return 3+""; // 로그인이 안되어 있음
         }
         return null;
     }
