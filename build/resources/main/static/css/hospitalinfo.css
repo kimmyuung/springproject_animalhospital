@@ -1,0 +1,13 @@
+.star{
+    width: 90px;
+    cursor: pointer;
+}
+
+.star1{
+    width: 90px;
+}
+
+.reviewlist{
+    border: solid 1px #eeeeee;
+    border-radius: 10px;
+}

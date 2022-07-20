@@ -25,20 +25,14 @@ boardlist(0);
 
 function boardlist( page){
      this.current_page = page;
-//     console.log(this.current_page);
+     console.log(this.current_page);
     $.ajax({
     		url: "/board/blist",
     		 method: "POST",
     		 data: {"page":this.current_page},
     		success: function(boardlist){
-//    		console.log(boardlist);
-    		    html =
-    		        '<tr>'+
-                    '   <th>번호</th>'+
-                    '   <th>제목</th>'+
-                    '   <th>이미지</th>'+
-                    '</tr>';
-//    		    '<div><div>번호</div><div>제목</div><div>이미지</div></div>';
+    		console.log(boardlist);
+    		    html = '<div><div>번호</divh><div>제목</div><div>이미지</div></div>';
                 if( boardlist.blists.length == 0 ){ // 검색 결과가 존재하지 않으면
                                           html +=
                                                 '<div>'+
@@ -47,16 +41,11 @@ function boardlist( page){
                                 }else{
                                         for( let i = 0 ; i<boardlist.blists.length ; i++ ){
                                             html +=
-                                                '<tr type="button" data-bs-toggle="modal" data-bs-target="#myModal2" onclick="bview('+boardlist.blists[i].bno+')">'+
-                                                '   <td>'+boardlist.blists[i].bno+'</td>'+
-                                                '   <td>'+boardlist.blists[i].btitle+'</td>'+
-                                                '   <td><img src="/upload/'+boardlist.blists[i].bimg+'"></td>'+
-                                                '</tr>';
-//                                                    '<div type="button" data-bs-toggle="modal" data-bs-target="#myModal2" onclick="bview('+boardlist.blists[i].bno+')">'+
-//                                                            '<div>'+boardlist.blists[i].bno+'</div> '+
-//                                                            '<div>'+boardlist.blists[i].btitle+'</div> '+
-//                                                            '<div><img src="/upload/'+boardlist.blists[i].bimg+'"></div> '+
-//                                                     '</div>';
+                                                    '<div type="button" data-bs-toggle="modal" data-bs-target="#myModal2" onclick="bview('+boardlist.blists[i].bno+')">'+
+                                                            '<div>'+boardlist.blists[i].bno+'</div> '+
+                                                            '<div>'+boardlist.blists[i].btitle+'</div> '+
+                                                            '<div><img src="/upload/'+boardlist.blists[i].bimg+'"></div> '+
+                                                     '</div>';
                                         }
                     }
                      let pagehtml = "";
@@ -71,8 +60,8 @@ function boardlist( page){
                                         '<button class="page-link" onclick="boardlist('+ (page-1)  +')"> 이전 </button>'+
                              '</li>';
                       }
-                        alert(boardlist.blists[0].endbtn);
-                     for( let i = boardlist.blists[0].startbtn ; i<=boardlist.blists[0].endbtn; i++ ){
+                        alert(boardlist.blists[0].endhtn);
+                     for( let i = boardlist.blists[0].startbtn ; i<=boardlist.blists[0].endhtn; i++ ){
                         pagehtml +=
                               '<li class="page-item"> '+
                                 '<button class="page-link" onclick="boardlist('+(i-1)+')"> '+i+' </button>'+
@@ -99,8 +88,7 @@ function boardlist( page){
 let bno = 0;
 let bnum;
 function bview(bno){
-
-        bnum = bno;
+    bnum = bno;
         $.ajax({
             url : "/board/getboard" ,
             method : "GET",
@@ -108,8 +96,8 @@ function bview(bno){
             success: function( board ){
                 let imgtag = "";
                 // 응답받은 데이터를 모달에 데이터 넣기
-                console.log( board );
-                getreply();
+                console.log( board.mid  );
+                 getreply();
                 for( let i = 0 ; i<board.bimglist.length ; i++ ){
                      if( i == 0 ){  // 첫번째 이미지만 active 속성 추가
                         imgtag +=
@@ -128,7 +116,6 @@ function bview(bno){
                                         '<button type="button" class="btn btn-primary" onclick="bdelete('+board.bno+')">삭제</button>'
                                      );
                 }
-
                 $("#bwiter").html( board.mid );
                  $("#btitl").html( board.btitle );
                  $("#bcontent").html( board.bcontent );
@@ -331,7 +318,6 @@ function getrereply(rno){
                         '</div>';
                 }
             }
-            console.log(rereplyhtml);
             $("#"+ rindex).html(rereplyhtml);
         }
     });
