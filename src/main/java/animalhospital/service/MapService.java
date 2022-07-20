@@ -259,8 +259,11 @@ public class MapService {
         Optional<ReviewEntity> optionalReviewEntity =  reviewRepository.findById(rno );
         ReviewEntity reviewEntity =  optionalReviewEntity.get();
 
+
         // 2.  해당 엔티티 -> json 객체 변환
         JSONObject object = new JSONObject();
+
+
         // 1. json에 엔티티 필드 값 넣기
         object.put("rno" ,reviewEntity.getRno());
         object.put("rcontent" , reviewEntity.getRcontent());

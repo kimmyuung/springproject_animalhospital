@@ -331,6 +331,7 @@ function getreviewstarlist(hname,hdate){
              data: {"hname":this.hname,"hdate":this.hdate},
             success: function(reviewlist){
             html = '';
+            console.log();
                let totalcount = 0;
                     let ravg = '';
                      let kindavg = '';
@@ -341,14 +342,33 @@ function getreviewstarlist(hname,hdate){
                     let price=0;
                      totalcount = reviewlist.data.length;
             for( let i = 0 ; i<reviewlist.data.length ; i++ ){
-            console.log("durlsms "+reviewlist.data[i]);
+            console.log("durlsms "+reviewlist.data[i].rkind);
                kind+= parseInt( reviewlist.data[i].rkind);
              fac+= parseInt( reviewlist.data[i].rfac);
               price+= parseInt( reviewlist.data[i].rprice);
               }
-                let rk =	parseFloat(parseInt(kind)/parseInt(totalcount));
-                let rf =	parseFloat(parseInt(fac)/parseInt(totalcount));
-                let rp =	parseFloat(parseInt(price)/parseInt(totalcount));
+                let rrk=   parseFloat(parseInt(kind)/parseInt(totalcount));
+                  let rrf=   parseFloat(parseInt(fac)/parseInt(totalcount));
+                    let rrp=   parseFloat(parseInt(price)/parseInt(totalcount));
+                let rk =	0;
+                 let rf =	0;
+                  let rp =	0;
+                if(isNaN(rrk)==true){
+                    rk=0;
+                }else{
+                    rk=rrk;
+                }
+                if(isNaN(rrf)==true){
+                    rf=0;
+                }else{
+                    rf=rrf;
+                }
+            if(isNaN(rrp)==true){
+                    rp=0;
+                }else{
+                    rp=rrp;
+                }
+
                     if(rk<=0){
                          kindavg = '<img  class="star1" src="/img/star1.png">'+
                           '<img  class="star1" src="/img/star1.png">'+
@@ -480,8 +500,7 @@ function getreviewstarlist(hname,hdate){
                         $("#rkind").html(kindavg);
                         $("#rfac").html(facavg);
                         $("#rprice").html(priceavg);
-
-                let avg=parseFloat((rk+rf+rp)/3).toFixed(2);
+                            let avg=parseFloat((rk+rf+rp)/3).toFixed(2);
                             if(avg<=0){
                                ravg = '<img  class="star2" src="/img/star1.png">'+
                                 '<img  class="star2" src="/img/star1.png">'+
