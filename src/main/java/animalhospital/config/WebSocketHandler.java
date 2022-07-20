@@ -30,7 +30,11 @@ public class WebSocketHandler extends TextWebSocketHandler {
 
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
-        JSONObject object = new JSONObject(message.getPayload());
+
+        String json = message.getPayload();
+        System.out.println(json);
+
+        JSONObject object = new JSONObject(json);
         System.out.println(object.toString());
         memberService.messagesend(object);
         for( WebSocketSession socketSession :list.keySet() ){
@@ -39,6 +43,7 @@ public class WebSocketHandler extends TextWebSocketHandler {
                 System.out.println(message);
             }
         }
+
 //        super.handleTextMessage(session, message);
     }
 

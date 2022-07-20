@@ -30,7 +30,7 @@ public class AnswerWebSocketHandler extends TextWebSocketHandler {
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
         JSONObject object = new JSONObject(message.getPayload());
-        //memberService.messageanswer(object);
+        memberService.messageanswer(object);
         for( WebSocketSession socketSession :list.keySet() ){
             if(list.get(socketSession).equals(object.get("to"))){
                 socketSession.sendMessage(message);

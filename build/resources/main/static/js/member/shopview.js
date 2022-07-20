@@ -3,11 +3,13 @@ getitem(sno);
 idcheck(sno);
 likecheck();
 let pass;
+let seller;
 function getitem(sno) {
 $.ajax({
 url : '/member/getitem',
 data : {"sno" : sno},
 success : function(re) {
+    seller = re.mid;
     console.log(re);
     let html = '';
     html += '<div>상품 이름 : '+re.btitle+'</div>';
@@ -24,8 +26,11 @@ success : function(re) {
 }
 
 });
-
 }
+
+
+
+
 
 function getParameterByName(sno) {
     sno = sno.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
@@ -149,37 +154,63 @@ $.ajax({
     });
 }
 
-$(document).ready(function{
-let shopsocket = new Websocket("ws://localhost:8082/ws/member/shopmessage"); // 배포 시 변경
-    shopsocket.onmessage = onMessage;
-    shopsocket.onopen = onOpen;
-    shopsocket.onclose = onClose;
+$(document).ready(function(){
 
-       function onClose() {
-        shopsocket.send("메시지 보내기를 종료합니다.");
-        }
+      let mid ="";
+        $.ajax({
+            url: '/member/getmid',
+            async : false,
+            success: function(result){
+                mid= result;
+                console.log(mid);
+            }
+        });
 
-       function onOpen() {
+           $("#sendmsg").click(function(){
+             if(pass) {
+                   let msg = $("#msg").val();
+                   if(msg == '') {
+                   alert("메시지 내용을 입력해주세요");
+                   return;
+                   }
+                      let from = mid.replace(/\n|\r|\s*/g, "");
+                      let to = seller;
+                      alert(from);
+                      let jsonmsg = {
+                      "from" : from,
+                      "to" : to ,
+                      "msg" :msg,
+                      "type" : 1
+                      }
+                      console.log(jsonmsg);
+                      send(jsonmsg);
+                      msg = "";
+                   }
+                   else {
+                   alert("로그인 후에 이용이 가능합니다."); return;
+                   }
+            });
 
-       shopsocket.send("메세지를 보냅니다.");
-       }
+            let msgwebsocket = new WebSocket("ws://localhost:8082/ws/message/"+mid);
+            msgwebsocket.onopen = onOpen;
+            msgwebsocket.onclose = onClose;
+            msgwebsocket.onmessage = onMessage;
 
-        function sendmsg() {
-        if(pass) {
-        let msg = $("#msg").val();
-        if(msg == '') {alert("메시지 내용을 입력해주세요"); return;}
-        shopsocket.send(msg);
-        }
-        else {
-        alert("로그인 후에 이용이 가능합니다."); return;
-        }
-        }
+             function onOpen() {
+                    alert("소켓 시작~");
 
-       function onMessage() {
-       alert("메시지 ");
+             }
+             function onClose() {
+                    alert("소켓 종료~");
 
-       }
+             }
+            function onMessage() {
+                    alert("메시지 ");
 
+                    }
+             function send(jsonmsg){
+                msgwebsocket.send(JSON.stringify(jsonmsg));
+            }
 
     });
 

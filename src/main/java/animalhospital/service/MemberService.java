@@ -26,6 +26,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
 import java.io.File;
@@ -267,6 +268,134 @@ public class MemberService implements OAuth2UserService<OAuth2UserRequest ,OAuth
 
     @Transactional
     public boolean messagesend(JSONObject object){
+        System.out.println("messagesend : " + object);
+        String from = (String) object.get("from");
+        String to = (String) object.get("to");
+        String msg = (String) object.get("msg");
+        int type = (int) object.get("type");
+        MemberEntity fromentity = null;
+        Optional<MemberEntity> optionalMember1 = memberRepository.findBymid(from);
+        if(optionalMember1.isPresent()){
+            fromentity = optionalMember1.get();
+        }else {
+            return false;
+        }
+        System.out.println("2");
+        String tomid =requestRepository.findByhospital(to);
+        MemberEntity toentity = null;
+        if(tomid != null) {
+            Optional<MemberEntity> optionalMember2 = memberRepository.findBymid(tomid);
+            if (optionalMember2.isPresent()) {
+                toentity = optionalMember2.get();
+            } else {
+                return false; // 해당 되는 병원이 없음
+            }
+        }
+        else if(tomid == null) {
+            Optional<MemberEntity> optionalMember2 = memberRepository.findBymid(to);
+            if(optionalMember2.isPresent()) {
+                toentity = optionalMember2.get();
+            }
+        }
+        System.out.println("3");
+        MessageEntity messageEntity = MessageEntity.builder()
+                .msg(msg)
+                .fromentity(fromentity)
+                .toentity(toentity)
+                .msgtype(type)
+                .build();
+
+        messageRepository.save(messageEntity);
+
+        fromentity.getFromentitylist().add(messageEntity);
+        toentity.getToentitylist().add(messageEntity);
+        return true;
+
+    }
+
+
+    public JSONArray gettomsglist(int type){
+        OauthDto oauthDto = (OauthDto)request.getSession().getAttribute("login");
+        Optional<MemberEntity> optional =  memberRepository.findBymid(oauthDto.getMid());
+        int mno=0;
+        if(optional.isPresent()){
+            MemberEntity memberEntity = optional.get();
+            mno = memberEntity.getMno();
+        }
+
+        List<MessageEntity>list = messageRepository.gettomsglist(mno, type);
+        //JSON형 변환
+        JSONArray jsonArray = new JSONArray();
+        for(MessageEntity msg : list){
+            JSONObject object = new JSONObject();
+
+            object.put("msgno", msg.getMsgno());
+            object.put("msg", msg.getMsg());
+            object.put("from", msg.getFromentity().getMid());
+            object.put("date", msg.getCreatedate());
+            jsonArray.put(object);
+        }
+        System.out.println(jsonArray);
+        return jsonArray;
+
+    }
+
+    public JSONArray getfrommsglist(int type){
+        OauthDto oauthDto = (OauthDto)request.getSession().getAttribute("login");
+        Optional<MemberEntity> optional =  memberRepository.findBymid(oauthDto.getMid());
+        System.out.println(optional);
+        int mno=0;
+        if(optional.isPresent()){
+            MemberEntity memberEntity = optional.get();
+            mno = memberEntity.getMno();
+            System.out.println(mno);
+        }
+        System.out.println(type);
+        List<MessageEntity>list = messageRepository.getfrommsglist(mno, type);
+
+        //JSON형 변환
+        JSONArray jsonArray = new JSONArray();
+        for(MessageEntity msg : list){
+            System.out.println(msg);
+            JSONObject object = new JSONObject();
+
+            object.put("msgno", msg.getMsgno());
+            object.put("msg", msg.getMsg());
+            object.put("to", msg.getToentity().getMid());
+            object.put("from", msg.getFromentity().getMid());
+            object.put("date", msg.getCreatedate());
+            object.put("isread" , msg.isIsread() ); ///////// msg.is <<????
+            jsonArray.put(object);
+        }
+        return jsonArray;
+    }
+
+    @Autowired
+    private HttpServletRequest request;
+    public JSONObject getinfo() {
+
+        OauthDto oauthDto = (OauthDto)request.getSession().getAttribute("login");
+        String mid = oauthDto.getMid();
+        String hname =  (String) request.getSession().getAttribute("hname");
+        String hdate =  (String) request.getSession().getAttribute("hdate");
+        JSONObject object = new JSONObject();
+        object.put("mid", mid);
+        object.put("hname",hname);
+        object.put("hdate",hdate);
+        return object;
+
+    }
+
+
+    public String getmid() {
+        OauthDto oauthDto = (OauthDto)request.getSession().getAttribute("login");
+        String mid = oauthDto.getMid();
+        return mid;
+    }
+
+    @Transactional
+    public boolean messageanswer(JSONObject object){
+        System.out.println(object);
         String from = (String) object.get("from");
         String to = (String) object.get("to");
         String msg = (String) object.get("msg");
@@ -278,6 +407,7 @@ public class MemberService implements OAuth2UserService<OAuth2UserRequest ,OAuth
         }else {
             return false;
         }
+        System.out.println("2");
         MemberEntity toentity = null;
         Optional<MemberEntity> optionalMember2 = memberRepository.findBymid(to);
         if(optionalMember2.isPresent()){
@@ -285,11 +415,12 @@ public class MemberService implements OAuth2UserService<OAuth2UserRequest ,OAuth
         }else {
             return false;
         }
-
+        System.out.println("3");
         MessageEntity messageEntity = MessageEntity.builder()
                 .msg(msg)
                 .fromentity(fromentity)
                 .toentity(toentity)
+                .msgtype(2)
                 .build();
 
         messageRepository.save(messageEntity);
@@ -300,4 +431,9 @@ public class MemberService implements OAuth2UserService<OAuth2UserRequest ,OAuth
 
     }
 
+    @Transactional
+    public boolean isread(int msgno){
+        messageRepository.findById(msgno).get().setIsread(true);
+        return true;
+    }
 }
