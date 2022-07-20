@@ -180,32 +180,18 @@ public class MemberService implements OAuth2UserService<OAuth2UserRequest ,OAuth
     }
     @Autowired
     RequestRepository requestRepository;
-    public boolean requestsave(RequestDto requestDto) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Object principal = authentication.getPrincipal();
-        String mid = null;
-        if( principal instanceof UserDetails){
-            mid = ((UserDetails) principal).getUsername();
-        }else if( principal instanceof DefaultOAuth2User){
-            Map<String , Object>  map =  ((DefaultOAuth2User) principal).getAttributes();
-            if( map.get("response") != null ){
-                Map< String , Object> map2  = (Map<String, Object>) map.get("response");
-                mid = map2.get("email").toString().split("@")[0];
-            }else{
-                Map< String , Object> map2  = (Map<String, Object>) map.get("kakao_account");
-                mid = map2.get("email").toString().split("@")[0];
-            }
-        }else{
-            return false;
-        }
-        if( mid != null  ) {
-            Optional<MemberEntity> optionalMember = memberRepository.findBymid(mid);
-            if (optionalMember.isPresent()) {
-                int mno = optionalMember.get().getMno();
+    @Transactional
+    public int requestsave(RequestDto requestDto) {
+
+        String mid = authenticationget();
+        Optional<MemberEntity> optionalMember = memberRepository.findBymemail(mid);
+        if (optionalMember.isPresent()) {
+            int mno = optionalMember.get().getMno();
+            if( !requestRepository.findbymno(mno).isPresent() || !requestRepository.findbyhospital(requestDto.getHospital()).isPresent() ) {
                 RequestEntity requestEntity = requestDto.toentity();
                 requestEntity.setMid(mid);
                 requestEntity.setMno(mno);
-                requestEntity.setHospital(requestEntity.getHname()+requestEntity.getHdate());
+                requestEntity.setHospital(requestEntity.getHospital());
                 String uuidfile = null;
                 UUID uuid = UUID.randomUUID();
                 MultipartFile file = requestDto.getBinimg();
@@ -217,26 +203,26 @@ public class MemberService implements OAuth2UserService<OAuth2UserRequest ,OAuth
                     file.transferTo(new File(filepath));
                     requestEntity.setBinimg(uuidfile);
                     requestRepository.save(requestEntity);
-
+                    return 1;
                 } catch (IOException e) {
                     System.out.println("requestsave error : " + e);
                 }
-
-            }else {
-                return false;
+                        return 1;
             }
+            return 2;
+        }else {
+            return 3;
         }
-        return false;
+
     }
 
     public JSONArray getbinlist() {
         JSONArray jsonArray = new JSONArray();
-        List<RequestEntity> entities = requestRepository.findAll();
+        List<RequestEntity> entities = requestRepository.findBybinlist();
         for (RequestEntity entity : entities ){
             JSONObject object = new JSONObject();
             object.put("hno", entity.getHno());
-            object.put("hname", entity.getHname());
-            object.put("hdate", entity.getHdate());
+            object.put("hospital", entity.getHospital());
             object.put("mid", entity.getMid());
             object.put("mno", entity.getMno());
             object.put("binimg", entity.getBinimg());
@@ -246,17 +232,20 @@ public class MemberService implements OAuth2UserService<OAuth2UserRequest ,OAuth
     }
 
     @Transactional
-    public boolean setrole(int mno, String hname, String hdate, String bin) {
-        if(bin !=null){
-            String hospital = "HOSPITAL";
+    public boolean setrole(int mno, String hospital, String bin) {
+        if(bin != null){
             MemberEntity memberEntity = memberRepository.findBymno(mno);
             memberEntity.setRole(Role.HOSPITAL);
             memberRepository.save(memberEntity);
-            RequestEntity requestEntity = requestRepository.findBymno(mno);
-            requestEntity.setBin(bin);
-            requestEntity.setActive(true);
-            requestRepository.save(requestEntity);
-            return  true;
+            Optional<RequestEntity> requestEntity = requestRepository.findbyhospital (hospital);
+            if(requestEntity.isPresent()){
+                RequestEntity requestEntity1 = requestEntity.get();
+                requestEntity1.setBin(bin);
+                requestEntity1.setActive(true);
+                requestRepository.save(requestEntity1);
+                return  true;
+            }
+            return false;
         }else {
             return false;
         }

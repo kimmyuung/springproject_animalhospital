@@ -13,7 +13,7 @@ function list(){
             for(let i=0; i<result.length; i++){
                 html +=
                     '<tr>'+
-                    '    <td>'+result[i].mid+'</td><td>'+result[i].hname+result[i].hdate+'</td><td><input type="text" id="bin" name="bin"></td><td><img style="width:100px;" src="/upload/'+result[i].binimg+'"></td><td><button type="button" onclick="setrole('+i+')">허가</button></td>'+
+                    '    <td>'+result[i].mid+'</td><td>'+result[i].hospital+'</td><td><input type="text" id="bin" name="bin"></td><td><img style="width:100px;" src="/upload/'+result[i].binimg+'"></td><td><button type="button" onclick="setrole('+i+')">허가</button></td>'+
                     '</tr>';
             }
             console.log(result);
@@ -24,19 +24,22 @@ function list(){
 
 function setrole(i){
     let mno = blist[i].mno;
-    let hname = blist[i].hname;
-    let hdate = blist[i].hdate;
+    let hospital = blist[i].hospital;
     let bin = $("#bin").val();
-    alert(bin);
-    $.ajax({
-        url:"/admin/setrole",
-        data: {"mno" : mno, "hname" : hname, "hdate" : hdate, "bin" : bin},
-        success: function(result){
-            if(result){
-                alert("변경완료");
-            }else{
-                alert("변경실패")
+    if(bin == ""){
+        alert("사업자번호를 입력해주세요")
+    }else {
+        $.ajax({
+            url:"/admin/setrole",
+            data: {"mno" : mno, "hospital" : hospital, "bin" : bin},
+            success: function(result){
+                if(result){
+                    alert("변경완료");
+                    list();
+                }else{
+                    alert("변경실패");
+                }
             }
-        }
-    });
+        });
+    }
 }

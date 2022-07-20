@@ -26,4 +26,6 @@ public class RequestEntity {
     private String mid;
     private String binimg;
 
+
+
 }

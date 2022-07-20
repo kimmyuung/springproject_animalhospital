@@ -161,6 +161,7 @@ function msgdelete(){
         success: function(object){
             if(object){
                 alert("삭제 성공");
+                 $(".msgtable").load(window.location.href + ".msgtable");
                 deletelist=[];
             }
         }
@@ -183,26 +184,17 @@ $(document).ready(function(){
         $(".btn-close").trigger("click");
     });
 
-   // 1. 웹소켓 객체 생성
    let msgwebsocket = new WebSocket("ws://localhost:8082/ws/answer/"+mid);
 
-   // 2. 웹소켓 객체에 구현된 메소드 저장
    msgwebsocket.onopen = onOpen;
    msgwebsocket.onclose = onClose;
    msgwebsocket.onmessage = onMessage;
 
-   // 3. 각 메소드 구현
-   function onOpen(){
-        alert("입장");
-   }
+   function onOpen(){}
 
-   function onClose(){
-        alert("퇴장");
-   }
+   function onClose(){}
 
-   function onMessage(){
-        alert("메시지");
-   }
+   function onMessage(){}
 
    function send(jsonmsg){
         msgwebsocket.send(JSON.stringify(jsonmsg));

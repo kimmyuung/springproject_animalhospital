@@ -14,4 +14,7 @@ public interface MessageRepository extends JpaRepository<MessageEntity,Integer> 
 
     @Query( value = "select * from message where fromentity = :mno and msgtype = :type order by msgno desc", nativeQuery = true)
     List<MessageEntity> getfrommsglist(int mno, int type);
+
+    @Query(value = "select count(*) from message where tomno = :mno and isread = 0", nativeQuery = true)
+    Integer getisread(@Param("mno") int mno);
 }

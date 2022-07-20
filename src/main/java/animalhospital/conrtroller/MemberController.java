@@ -48,10 +48,11 @@ public class MemberController {
 
     @PostMapping("/requestsave")
     @ResponseBody
-    public boolean requestsave (RequestDto requestDto) {
-        boolean result = memberService.requestsave(requestDto);
+    public int requestsave (RequestDto requestDto, HttpServletResponse response) {
 
-        return result;
+            int result = memberService.requestsave(requestDto);
+            System.out.println("result : "+result);
+            return result;
     }
 
     @GetMapping("/getinfo")
