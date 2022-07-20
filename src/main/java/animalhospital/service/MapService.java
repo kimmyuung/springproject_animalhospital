@@ -41,6 +41,10 @@ public class MapService {
 
     @Autowired
     private MemberRepository memberRepository;
+
+    @Autowired
+    private MemberService memberService;
+
     public JSONArray map() {
         JSONArray animalhospital =  new JSONArray();
         try {
@@ -103,25 +107,7 @@ public class MapService {
     }
     @Transactional
     public boolean addreview(ReviewDto reviewDto){
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Object principal = authentication.getPrincipal();
-        String mid = null;
-        if( principal instanceof UserDetails){
-            mid = ((UserDetails) principal).getUsername();
-        }else if( principal instanceof DefaultOAuth2User){
-            Map<String , Object> map =  ((DefaultOAuth2User) principal).getAttributes();
-            if( map.get("response") != null ){
-                Map< String , Object> map2  = (Map<String, Object>) map.get("response"); // 네이버
-                mid = map2.get("email").toString().split("@")[0];
-            }else if(map.get("kakao_account") != null){
-                Map< String , Object> map2  = (Map<String, Object>) map.get("kakao_account"); // 카카오
-                mid = map2.get("email").toString().split("@")[0];
-            }else if(map.get("kakao_account") == null && map.get("response") == null ) { // 구글, 깃허브
-                mid = map.get("email").toString().split("@")[0];
-            }
-        }else{
-            return false;
-        }
+        String mid = memberService.authenticationget();
         if( mid != null  ) {
             Optional<MemberEntity> optionalMember = memberRepository.findBymid(mid);
             if (optionalMember.isPresent()) { // null 아니면

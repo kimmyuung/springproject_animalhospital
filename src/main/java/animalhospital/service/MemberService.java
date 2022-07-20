@@ -71,7 +71,7 @@ public class MemberService implements OAuth2UserService<OAuth2UserRequest ,OAuth
         }else{
             return 3+""; // 로그인이 안되어 있음
         }
-        return null;
+        return null; // 프로그램 오류
     }
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
@@ -175,25 +175,7 @@ public class MemberService implements OAuth2UserService<OAuth2UserRequest ,OAuth
     @Autowired
     RequestRepository requestRepository;
     public boolean requestsave(RequestDto requestDto) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Object principal = authentication.getPrincipal();
-        String mid = null;
-        if( principal instanceof UserDetails){
-            mid = ((UserDetails) principal).getUsername();
-        }else if( principal instanceof DefaultOAuth2User){
-            Map<String , Object> map =  ((DefaultOAuth2User) principal).getAttributes();
-            if( map.get("response") != null ){
-                Map< String , Object> map2  = (Map<String, Object>) map.get("response"); // 네이버
-                mid = map2.get("email").toString().split("@")[0];
-            }else if(map.get("kakao_account") != null){
-                Map< String , Object> map2  = (Map<String, Object>) map.get("kakao_account"); // 카카오
-                mid = map2.get("email").toString().split("@")[0];
-            }else if(map.get("kakao_account") == null && map.get("response") == null ) { // 구글, 깃허브
-                mid = map.get("email").toString().split("@")[0];
-            }
-        }else{
-            return false; // 로그인이 안되어 있음
-        }
+        String mid = authenticationget();
         if( mid != null  ) {
             Optional<MemberEntity> optionalMember = memberRepository.findBymid(mid);
             if (optionalMember.isPresent()) {
@@ -280,7 +262,7 @@ public class MemberService implements OAuth2UserService<OAuth2UserRequest ,OAuth
         }else {
             return false;
         }
-        System.out.println("2");
+
         String tomid =requestRepository.findByhospital(to);
         MemberEntity toentity = null;
         if(tomid != null) {
@@ -295,9 +277,11 @@ public class MemberService implements OAuth2UserService<OAuth2UserRequest ,OAuth
             Optional<MemberEntity> optionalMember2 = memberRepository.findBymid(to);
             if(optionalMember2.isPresent()) {
                 toentity = optionalMember2.get();
+            } else {
+                return false; // 해당 되는 회원이 없음
             }
         }
-        System.out.println("3");
+
         MessageEntity messageEntity = MessageEntity.builder()
                 .msg(msg)
                 .fromentity(fromentity)
