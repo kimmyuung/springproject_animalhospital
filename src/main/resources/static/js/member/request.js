@@ -23,36 +23,40 @@ function search(){
 }
 
 function hnamesave(i){
-//alert(searchresult[i].name+"hdate"+searchresult[i].opendate+"hcity"+searchresult[i].city);
     $("#hname").val(searchresult[i].name);
-    $("#hdate").val(searchresult[i].opendate);
+    $("#hospital").val(searchresult[i].name + searchresult[i].opendate);
 
     $("#closebtn").trigger('click');
 }
 
 function request(){
-//    let hname = $("#hname").val();
-    let hdate = $("#hdate").val();
-    let hname = $('[name="hname"]').val();
-    alert(hname);
-//    let binimg = $("#binimg").val();
-//    alert(hname + hdate+binimg);
-    let formData = new FormData($("#requestform")[0]);
-    $.ajax({
-        url: '/member/requestsave',
-        method: "POST",
-        enctype: 'multipart/form-data',
-//        data: {"hname": hname, "hdate": hdate},
-//        data: {"hname": hname, "hdate": hdate,"binimg": binimg},
-        data: formData,
-        contentType: false,
-        processData: false ,
-        success: function(result){
-            if(result){
-                alert(신청완료);
-            }else{
-                alert(신청실패);
+    let hospital = $("#hospital").val();
+    let binimg = $("#binimg").val();
+    alert(hospital+binimg);
+    if(hospital == "" || binimg == ""){
+        alert("모두 입력해주세요!");
+    }else {
+        let formData = new FormData($("#requestform")[0]);
+        $.ajax({
+            url: '/member/requestsave',
+            method: "POST",
+            enctype: 'multipart/form-data',
+            async: false,
+            data: formData,
+            contentType: false,
+            processData: false ,
+            success: function(result){
+                console.log(result);
+                alert(result);
+                if(result == 1){
+                    alert("신청완료");
+                }else if (result == 2){
+                    alert("이미 등록된 병원입니다");
+                }else{
+                    alert("신청실패");
+                }
             }
-        }
-    });
+        });
+    }
+
 }

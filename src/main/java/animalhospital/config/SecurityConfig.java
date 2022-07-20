@@ -95,6 +95,8 @@ public class SecurityConfig {
                 .ignoringAntMatchers("/member/idcheck")
                 .ignoringAntMatchers("/member/itemview{sno}")
                 .ignoringAntMatchers("/board/mypetupdate")
+                .ignoringAntMatchers("/member/requestsave")
+                .ignoringAntMatchers("/member/msgdelete")
                 .ignoringAntMatchers("/")
                 .and()
                 .exceptionHandling()

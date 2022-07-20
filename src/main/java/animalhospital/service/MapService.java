@@ -119,7 +119,7 @@ public class MapService {
                     MultipartFile file = reviewDto.getRimg1();
                     UUID uuid = UUID.randomUUID();
                     uuidfile = uuid.toString() + "_" + file.getOriginalFilename().replaceAll("_", "-");
-                    String dir = "C:\\Users\\504\\springproject_animalhospital\\src\\main\\resources\\static\\upload\\";
+                    String dir = "C:\\Users\\504\\git\\springproject_animalhospital\\build\\resources\\main\\static\\upload\\";
                     // 배포용도 필요하다...
                     String filepath = dir + uuidfile;
                     try {
@@ -134,8 +134,8 @@ public class MapService {
                     UUID uuid2 = UUID.randomUUID();
                     uuidfile2 = uuid2.toString() + "_" + file2.getOriginalFilename().replaceAll("_", "-");
                     String dir2 = "C:\\Users\\504\\springproject_animalhospital\\src\\main\\resources\\static\\upload\\";
-                   // 배포용도 있어야 한다...
-                    //  // String dir = "/home/ec2-user/app/springweb2/build/resources/main/static/upload/";
+                    // 배포용도 있어야 한다...
+                    // String dir = "/home/ec2-user/app/springproject_animalhospital/build/resources/main/static/upload/";
                     //  // "/home/{유저명}/{폴더명}/{git프로젝트명}/build/resources/main/static/";
                     String filepath2 = dir2 + uuidfile2;
 
@@ -167,12 +167,12 @@ public class MapService {
         Pageable pageable = PageRequest.of( page , 3 , Sort.by( Sort.Direction.DESC , "rno")    ); // SQL : limit 와 동일 한 기능처리
         Page<ReviewEntity> reviewEntity =  reviewRepository.findByrlist(hname, hdate,pageable);
         JSONArray jsonArray = new JSONArray();
-        ;
+
         for (ReviewEntity entity : reviewEntity ) {
             String same = null;
             JSONObject object = new JSONObject();
             if(loginDto == null){
-                same =  same="false";
+                same="false";
             }
             else if(entity.getMemberEntity().getMid().equals(loginDto.getMid())){
                 same="true";
@@ -242,8 +242,12 @@ public class MapService {
     public JSONObject getreview( int rno ){
 
         Optional<ReviewEntity> optionalReviewEntity =  reviewRepository.findById(rno );
-        ReviewEntity reviewEntity =  optionalReviewEntity.get();
-
+        ReviewEntity reviewEntity = null;
+        if(optionalReviewEntity.isPresent()) {
+            reviewEntity = optionalReviewEntity.get();
+        } else {
+            return null; // 찾는 리뷰가 없는 경우
+        }
         // 2.  해당 엔티티 -> json 객체 변환
         JSONObject object = new JSONObject();
         // 1. json에 엔티티 필드 값 넣기
@@ -263,8 +267,12 @@ public class MapService {
     public boolean updatereview( ReviewDto reviewDto ){
         Optional<ReviewEntity> optional
                 =  reviewRepository.findById( reviewDto.getRno() );
-        ReviewEntity reviewEntity =  optional.get();
-
+        ReviewEntity reviewEntity =  null;
+        if(optional.isPresent()) {
+            reviewEntity = optional.get();
+        } else {
+            return false;
+        }
         String uuidfile = null;
         String uuidfile2 = null;
 

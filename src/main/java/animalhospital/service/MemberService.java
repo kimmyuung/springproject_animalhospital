@@ -202,7 +202,8 @@ public class MemberService implements OAuth2UserService<OAuth2UserRequest ,OAuth
 
     @Autowired
     RequestRepository requestRepository;
-    public boolean requestsave(RequestDto requestDto) {
+    @Transactional
+    public int  requestsave(RequestDto requestDto) {
         String mid = authenticationget();
         if( mid != null  ) {
             Optional<MemberEntity> optionalMember = memberRepository.findBymid(mid);
@@ -211,7 +212,7 @@ public class MemberService implements OAuth2UserService<OAuth2UserRequest ,OAuth
                 RequestEntity requestEntity = requestDto.toentity();
                 requestEntity.setMid(mid);
                 requestEntity.setMno(mno);
-                requestEntity.setHospital(requestEntity.getHname()+requestEntity.getHdate());
+                requestEntity.setHospital(requestEntity.getHospital());
                 String uuidfile = null;
                 UUID uuid = UUID.randomUUID();
                 MultipartFile file = requestDto.getBinimg();
@@ -223,27 +224,26 @@ public class MemberService implements OAuth2UserService<OAuth2UserRequest ,OAuth
                     file.transferTo(new File(filepath));
                     requestEntity.setBinimg(uuidfile);
                     requestRepository.save(requestEntity);
-
+                    return 1;
                 } catch (IOException e) {
                     System.out.println("requestsave error : " + e);
                 }
 
             }else {
-                return false;
+                return 2;
             }
         }
-        return false;
+        return 3;
     }
 
     public JSONArray getbinlist() {
         JSONArray jsonArray = new JSONArray();
-        List<RequestEntity> entities = requestRepository.findAll();
+        List<RequestEntity> entities = requestRepository.findBybinlist();
         System.out.println(entities);
         for (RequestEntity entity : entities ){
             JSONObject object = new JSONObject();
             object.put("hno", entity.getHno());
-            object.put("hname", entity.getHname());
-            object.put("hdate", entity.getHdate());
+            object.put("hospital", entity.getHospital());
             object.put("mid", entity.getMid());
             object.put("mno", entity.getMno());
             object.put("binimg", entity.getBinimg());
@@ -253,24 +253,26 @@ public class MemberService implements OAuth2UserService<OAuth2UserRequest ,OAuth
     }
 
     @Transactional
-    public boolean setrole(int mno, String hname, String hdate, String bin) {
-        System.out.println(mno + hname + hdate + bin);
-        if(bin !=null){
-            String hospital = "HOSPITAL";
+    public boolean setrole(int mno, String hospital, String bin) {
+        if (bin != null) {
             MemberEntity memberEntity = memberRepository.findBymno(mno);
             memberEntity.setRole(Role.HOSPITAL);
             memberRepository.save(memberEntity);
-            System.out.println(memberEntity.getRole().getKey());
-            RequestEntity requestEntity = requestRepository.findBymno(mno);
-            requestEntity.setBin(bin);
-            requestEntity.setActive(true);
-            requestRepository.save(requestEntity);
-            return  true;
-        }else {
-            return false;
+
+            Optional<RequestEntity> requestEntity = requestRepository.findbyhospital(hospital);
+            if (requestEntity.isPresent()) {
+                RequestEntity requestEntity1 = requestEntity.get();
+                requestEntity1.setBin(bin);
+                requestEntity1.setActive(true);
+                requestRepository.save(requestEntity1);
+                return true;
+            } else {
+                return false; // 병원이 없는 경우
+            }
+        } else {
+            return false; // 리스트에 없는 경우(=중복되는 경우?)
         }
     }
-
     //쪽지
     //메시지 전송
     @Autowired
@@ -477,4 +479,12 @@ public class MemberService implements OAuth2UserService<OAuth2UserRequest ,OAuth
         return jsonArray;
     }
 
+    @Transactional
+    public boolean msgdelete(List<Integer>deletelist){
+        for(int msgno : deletelist){
+            MessageEntity entity = messageRepository.findById(msgno).get();
+            messageRepository.delete(entity);
+        }
+        return true;
+    }
 }
