@@ -78,6 +78,7 @@ public class MapService {
         return animalhospital;
     }
     //병원 검색
+
     public JSONArray search (String keyword){
         JSONArray hospital = map();
 

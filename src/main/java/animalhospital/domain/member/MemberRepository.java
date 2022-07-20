@@ -18,15 +18,6 @@ public interface MemberRepository extends JpaRepository<MemberEntity , Integer> 
     MemberEntity findBymno (int mno);
 
 
-
-    MemberEntity findBymno (int mno);
-
-
-
-    MemberEntity findBymno (int mno);
-
-
-
 }
 
 //  특정 필드 검색 메소드 만들기 : findBy필드명
