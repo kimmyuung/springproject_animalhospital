@@ -1,3 +1,4 @@
+
 gettomsglist();
 let msg;
 function gettomsglist(){
@@ -64,8 +65,7 @@ $(document).ready(function(){
         let jsonmsg = {
             "from" : mid,
             "to" : to ,
-            "msg" : msg,
-            "type" : "2"
+            "msg" : msg
         }
         console.log(jsonmsg);
         send(jsonmsg);

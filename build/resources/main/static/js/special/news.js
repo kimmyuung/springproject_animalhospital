@@ -10,7 +10,7 @@ function getnews(){
 
             html +=
 
-                   ' <div class="newsbox" onclick="window.open(`'+re[i].nlink+'`)">'+
+                   ' <div class="newsbox" >'+
                     ' <div class="img_wrap">'+
                                 '<img src="'+re[i].imgurl+'">'+
                       '</div>'+

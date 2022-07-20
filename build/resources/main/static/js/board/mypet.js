@@ -1,5 +1,4 @@
 function save(){
-
         if($("#bimg").val()==""){
             alert("이미지를 하나 이상 등록해주세요");
         }else if($("#btitle").val()==""){
@@ -14,78 +13,51 @@ function save(){
             contentType: false,
             processData: false ,
             success: function( re ){
-                if(re){
-                     location.href ="list"
-
-                }else{
-                    alert("로그인 후 이용해주세요!")
-                }
+                alert("등록완료");
+                location.reload();
             }
         });
         }
 }
-
 let current_page = 0;
 boardlist(0);
 
 
 function boardlist( page){
-    this.current_page = page;
-    console.log(this.current_page);
+     this.current_page = page;
+//     console.log(this.current_page);
     $.ajax({
     		url: "/board/blist",
     		 method: "POST",
     		 data: {"page":this.current_page},
     		success: function(boardlist){
-    		console.log(boardlist);
-    		    html ="";
+//    		console.log(boardlist);
+    		    html =
+    		        '<tr>'+
+                    '   <th>번호</th>'+
+                    '   <th>제목</th>'+
+                    '   <th>이미지</th>'+
+                    '</tr>';
 //    		    '<div><div>번호</div><div>제목</div><div>이미지</div></div>';
                 if( boardlist.blists.length == 0 ){ // 검색 결과가 존재하지 않으면
-                      html +=
-                        '<div>'+
-                            '<div colspan="5">검색 결과가 존재하지 않습니다.</div> '+
-                        '</div>';
-                      }else{
-                                for( let i = 0 ; i<boardlist.blists.length ; i++ ){
-                                    if(i%3 ==0){
-
-                                         html +=
-                                            '<div class="row">'+
-                                                '<div class="card" style="width: 18rem;" >'+
-                                                '  <img src="/upload/'+boardlist.blists[i].bimg+'" class="card-img-top"  data-bs-toggle="modal" data-bs-target="#myModal2" onclick="bview('+boardlist.blists[i].bno+')">'+
-                                                '  <div class="card-body">'+
-                                                '    <h5 class="card-title">'+boardlist.blists[i].btitle+'</h5>'+
-                                                '    <p class="card-text d-flex justify-content-end">'+boardlist.blists[i].bdate+'</p>'+
-//                                                '    <p class="card-text">'+boardlist.blists[i].mid+boardlist.blists[i].bdate+'</p>'+
-//                                                '    <a href="#" class="btn btn-primary">Go somewhere</a>'+
-                                                '  </div>'+
-                                                '</div>';
-
-                                    }else if(i %3 ==1){
-                                        html +=
-                                            '<div class="card" style="width: 18rem;" >'+
-                                                '  <img src="/upload/'+boardlist.blists[i].bimg+'" class="card-img-top"  data-bs-toggle="modal" data-bs-target="#myModal2" onclick="bview('+boardlist.blists[i].bno+')">'+
-                                                '  <div class="card-body">'+
-                                                '    <h5 class="card-title">'+boardlist.blists[i].btitle+'</h5>'+
-                                                '    <p class="card-text d-flex justify-content-end">'+boardlist.blists[i].bdate+'</p>'+
-//                                                '    <p class="card-text">'+boardlist.blists[i].mid+boardlist.blists[i].bdate+'</p>'+
-//                                                '    <a href="#" class="btn btn-primary">Go somewhere</a>'+
-                                                '  </div>'+
-                                                '</div>';
-                                    }else if(i %3 ==2){
-                                        html +=
-                                                '<div class="card" style="width: 18rem;" >'+
-                                                '  <img src="/upload/'+boardlist.blists[i].bimg+'" class="card-img-top"  data-bs-toggle="modal" data-bs-target="#myModal2" onclick="bview('+boardlist.blists[i].bno+')">'+
-                                                '  <div class="card-body">'+
-                                                '    <h5 class="card-title">'+boardlist.blists[i].btitle+'</h5>'+
-                                                '    <p class="card-text d-flex justify-content-end">'+boardlist.blists[i].bdate+'</p>'+
-//                                                '    <p class="card-text">'+boardlist.blists[i].mid+boardlist.blists[i].bdate+'</p>'+
-//                                                '    <a href="#" class="btn btn-primary">Go somewhere</a>'+
-                                                '  </div>'+
-                                                '</div>';
-                                            '</div>';
-                                    }
-                                }
+                                          html +=
+                                                '<div>'+
+                                                        '<div colspan="5">검색 결과가 존재하지 않습니다.</div> '+
+                                                 '</div>';
+                                }else{
+                                        for( let i = 0 ; i<boardlist.blists.length ; i++ ){
+                                            html +=
+                                                '<tr type="button" data-bs-toggle="modal" data-bs-target="#myModal2" onclick="bview('+boardlist.blists[i].bno+')">'+
+                                                '   <td>'+boardlist.blists[i].bno+'</td>'+
+                                                '   <td>'+boardlist.blists[i].btitle+'</td>'+
+                                                '   <td><img src="/upload/'+boardlist.blists[i].bimg+'"></td>'+
+                                                '</tr>';
+//                                                    '<div type="button" data-bs-toggle="modal" data-bs-target="#myModal2" onclick="bview('+boardlist.blists[i].bno+')">'+
+//                                                            '<div>'+boardlist.blists[i].bno+'</div> '+
+//                                                            '<div>'+boardlist.blists[i].btitle+'</div> '+
+//                                                            '<div><img src="/upload/'+boardlist.blists[i].bimg+'"></div> '+
+//                                                     '</div>';
+                                        }
                     }
                      let pagehtml = "";
                      if( page == 0 ){
@@ -99,8 +71,8 @@ function boardlist( page){
                                         '<button class="page-link" onclick="boardlist('+ (page-1)  +')"> 이전 </button>'+
                              '</li>';
                       }
-                      console.log(boardlist.blists);
-                     for( let i = boardlist.blists[0].startbtn ; i<=boardlist.blists[0].endhtn; i++ ){
+                        alert(boardlist.blists[0].endbtn);
+                     for( let i = boardlist.blists[0].startbtn ; i<=boardlist.blists[0].endbtn; i++ ){
                         pagehtml +=
                               '<li class="page-item"> '+
                                 '<button class="page-link" onclick="boardlist('+(i-1)+')"> '+i+' </button>'+
@@ -122,8 +94,8 @@ function boardlist( page){
                 $("#pagebtnbox").html( pagehtml);
     		}
     	});
-}
 
+}
 let bno = 0;
 let bnum;
 function bview(bno){
@@ -142,20 +114,19 @@ function bview(bno){
                      if( i == 0 ){  // 첫번째 이미지만 active 속성 추가
                         imgtag +=
                                      '<div class="carousel-item active">'+
-                                         '<img id="preview" src="/upload/'+board.bimglist[i]+'" class="d-block w-100" alt="...">'+
+                                         '<img src="/upload/'+board.bimglist[i]+'" class="d-block w-100" alt="...">'+
                                     '</div>';
                      }else{
                         imgtag +=
                                  '<div class="carousel-item">'+
-                                     '<img  id="preview" src="/upload/'+board.bimglist[i]+'" class="d-block w-100" alt="...">'+
+                                     '<img src="/upload/'+board.bimglist[i]+'" class="d-block w-100" alt="...">'+
                                 '</div>';
                      }
                 }
-                if(board.same=="true"){
+                if(board.same="true"){
                     $("#deletebutton").html(
-                    '<button type="button" class="btn btn-primary" onclick="bdelete('+board.bno+')">삭제</button>'+
-                    '<button type="button" class="btn btn-primary" onclick="bupdate('+board.bno+')"   data-bs-toggle="modal" data-bs-target="#myModal3">수정</button>'
-                 );
+                                        '<button type="button" class="btn btn-primary" onclick="bdelete('+board.bno+')">삭제</button>'
+                                     );
                 }
 
                 $("#bwiter").html( board.mid );
@@ -168,53 +139,6 @@ function bview(bno){
         });
 }
 
-function bupdate(bno){
-alert(bno);
-    $.ajax({
-            url : "/board/getboard" ,
-            method : "GET",
-            data: {"bno":bno},
-            success: function( board ){
-            console.log(board);
-                let imgtag = "";
-                console.log( board );
-                for( let i = 0 ; i<board.bimglist.length ; i++ ){
-                     if( i == 0 ){  // 첫번째 이미지만 active 속성 추가
-                        imgtag +=
-                                     '<div class="carousel-item active">'+
-                                         '<img id="img_preview2" src="/upload/'+board.bimglist[i]+'" class="d-block w-100" alt="...">'+
-                                    '</div>';
-                     }else{
-                        imgtag +=
-                                 '<div class="carousel-item">'+
-                                     '<img id="img_preview2" src="/upload/'+board.bimglist[i]+'" class="d-block w-100" alt="...">'+
-                                '</div>';
-                     }
-                }
-                 $("#btitle2").val( board.btitle );
-                 $("#bcontent2").html( board.bcontent );
-                $("#preview2").html( imgtag );
-            }
-    })
-}
-function tipupdate(){
-    let form = $("#updateform")[0];
-            let formdata = new FormData( form);
-            $.ajax({
-                url: "/board/mypetupdate",
-                method: "PUT",
-                data : formdata ,
-                contentType: false,
-                processData: false ,
-                success: function( re ){
-                    if(re){
-                    location.reload();
-                    }else{
-                        alert("로그인 후 이용해주세요!")
-                    }
-                }
-            });
-}
 function bdelete(bno){
       $.ajax({
                  url : "/board/bdelete" ,
@@ -254,23 +178,6 @@ $(function() {
     });
 });
 
-
-$(function() {
-    $("#bimg2").on('change', function(){
-    readURL(this);
-    });
-});
-function readURL(input) {
-    if (input.files && input.files[0]) {
-        var reader = new FileReader();
-        reader.onload = function (e) {
-        $('#img_preview2').attr('src', e.target.result);
-        }
-        reader.readAsDataURL(input.files[0]);
-    }
-}
-
-
 function replysave(){
     let reply = $("#reply").val();
     $.ajax({
@@ -287,9 +194,6 @@ function replysave(){
         }
     });
 }
-
-
-
 function getreply(){
     let replyhtml = "";
     $.ajax({
@@ -413,7 +317,7 @@ function getrereply(rno){
                             '</div>'+
                             '<div>'+result[i].rcontent+'</div>'+
                             '<div id="repltbtn">'+
-                                '<button type="button" onclick="rereplyinput('+result[i].rno+')">답글</button><button type="button" onclick="replyupdate('+result[i].rno+')">수정</button><button type="button" onclick="replydelete('+result[i].rno+')">삭제</button>'+
+                                '<button type="button" onclick="replyupdate('+result[i].rno+')">수정</button><button type="button" onclick="replydelete('+result[i].rno+')">삭제</button>'+
                             '</div>'+
                         '</div>';
                 }else{
@@ -424,9 +328,6 @@ function getrereply(rno){
                                 '<div class="col-md-6 d-flex justify-content-end">'+result[i].createdate+'</div>'+
                             '</div>'+
                             '<div>'+result[i].rcontent+'</div>'+
-                            '<div id="repltbtn">'+
-                                '<button type="button" onclick="rereply('+result[i].rno+')">답글</button>'+
-                            '</div>'+
                         '</div>';
                 }
             }
@@ -434,35 +335,4 @@ function getrereply(rno){
             $("#"+ rindex).html(rereplyhtml);
         }
     });
-}
-function replyupdate(rno) {
-    $.ajax({
-        url: '/board/replyupdate',
-        data : { "rno": rno },
-        success : function(result){
-            let html =
-                '<input type="text" id="reply" value="'+result.rcontent+'">'+
-                '<button type="button" onclick="reupdate('+rno+')">수정</button>';
-            $("#replyinput").html(html);
-        }
-    });
-}
-
-function reupdate(rno){
-    let reply = $("#reply").val();
-        $.ajax({
-            url:'/board/reupdate',
-            method : "POST",
-            data : {"rno": rno,"reply": reply},
-            success : function(result){
-                $('#reply').val('');
-                getreply();
-            }
-        });
-}
-function rereplyinput(rno){
-        let html =
-            '<input type="text" id="reply"">'+
-            '<button type="button" onclick="rereply('+rno+')">답글</button>';
-        $("#replyinput").html(html);
 }

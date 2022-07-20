@@ -1,27 +1,30 @@
+
 //쪽지 메소드
-
 $(document).ready(function(){
-
-    let mid ="";
+    let mid = "";
+    let hname = "";
+    let hdate = "";
     $.ajax({
-        url: '/member/getmid',
+        url: '/member/getinfo',
         success: function(result){
-            mid= result;
-            console.log(mid);
+            console.log(result);
+            mid = result.mid;
+            hname = result.hname;
+            hdate = result.hdate;
         }
     });
 
      $("#sendmsg").click(function(){
-     console.log(info.hname);
-     console.log(info.hdate);
-        let from = mid;
-        let to = info.hname+info.hdate;
+     console.log(mid);
+     console.log(hname);
+//        let from = mid;
+//        let to = hname+hdate;
         let msg = $("#msginput").val();
         let jsonmsg = {
-            "from" : from,
-            "to" : to ,
-            "msg" :msg,
-            "type" : "2"
+
+            "from" : mid,
+            "to" : hname+hdate ,
+            "msg" :msg
         }
         console.log(jsonmsg);
         send(jsonmsg);

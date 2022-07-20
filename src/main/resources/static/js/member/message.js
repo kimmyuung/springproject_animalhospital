@@ -1,5 +1,4 @@
 //쪽지 메소드
-
 $(document).ready(function(){
 
     let mid ="";
@@ -20,8 +19,7 @@ $(document).ready(function(){
         let jsonmsg = {
             "from" : from,
             "to" : to ,
-            "msg" :msg,
-            "type" : "2"
+            "msg" :msg
         }
         console.log(jsonmsg);
         send(jsonmsg);
@@ -55,3 +53,4 @@ $(document).ready(function(){
    }
 
 });
+

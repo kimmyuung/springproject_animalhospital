@@ -18,12 +18,12 @@ public class AdminContoller {
     MemberService memberService;
 
     @GetMapping("/binlist")
-    public String binlist() {
+    public String binlist(){
         return "admin/binlist";
     }
 
     @GetMapping("/getbinlist")
-    public void getbinlist(HttpServletResponse response) {
+    public void getbinlist(HttpServletResponse response){
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json");
         try {
@@ -34,13 +34,14 @@ public class AdminContoller {
     }
 
     @GetMapping("/setrole")
-    public void setrole(HttpServletResponse response, @RequestParam("mno") int mno, @RequestParam("hname") String hname, @RequestParam("hdate") String hdate, @RequestParam("bin") String bin) {
+    public void setrole(HttpServletResponse response, @RequestParam("mno") int mno,@RequestParam("hname") String hname,@RequestParam("hdate") String hdate,@RequestParam("bin") String bin){
         try {
             response.setCharacterEncoding("UTF-8");
             response.setContentType("application/json");
-            response.getWriter().print(memberService.setrole(mno, hname, hdate, bin));
+            response.getWriter().print(memberService.setrole(mno, hname, hdate,bin));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
+
 }

@@ -1,3 +1,4 @@
+
 function search(){
     let keyword = $("#searchbar").val();
     $.ajax({

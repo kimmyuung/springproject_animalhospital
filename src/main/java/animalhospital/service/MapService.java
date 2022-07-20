@@ -28,7 +28,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
@@ -41,10 +40,6 @@ public class MapService {
 
     @Autowired
     private MemberRepository memberRepository;
-
-    @Autowired
-    private MemberService memberService;
-
     public JSONArray map() {
         JSONArray animalhospital =  new JSONArray();
         try {
@@ -85,22 +80,6 @@ public class MapService {
     //병원 검색
     public JSONArray search (String keyword){
         JSONArray hospital = map();
-        JSONArray jsonArray = new JSONArray();
-        if(keyword != null) {
-            for(int i = 0; i < hospital.length(); i++){
-                JSONObject object = (JSONObject) hospital.get(i);
-                String name = (String) object.get("name");
-                if( name.contains(keyword) ){
-                    jsonArray.put(object);
-                }
-            }
-        }
-//        System.out.println(jsonArray);
-        return jsonArray;
-    }
-
-    public JSONArray search (String keyword){
-        JSONArray hospital = map();
 
         JSONArray jsonArray = new JSONArray();
         if(keyword != null) {
@@ -117,7 +96,23 @@ public class MapService {
     }
     @Transactional
     public boolean addreview(ReviewDto reviewDto){
-        String mid = memberService.authenticationget();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Object principal = authentication.getPrincipal();
+        String mid = null;
+        if( principal instanceof UserDetails){
+            mid = ((UserDetails) principal).getUsername();
+        }else if( principal instanceof DefaultOAuth2User){
+            Map<String , Object> map =  ((DefaultOAuth2User) principal).getAttributes();
+            if( map.get("response") != null ){
+                Map< String , Object> map2  = (Map<String, Object>) map.get("response");
+                mid = map2.get("email").toString().split("@")[0];
+            }else{
+                Map< String , Object> map2  = (Map<String, Object>) map.get("kakao_account");
+                mid = map2.get("email").toString().split("@")[0];
+            }
+        }else{
+            return false;
+        }
         if( mid != null  ) {
             Optional<MemberEntity> optionalMember = memberRepository.findBymid(mid);
             if (optionalMember.isPresent()) { // null 아니면
@@ -130,7 +125,6 @@ public class MapService {
                     UUID uuid = UUID.randomUUID();
                     uuidfile = uuid.toString() + "_" + file.getOriginalFilename().replaceAll("_", "-");
                     String dir = "C:\\Users\\504\\springproject_animalhospital\\src\\main\\resources\\static\\upload\\";
-                    // 배포용도 필요하다...
                     String filepath = dir + uuidfile;
                     try {
                         file.transferTo(new File(filepath));
@@ -144,9 +138,6 @@ public class MapService {
                     UUID uuid2 = UUID.randomUUID();
                     uuidfile2 = uuid2.toString() + "_" + file2.getOriginalFilename().replaceAll("_", "-");
                     String dir2 = "C:\\Users\\504\\springproject_animalhospital\\src\\main\\resources\\static\\upload\\";
-                   // 배포용도 있어야 한다...
-                    //  // String dir = "/home/ec2-user/app/springweb2/build/resources/main/static/upload/";
-                    //  // "/home/{유저명}/{폴더명}/{git프로젝트명}/build/resources/main/static/";
                     String filepath2 = dir2 + uuidfile2;
 
                     try {
@@ -177,14 +168,10 @@ public class MapService {
         Pageable pageable = PageRequest.of( page , 3 , Sort.by( Sort.Direction.DESC , "rno")    ); // SQL : limit 와 동일 한 기능처리
         Page<ReviewEntity> reviewEntity =  reviewRepository.findByrlist(hname, hdate,pageable);
         JSONArray jsonArray = new JSONArray();
-        ;
+        String same = null;
         for (ReviewEntity entity : reviewEntity ) {
-            String same = null;
             JSONObject object = new JSONObject();
-            if(loginDto == null){
-                same =  same="false";
-            }
-            else if(entity.getMemberEntity().getMid().equals(loginDto.getMid())){
+            if(entity.getMemberEntity().getMid().equals(loginDto.getMid())){
                 same="true";
             }
             else{ same="false";}
@@ -214,104 +201,5 @@ public class MapService {
         System.out.println(jo);
         return jo;
     }
-    @Transactional
-    public boolean rdelete( int rno ){
-        System.out.println(rno);
-        ReviewEntity reviewEntity =  reviewRepository.findById( rno ).get();
-        if( reviewEntity != null ){
-            // 해당 엔티티를 삭제
-            reviewRepository.delete( reviewEntity );
-            return true;
-        }else{
-            return false;
-        }
-    }
 
-    public JSONObject getreviewstarlist( String hname,String hdate){
-        JSONObject jo = new JSONObject();
-        List<ReviewEntity> reviewEntity =  reviewRepository.findBylist(hname, hdate);
-        JSONArray jsonArray = new JSONArray();
-        for (ReviewEntity entity : reviewEntity ) {
-            JSONObject object = new JSONObject();
-            object.put("rno", entity.getRno());
-            object.put("rcontent", entity.getRcontent());
-            object.put("rmodifiedate", entity.getModifiedate());
-            object.put("rcreatedate", entity.getCreatedate());
-            object.put("rkind", entity.getRkind());
-            object.put("rfac", entity.getRfac());
-            object.put("rprice", entity.getRprice());
-            object.put("rimg1", entity.getRimg1());
-            object.put("rimg2", entity.getRimg2());
-            object.put("mid", entity.getMemberEntity().getMid());
-            jsonArray.put(object);
-        }
-        jo.put("data", jsonArray);
-        System.out.println(jo);
-        return jo;
-    }
-    public JSONObject getreview( int rno ){
-
-        Optional<ReviewEntity> optionalReviewEntity =  reviewRepository.findById(rno );
-        ReviewEntity reviewEntity =  optionalReviewEntity.get();
-
-        // 2.  해당 엔티티 -> json 객체 변환
-        JSONObject object = new JSONObject();
-        // 1. json에 엔티티 필드 값 넣기
-        object.put("rno" ,reviewEntity.getRno());
-        object.put("rcontent" , reviewEntity.getRcontent());
-        object.put("mid" , reviewEntity.getMemberEntity().getMid());
-        object.put("rimg1" , reviewEntity.getRimg1());
-        object.put("rimg2" , reviewEntity.getRimg2());
-        object.put("rkind" , reviewEntity.getRkind());
-        object.put("rfac" , reviewEntity.getRfac());
-        object.put("rprice" , reviewEntity.getRprice());
-
-        return object;
-    }
-
-    @Transactional
-    public boolean updatereview( ReviewDto reviewDto ){
-        Optional<ReviewEntity> optional
-                =  reviewRepository.findById( reviewDto.getRno() );
-        ReviewEntity reviewEntity =  optional.get();
-
-        String uuidfile = null;
-        String uuidfile2 = null;
-
-        if(reviewDto.getRimg1()!=null) {
-            MultipartFile file = reviewDto.getRimg1();
-            UUID uuid = UUID.randomUUID();
-            uuidfile = uuid.toString() + "_" + file.getOriginalFilename().replaceAll("_", "-");
-            // String dir = "C:\\Users\\504\\springproject_animalhospital\\src\\main\\resources\\static\\upload\\";
-            String dir = "C:\\Users\\82102\\IdeaProjects\\springproject_animalhospital\\src\\main\\resources\\static\\upload\\";
-            String filepath = dir + uuidfile;
-            try {
-                file.transferTo(new File(filepath));
-                reviewEntity.setRimg1(uuidfile);
-            } catch (Exception e) {
-                System.out.println("파일저장실패 : " + e);
-            }
-        }
-        if(reviewDto.getRimg2()!=null) {
-            MultipartFile file2 = reviewDto.getRimg2();
-            UUID uuid2 = UUID.randomUUID();
-            uuidfile2 = uuid2.toString() + "_" + file2.getOriginalFilename().replaceAll("_", "-");
-            String dir2 = "C:\\Users\\504\\springproject_animalhospital\\src\\main\\resources\\static\\upload\\";
-            //String dir2 = "C:\\Users\\82102\\IdeaProjects\\springproject_animalhospital\\src\\main\\resources\\static\\upload\\";
-            String filepath2 = dir2 + uuidfile2;
-
-            try {
-                file2.transferTo(new File(filepath2));
-                reviewEntity.setRimg2(uuidfile2);
-            } catch (Exception e) {
-                System.out.println("파일저장실패 : " + e);
-            }
-        }
-        reviewEntity.setRcontent(reviewDto.getRcontent());
-        reviewEntity.setRkind(reviewDto.getRkind());
-        reviewEntity.setRfac(reviewDto.getRfac());
-        reviewEntity.setRprice(reviewDto.getRprice());
-
-        return true;
-    }
 }
