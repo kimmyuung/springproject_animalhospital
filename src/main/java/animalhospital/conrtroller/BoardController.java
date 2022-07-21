@@ -53,8 +53,7 @@ public class BoardController {
     public boolean tipwrite_save( BoardDto boardDto ){
         boardDto.setCno(3);
         boolean result = boardService.save( boardDto );
-
-        return result;
+        return  result;
     }
 
     @PutMapping("/tipupdate")

@@ -17,10 +17,10 @@ import javax.servlet.http.HttpServletResponse;
 public class MapController {
 
     @Autowired
-    MapService mapService;
+    private HttpServletRequest request;     // 1. 세션 호출을 위한 request 객체 생성
 
     @Autowired
-    private HttpServletRequest request;     // 1. 세션 호출을 위한 request 객체 생성
+    MapService mapService;
 
     @Autowired
     BoardService boardService;
@@ -76,7 +76,6 @@ public class MapController {
             object.put("link", crawlDto.getLink());
         }
         try {
-
             response.setCharacterEncoding("UTF-8");
             response.setContentType("application/json");
             response.getWriter().print(object);
@@ -141,16 +140,9 @@ public class MapController {
 
     @DeleteMapping("/rdelete")
     @ResponseBody
-    public boolean rdelete(@RequestParam("rno") int rno ){
-        System.out.println(rno);
-        return mapService.rdelete( rno );
-    }
+    public boolean rdelete(@RequestParam("rno") int rno ){return mapService.rdelete( rno );}
 
     @PostMapping("/updatereview" )
     @ResponseBody
-    public boolean updatereview(HttpServletResponse response, ReviewDto reviewDto){
-        System.out.println("sssss"+reviewDto);
-        boolean result = mapService.updatereview(reviewDto);
-        return result;
-    }
+    public boolean updatereview(HttpServletResponse response, ReviewDto reviewDto){boolean result = mapService.updatereview(reviewDto);return result;}
 }

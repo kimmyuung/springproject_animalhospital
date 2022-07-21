@@ -118,11 +118,11 @@ function search(){
     alert("검색어를 입력해주세요"); return;
 
     }
-    if(keyword == "동물병원") {
+    if(keyword == "동물병원" || keyword == "동물" || keyword == "병원") {
     alert("검색되는 숫자가 너무 많습니다. 다른 검색어로 검색해주세요"); return;
     $("#searchbar").val("");
     }
-    var pr = /^[가-힣0-9 ]{3,20}$/      //한글 3글자 이상 20글자 이하
+    var pr = /^[가-힣0-9 ]{2,20}$/      //한글 3글자 이상 20글자 이하
     if(pr.test(keyword)) {
     $.ajax({
             url: "/map/search",
@@ -147,7 +147,7 @@ function search(){
         });
     }
     else {
-    alert("검색어는 한글로 최소 3자 이상 입력해야 합니다.");
+    alert("검색어는 한글로 최소 2자 이상 입력해야 합니다.");
     $("#searchbar").val("");
     return;
     }

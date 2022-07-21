@@ -203,7 +203,9 @@ public class BoardService {
             Map<String, String> map = new HashMap<>();
             map.put("bno", entity.getBno()+"" );
             map.put("btitle", entity.getBtitle());
-            map.put("bimg", entity.getBoardimgEntities().get(0).getBimg());
+            if(entity.getBoardimgEntities().size() != 0) {
+                map.put("bimg", entity.getBoardimgEntities().get(0).getBimg());
+            }
             map.put( "startbtn" , startbtn+"" );
             map.put("mid", entity.getMemberEntity().getMid());
             map.put("bdate",  entity.getCreatedate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
@@ -561,6 +563,7 @@ public class BoardService {
                    uuidfile = uuid.toString() + "_" + file.getOriginalFilename().replaceAll("_", "-");
                    //String dir = "C:\\Users\\504\\springproject_animalhospital\\src\\main\\resources\\static\\upload\\";
                    String dir = "/home/ec2-user/app/springproject_animalhospital/build/resources/main/static/upload/";
+
                    String filepath = dir + uuidfile;
 
                    try {
