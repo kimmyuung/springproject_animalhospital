@@ -53,17 +53,17 @@ public class BoardController {
     public boolean tipwrite_save( BoardDto boardDto ){
         boardDto.setCno(3);
         boolean result = boardService.save( boardDto );
-
-        return result;
+        return  result;
     }
 
     @PutMapping("/tipupdate")
     @ResponseBody
     public boolean tipwrite_update( BoardDto boardDto ){
         boardDto.setCno(3);
+        boardDto.setBcontent(boardDto.getBcontent().replace("\r\n", "<br>"));
         int bno =  (Integer) request.getSession().getAttribute("bno");
         boardDto.setBno(bno);
-        boolean result = boardService.save( boardDto );
+        boolean result = boardService.bupdate( boardDto );
 
         return result;
     }

@@ -88,7 +88,7 @@ $.ajax({
             data : {"btitle" : $("#btitle").val(),"bcontent" : $("#bcontent").val()} ,
             success : function(re) {
             console.log(re);
-           if(re == true) {alert("등록 성공"); getnotice(0);  $('#myModal').modal('hide')}
+           if(re == true) {alert("등록 성공"); getnotice(0);  $('#myModal').modal('hide');}
            else { alert("등록 실패");}
            }
     });
@@ -100,6 +100,15 @@ $.ajax({
 function bnosave(bno) {
 updatebno = bno;
 console.log(updatebno);
+$.ajax({
+url : '/board/getboard',
+data : {"bno" : bno},
+success : function(re) {
+console.log(re);
+$("#btitle2").val(re.btitle);
+$("#bcontent2").val(re.bcontent);
+}
+});
 }
 function noticeupdate() {
 console.log(updatebno);
@@ -109,7 +118,7 @@ $.ajax({
             data : {"bno" : updatebno, "btitle" : $("#btitle2").val(),"bcontent" : $("#bcontent2").val()} ,
             success : function(re) {
             console.log(re);
-           if(re == true) {alert("수정 성공"); getnotice(0); $('#myModal2').modal('hide')}
+           if(re == true) {alert("수정 성공"); getnotice(0); $('#myModal2').modal('hide');}
            else { alert("수정 실패");}
            }
     });

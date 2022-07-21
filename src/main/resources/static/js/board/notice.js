@@ -9,8 +9,6 @@ var today = new Date();
 function getnotice(page) {
 
 this.current_page = page;
-
-
 $.ajax({
     url : '/board/getnotice',
     type : 'post',
@@ -34,8 +32,8 @@ $.ajax({
        	}
 
             html += '<tr>' +
-            '<td width="20%" style="padding-left:50px;">'+ json.data[i]["btitle"] +'</td>' +
-            '<td width="40%" style="text-align:center">'+ json.data[i]["bcontent"] +'</td>' +
+            '<td width="20%" style="padding-left:50px;"onclick="noticedetail()"data-bs-toggle="modal" data-bs-target="#myModal3">'+ json.data[i]["btitle"] +'</td>' +
+            '<td width="40%" style="text-align:center" onclick="noticedetail()"data-bs-toggle="modal" data-bs-target="#myModal3">'+ json.data[i]["bcontent"] +'</td>' +
             '<td width="20%" style="text-align:center">'+ json.data[i]["bindate"] + '</td>' +
             '<td width="20%" style="text-align:center">' ;
             if(json.username == 'admin'){
@@ -88,7 +86,7 @@ $.ajax({
             data : {"btitle" : $("#btitle").val(),"bcontent" : $("#bcontent").val()} ,
             success : function(re) {
             console.log(re);
-           if(re == true) {alert("등록 성공"); getnotice(0);  $('#myModal').modal('hide')}
+           if(re == true) {alert("등록 성공"); getnotice(0);  $('#myModal').modal('hide');}
            else { alert("등록 실패");}
            }
     });
@@ -100,6 +98,15 @@ $.ajax({
 function bnosave(bno) {
 updatebno = bno;
 console.log(updatebno);
+$.ajax({
+url : '/board/getboard',
+data : {"bno" : bno},
+success : function(re) {
+console.log(re);
+$("#btitle2").val(re.btitle);
+$("#bcontent2").val(re.bcontent);
+}
+});
 }
 function noticeupdate() {
 console.log(updatebno);
@@ -109,7 +116,7 @@ $.ajax({
             data : {"bno" : updatebno, "btitle" : $("#btitle2").val(),"bcontent" : $("#bcontent2").val()} ,
             success : function(re) {
             console.log(re);
-           if(re == true) {alert("수정 성공"); getnotice(0); $('#myModal2').modal('hide')}
+           if(re == true) {alert("수정 성공"); getnotice(0); $('#myModal2').modal('hide');}
            else { alert("수정 실패");}
            }
     });
@@ -145,4 +152,8 @@ function formatDate(date) {
         day = '0' + day;
 
     return [year, month, day].join('-');
+}
+
+function noticedetail() {
+
 }

@@ -71,6 +71,12 @@ function getfrommsglist(type){
                     '<tr>'+
                         '<th>선택</th><th>받은사람</th><th>내용</th><th>보낸 날짜/시간</th>'+
                     '</tr>';
+            if(object.length == 0){
+             html +=
+             '<tr>'+
+             '<th colspan="4" class="text-center">받은 쪽지가 없습니다.</th>'+
+             '</tr>';
+            }
             for(let i=0; i<object.length; i++){
                 let msgtitle ="";
                 if(object[i].msg.length > 20 ){
@@ -99,6 +105,8 @@ function getfrommsglist(type){
 let fromid = "";
 function tomsgread( i ){
     fromid = msg[i].from;
+
+
     let html =
         '<div><span>보낸사람</span><span> '+msg[i].from+'</span></div>'+
         '<div><span>받은시간</span><span> '+msg[i].date+'</span></div>'+
@@ -172,6 +180,7 @@ $(document).ready(function(){
 
      $("#answer").click(function(){
         let msg = $("#msginput").val();
+        mid = mid.replace(/\n|\r|\s*/g, "");
         let to = fromid;
         let jsonmsg = {
             "from" : mid,
@@ -185,7 +194,8 @@ $(document).ready(function(){
         $(".btn-close").trigger("click");
     });
 
-   let msgwebsocket = new WebSocket("ws://localhost:8082/ws/answer/"+mid);
+    let msgwebsocket = new WebSocket("ws://ec2-43-200-181-29.ap-northeast-2.compute.amazonaws.com/ws/message/"+mid);
+
 
    msgwebsocket.onopen = onOpen;
    msgwebsocket.onclose = onClose;
