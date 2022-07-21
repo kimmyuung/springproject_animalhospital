@@ -71,6 +71,12 @@ function getfrommsglist(type){
                     '<tr>'+
                         '<th>선택</th><th>받은사람</th><th>내용</th><th>보낸 날짜/시간</th>'+
                     '</tr>';
+            if(object.length == 0){
+                html +=
+                    '<tr>'+
+                        '<th colspan="4" class="text-center">받은 쪽지가 없습니다.</th>'+
+                    '</tr>';
+            }
             for(let i=0; i<object.length; i++){
                 let msgtitle ="";
                 if(object[i].msg.length > 20 ){
@@ -86,6 +92,7 @@ function getfrommsglist(type){
                 }else{
                     mdate = senddate;
                 }
+
                 html +=
                     '<tr>'+
                         '<td><input name="checkbox" type="checkbox" value="'+object[i].msgno+'" onclick="oncheckbox()"></td><td>'+object[i].to+'</td><td onclick="frommsgread('+i+')" data-bs-toggle="modal" data-bs-target="#exampleModal2">'+msgtitle+'</td><td>'+mdate+'</td>'+

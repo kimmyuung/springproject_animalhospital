@@ -33,7 +33,6 @@ function hnamesave(i){
 function request(){
     let hospital = $("#hospital").val();
     let binimg = $("#binimg").val();
-    alert(hospital+binimg);
     if(hospital == "" || binimg == ""){
         alert("모두 입력해주세요!");
     }else {
@@ -47,8 +46,6 @@ function request(){
             contentType: false,
             processData: false ,
             success: function(result){
-                console.log(result);
-                alert(result);
                 if(result == 1){
                     alert("신청완료");
                 }else if (result == 2){

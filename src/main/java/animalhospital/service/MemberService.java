@@ -329,14 +329,17 @@ public class MemberService implements OAuth2UserService<OAuth2UserRequest ,OAuth
 
 
     public JSONArray gettomsglist(int type){
-        OauthDto oauthDto = (OauthDto)request.getSession().getAttribute("login");
-        Optional<MemberEntity> optional =  memberRepository.findBymid(oauthDto.getMid());
+//        OauthDto oauthDto = (OauthDto)request.getSession().getAttribute("login");
+        String mid = authenticationget();
+        Optional<MemberEntity> optional =  memberRepository.findBymid(mid);
+        System.out.println("gettomsglsit optional : "+optional);
         int mno=0;
         if(optional.isPresent()){
             MemberEntity memberEntity = optional.get();
+            System.out.println("gettomsglist member : " + memberEntity);
             mno = memberEntity.getMno();
         }
-
+        System.out.println("gettomsglist mno : "+mno);
         List<MessageEntity>list = messageRepository.gettomsglist(mno, type);
         //JSON형 변환
         JSONArray jsonArray = new JSONArray();
@@ -421,7 +424,7 @@ public class MemberService implements OAuth2UserService<OAuth2UserRequest ,OAuth
         }else {
             return false;
         }
-        System.out.println("2");
+        System.out.println("msganswer - 2");
         MemberEntity toentity = null;
         Optional<MemberEntity> optionalMember2 = memberRepository.findBymid(to);
         if(optionalMember2.isPresent()){
@@ -429,7 +432,7 @@ public class MemberService implements OAuth2UserService<OAuth2UserRequest ,OAuth
         }else {
             return false;
         }
-        System.out.println("3");
+        System.out.println("msganswer - 3");
         MessageEntity messageEntity = MessageEntity.builder()
                 .msg(msg)
                 .fromentity(fromentity)
