@@ -99,10 +99,12 @@ $.ajax({
             processData : false,
             success : function(re) {
             console.log(re);
-           if(re == true) {alert("등록 성공"); getitemlist(0);
+           if(re == true) {alert("등록 성공");
+           getitemlist(0);
            $("#sprcie").val('');
            $("#stitle").val('');
            $("#scontent").val('');
+           $('#myModal').modal('hide')
            }
            else { alert("등록 실패");}
            }
