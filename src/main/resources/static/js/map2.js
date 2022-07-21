@@ -12,7 +12,7 @@ $.ajax({
 
 var mapContainer = document.getElementById('map'), // 지도를 표시할 div
     mapOption = {
-        center: new kakao.maps.LatLng(37.63457, 127.33838), // 지도의 중심좌표
+        center: new kakao.maps.LatLng(37.3084307, 126.850962), // 지도의 중심좌표
         level: 5, // 지도의 확대 레벨
         mapTypeId : kakao.maps.MapTypeId.ROADMAP // 지도종류
     };
@@ -68,7 +68,7 @@ clusterer.clear(); // 클러스터 클리어
                      // 마커에 클릭 이벤트를 등록한다 (우클릭 : rightclick)
                     kakao.maps.event.addListener(marker, 'click', function() {
 
-                     $.ajax({
+                                       $.ajax({
                                                 url: "/map/view",
                                                 method: "GET",
                                                 data: {"hname":list[i].name , "hdate": list[i].opendate, "hcity" : list[i].city, "haddress" : list[i].addr, "htel" : list[i].tel , "lat" : list[i].lat , "logt" : list[i].logt},
@@ -79,19 +79,26 @@ clusterer.clear(); // 클러스터 클리어
                                             });
 
                                         });
+
                                         if(j<10){
                                             html +=
                                                 '<div class="hospital-box" onclick="hview('+i+')" >'+
                                                     '<div >'+list[i].name+'</div>'+
-                                                    '<div>'+list[i].addr+'</div>'+
+                                                   '<div>'+list[i].addr+'</div>'+
                                                 '</div>';
                                             j++;
                                         }
                                         clusterer.addMarker(marker);
+
+//                                    if(clusterer.getSize() == 0) {
+//                                       html +=
+//                                        '<div class="hospital-box" >'+
+//                                        '<div >주위에 병원이 없습니다.</div>' +
+//                                        '</div>';
+//                                         }
                                     }//if end
 
-     } //if end
-
+     } //for marker 찍기 end
          console.log( clusterer );
          $("#sidebar").html( html );
 

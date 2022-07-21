@@ -32,8 +32,8 @@ $.ajax({
        	}
 
             html += '<tr>' +
-            '<td width="20%" style="padding-left:50px;"onclick="noticedetail()"data-bs-toggle="modal" data-bs-target="#myModal3">'+ json.data[i]["btitle"] +'</td>' +
-            '<td width="40%" style="text-align:center" onclick="noticedetail()"data-bs-toggle="modal" data-bs-target="#myModal3">'+ json.data[i]["bcontent"] +'</td>' +
+            '<td width="20%" style="padding-left:50px;"onclick="noticedetail('+json.data[i]["bno"]+')"data-bs-toggle="modal" data-bs-target="#myModal3">'+ json.data[i]["btitle"] +'</td>' +
+            '<td width="40%" style="text-align:center" onclick="noticedetail('+json.data[i]["bno"]+')"data-bs-toggle="modal" data-bs-target="#myModal3">'+ json.data[i]["bcontent"] +'</td>' +
             '<td width="20%" style="text-align:center">'+ json.data[i]["bindate"] + '</td>' +
             '<td width="20%" style="text-align:center">' ;
             if(json.username == 'admin'){
@@ -154,6 +154,15 @@ function formatDate(date) {
     return [year, month, day].join('-');
 }
 
-function noticedetail() {
+function noticedetail(bno) {
 
+$.ajax({
+url : '/board/getboard',
+data : {"bno" : bno},
+success : function(re) {
+console.log(re);
+$("#btitle3").html(re.btitle);
+$("#bcontent3").html(re.bcontent);
+}
+});
 }
