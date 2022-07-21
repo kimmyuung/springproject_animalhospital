@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="UTF-8">
   <title>Title</title>
@@ -8,7 +8,11 @@
 </head>
 <body>
 <div class="container">
-  <h3>병원등록</h3>
+  <div th:replace="header.html :: header"></div>
+  <div class="bgc">
+    <h1>병원등록</h1>
+  </div>
+
   <form id="requestform" >
     <div>
       <label>어느 병원이신가요?</label>
@@ -55,5 +59,6 @@
 <!--  jquery -->
 <script src="http://code.jquery.com/jquery-latest.min.js"></script>
 <script src="/js/member/request.js"></script>
+
 </body>
 </html>

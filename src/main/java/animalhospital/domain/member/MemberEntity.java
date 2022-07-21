@@ -18,6 +18,7 @@ import java.util.List;
 @Builder
 @Getter @Setter
 @AllArgsConstructor @NoArgsConstructor
+@ToString
 public class MemberEntity {
 
     @Id

@@ -210,14 +210,14 @@ public class MemberService implements OAuth2UserService<OAuth2UserRequest ,OAuth
             if (optionalMember.isPresent()) {
                 int mno = optionalMember.get().getMno();
                 RequestEntity requestEntity = requestDto.toentity();
-                requestEntity.setMid(mid);
                 requestEntity.setMno(mno);
                 requestEntity.setHospital(requestEntity.getHospital());
                 String uuidfile = null;
                 UUID uuid = UUID.randomUUID();
                 MultipartFile file = requestDto.getBinimg();
                 uuidfile = uuid.toString() + "_" + file.getOriginalFilename().replaceAll("_", "-");
-                String dir = "C:\\Users\\504\\Desktop\\springproject_animalhospital\\src\\main\\resources\\static\\upload\\";
+//                String dir = "C:\\Users\\504\\Desktop\\springproject_animalhospital\\src\\main\\resources\\static\\upload\\";
+                String dir = "C:\\Users\\504\\springproject_animalhospital\\src\\main\\resources\\static\\upload\\";
                 String filepath = dir + uuidfile;
                 try {
 
@@ -244,7 +244,6 @@ public class MemberService implements OAuth2UserService<OAuth2UserRequest ,OAuth
             JSONObject object = new JSONObject();
             object.put("hno", entity.getHno());
             object.put("hospital", entity.getHospital());
-            object.put("mid", entity.getMid());
             object.put("mno", entity.getMno());
             object.put("binimg", entity.getBinimg());
             jsonArray.put(object);
@@ -285,15 +284,18 @@ public class MemberService implements OAuth2UserService<OAuth2UserRequest ,OAuth
         String to = (String) object.get("to");
         String msg = (String) object.get("msg");
         int type = (int) object.get("type");
+
         MemberEntity fromentity = null;
         Optional<MemberEntity> optionalMember1 = memberRepository.findBymid(from);
+
         if(optionalMember1.isPresent()){
             fromentity = optionalMember1.get();
-        }else {
+        }else{
             return false;
         }
 
-        String tomid =requestRepository.findByhospital(to);
+        int tomno = Integer.parseInt(requestRepository.findByhospital(to));
+        String tomid = String.valueOf(memberRepository.findbymno(tomno));
         MemberEntity toentity = null;
         if(tomid != null) {
             Optional<MemberEntity> optionalMember2 = memberRepository.findBymid(tomid);
@@ -302,8 +304,7 @@ public class MemberService implements OAuth2UserService<OAuth2UserRequest ,OAuth
             } else {
                 return false; // 해당 되는 병원이 없음
             }
-        }
-        else if(tomid == null) {
+        }else if(tomid == null) {
             Optional<MemberEntity> optionalMember2 = memberRepository.findBymid(to);
             if(optionalMember2.isPresent()) {
                 toentity = optionalMember2.get();
@@ -311,14 +312,12 @@ public class MemberService implements OAuth2UserService<OAuth2UserRequest ,OAuth
                 return false; // 해당 되는 회원이 없음
             }
         }
-
         MessageEntity messageEntity = MessageEntity.builder()
                 .msg(msg)
                 .fromentity(fromentity)
                 .toentity(toentity)
                 .msgtype(type)
                 .build();
-
         messageRepository.save(messageEntity);
 
         fromentity.getFromentitylist().add(messageEntity);
@@ -391,22 +390,26 @@ public class MemberService implements OAuth2UserService<OAuth2UserRequest ,OAuth
     private HttpServletRequest request;
     public JSONObject getinfo() {
 
-        OauthDto oauthDto = (OauthDto)request.getSession().getAttribute("login");
-        String mid = oauthDto.getMid();
+//        OauthDto oauthDto = (OauthDto)request.getSession().getAttribute("login");
+//        String mid = oauthDto.getMid();
+        String mid = authenticationget();
         String hname =  (String) request.getSession().getAttribute("hname");
         String hdate =  (String) request.getSession().getAttribute("hdate");
+        String hospital = hname+hdate;
+        System.out.println(mid);
+        System.out.println(hospital);
         JSONObject object = new JSONObject();
         object.put("mid", mid);
-        object.put("hname",hname);
-        object.put("hdate",hdate);
+        object.put("hospital",hospital);
         return object;
 
     }
 
 
     public String getmid() {
-        OauthDto oauthDto = (OauthDto)request.getSession().getAttribute("login");
-        String mid = oauthDto.getMid();
+//        OauthDto oauthDto = (OauthDto)request.getSession().getAttribute("login");
+//        String mid = oauthDto.getMid();
+        String mid = authenticationget();
         return mid;
     }
 
@@ -416,9 +419,12 @@ public class MemberService implements OAuth2UserService<OAuth2UserRequest ,OAuth
         String from = (String) object.get("from");
         String to = (String) object.get("to");
         String msg = (String) object.get("msg");
-
+        System.out.println(from);
+        System.out.println(to);
+        System.out.println(msg);
         MemberEntity fromentity = null;
         Optional<MemberEntity> optionalMember1 = memberRepository.findBymid(from);
+        System.out.println("answerhosptl : " + optionalMember1);
         if(optionalMember1.isPresent()){
             fromentity = optionalMember1.get();
         }else {
@@ -489,5 +495,16 @@ public class MemberService implements OAuth2UserService<OAuth2UserRequest ,OAuth
             messageRepository.delete(entity);
         }
         return true;
+    }
+
+    public boolean findhospital(String hospital) {
+        Optional<RequestEntity> requestEntity = requestRepository.findbyhospital(hospital);
+
+        System.out.println(requestEntity.toString());
+        if(requestEntity.isPresent()){
+            return true;
+        }else {
+            return false;
+        }
     }
 }
