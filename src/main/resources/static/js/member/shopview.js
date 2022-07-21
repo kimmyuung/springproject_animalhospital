@@ -1,6 +1,5 @@
 var sno = getParameterByName('sno');
 getitem(sno);
-idcheck(sno);
 likecheck();
 let pass;
 let seller;
@@ -12,16 +11,19 @@ success : function(re) {
     seller = re.mid;
     console.log(re);
     let html = '';
-    html += '<div>상품 이름 : '+re.btitle+'</div>';
-    html += '<div>상품 설명 : '+re.bcontent+'</div>';
-    html += '<div>상품 이미지 : '+re.bimglist+'</div>';
-     html += '<div>판매자 : '+re.mid+'</div>';
-    html += '<div>상품 가격 : '+re.price+'</div>';
-    if(! re.status) {
-    html += '<div>상품 상태 : 판매 중</div>';
-    }else {
-      html += '<div>상품 상태 : 판매 완료 </div>';
-    }
+
+    html +=
+    '<div id ="img_wrap"> <img id="viewimg" src="/shopupload/'+re.bimglist+'/"></div>';
+     html += '<div class="user_wrap"><span><i class="fa-solid fa-shield-cat"></i></span><span>'+re.mid+'</span> </div>';
+     html += '<div class="title"><span>상품 이름 </span><span>'+re.btitle+'</span></div>';
+       if(! re.status) {
+         html += '<div class="state"> 판매 중</div>';
+         }else {
+             html += '<div class="state"> 판매 완료</div>';
+         }
+    html += '<div class="price"><span>'+re.price+'원</span></div>';
+
+      html += '<div class="content_wrap"><div class="content">'+re.bcontent+'</div></div>';
     $("#itembox").html(html);
 }
 
@@ -135,6 +137,7 @@ $.ajax({
 function idcheck(sno) {
 $.ajax({
             url : '/member/idcheck',
+              async : false,
             data : {"sno" : sno } ,
             success : function(re) {
            if(re == 1) {
@@ -153,7 +156,7 @@ $.ajax({
 }
 
 $(document).ready(function(){
-
+idcheck(sno);
       let mid ="";
         $.ajax({
             url: '/member/getmid',

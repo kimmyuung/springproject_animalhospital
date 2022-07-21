@@ -60,7 +60,7 @@ public class ItemService {
                         UUID uuid = UUID.randomUUID();
 
                         uuidfile = uuid.toString() + "_" + file.getOriginalFilename().replaceAll("_", "-");
-                        String dir = "C:\\Users\\504\\git\\springproject_-animalhospital\\src\\main\\resources\\static\\shopupload\\";
+                        String dir = "D:\\sdy\\springproject_animalhospital\\src\\main\\resources\\static\\shopupload\\";
                       //  String dir = "C:\\Users\\82104\\git\\springproject_-animalhospital\\src\\main\\resources\\static\\upload\\"; // my notebook
 
                         String filepath = dir + uuidfile;
@@ -102,7 +102,7 @@ public class ItemService {
 
 
         int itemstatus = 0; // 상품 판매 상태가 판매 중인거만 리스트로 출력하기 위해서
-        Pageable pageable = PageRequest.of( page , 5 , Sort.by( Sort.Direction.DESC , "sno")    );
+        Pageable pageable = PageRequest.of( page , 4 , Sort.by( Sort.Direction.DESC , "sno")    );
         Page<ShopEntity> shopEntities = shopRepository.findByblist(itemstatus , pageable);
 
         List<  Map<String , String >  > Maplist = new ArrayList<>();
@@ -123,11 +123,11 @@ public class ItemService {
             map.put("stitle", entity.getStitle());
             map.put("scontent", entity.getScontent());
             map.put("sprice", entity.getPrice()+"");
-            if(entity.getShopimgEntities().get(0).getSimg().equals("")){
-                map.put("simg", "이미지가 없습니다.");
-            } else {
-                map.put("simg", entity.getShopimgEntities().get(0).getSimg());
-            }
+//            if(entity.getShopimgEntities().get(0).getSimg().equals("")){
+//                map.put("simg", "이미지가 없습니다.");
+//            } else {
+//                map.put("simg", entity.getShopimgEntities().get(0).getSimg());
+//            }
             // 경로가 달라 이미지가 저장되지 않음
             map.put( "startbtn" , startbtn+"" );
             map.put("mid", entity.getMember().getMid());
@@ -264,8 +264,8 @@ public class ItemService {
                 Optional<MemberEntity> optionalMember = memberRepository.findBymid(mid);
                 if(optionalMember.isPresent()) {
                     MemberEntity memberEntity = optionalMember.get();
-                    Optional<ShopEntity> shopid = shopRepository.findbymnoitem(memberEntity.getMno());
-                    if(shopid.isPresent()) {
+                    List<ShopEntity> shopid = shopRepository.findbymnoitem(memberEntity.getMno());
+                    if(shopid != null) {
 
                         return 1; // 로그인된 회원과 상품을 등록한 회원이 일치
                     }

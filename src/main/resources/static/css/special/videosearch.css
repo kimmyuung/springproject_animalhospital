@@ -23,11 +23,15 @@
     margin : 20px 10px 20px 10px;
     border-radius:10px;
 }
-
+#searchbox {
+        width: 75%;
+        margin-right: 20px;
+}
 #searcharea{
       width: 100%;
       display: flex;
       justify-content: center;
+          margin: 20px;
 }
 select {
 width : 85%
