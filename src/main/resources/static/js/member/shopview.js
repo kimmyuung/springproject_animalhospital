@@ -1,6 +1,5 @@
 var sno = getParameterByName('sno');
 getitem(sno);
-idcheck(sno);
 likecheck();
 let pass;
 let seller;
@@ -27,10 +26,6 @@ success : function(re) {
 
 });
 }
-
-
-
-
 
 function getParameterByName(sno) {
     sno = sno.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
@@ -136,7 +131,9 @@ function idcheck(sno) {
 $.ajax({
             url : '/member/idcheck',
             data : {"sno" : sno } ,
+            async : false,
             success : function(re) {
+            console.log(re);
            if(re == 1) {
            $("#itemupdate").css("display", "block");
            $("#itemdelete").css("display", "block");
@@ -153,6 +150,8 @@ $.ajax({
 }
 
 $(document).ready(function(){
+
+idcheck(sno);
 
       let mid ="";
         $.ajax({
