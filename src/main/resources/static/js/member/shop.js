@@ -84,7 +84,10 @@ function itemsave() {
 if($("#stitle").val() == "") {alert("상품 제목을 입력해주세요"); return;}
 if($("#scontent").val() == "") {alert("상품에 대한 설명을 입력해주세요"); return;}
 let check = /^[0-9]+$/;
-if (!check.test($("#sprice").val() ) ) {   alert("가격은 숫자만 입력해야 합니다."); return;}
+
+alert( $("#price").val() );
+
+if (! check.test($("#price").val() ) ) {   alert("가격은 숫자만 입력해야 합니다."); return;}
 
 
 let form = $("#saveform")[0]; // [0] : 폼내 입력 데이터 //
@@ -101,7 +104,7 @@ $.ajax({
             console.log(re);
            if(re == true) {alert("등록 성공");
            getitemlist(0);
-           $("#sprcie").val('');
+           $("#price").val('');
            $("#stitle").val('');
            $("#scontent").val('');
            $('#myModal').modal('hide')
