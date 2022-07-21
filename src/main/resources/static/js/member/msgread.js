@@ -1,4 +1,3 @@
-
 gettomsglist(1);
 $("#v-pills-home-tab").click(function(){
     gettomsglist(1);
@@ -22,7 +21,7 @@ function gettomsglist(type){
         url: '/member/gettomsglist',
         data :{"type" : type},
         success: function(object){
-
+              console.log(object);
             msg = object;
             let html =
                 '<tr>'+
@@ -83,7 +82,7 @@ function getfrommsglist(type){
                 let senddate = object[i].date.substr(0, 10);
                 console.log(senddate);
                 if(senddate == gettoday){
-                    mdate = object[i].date.substr(11, 8);
+                    mdate = object[i].date.substr(11, 18);
                 }else{
                     mdate = senddate;
                 }
@@ -163,6 +162,7 @@ function msgdelete(){
                 alert("삭제 성공");
                  $(".msgtable").load(window.location.href + ".msgtable");
                 deletelist=[];
+                gettomsglist(1);
             }
         }
     });
@@ -176,7 +176,8 @@ $(document).ready(function(){
         let jsonmsg = {
             "from" : mid,
             "to" : to ,
-            "msg" : msg
+            "msg" : msg,
+            "type" : 2
         }
         console.log(jsonmsg);
         send(jsonmsg);

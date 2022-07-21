@@ -69,7 +69,7 @@ public class BoardService {
 
                         uuidfile = uuid.toString() + "_" + file.getOriginalFilename().replaceAll("_", "-");
                         //String dir = "C:\\Users\\504\\springproject_animalhospital\\src\\main\\resources\\static\\upload\\";
-                            String dir  = "D:\\sdy\\springproject_animalhospital\\src\\main\\resources\\static\\upload\\";
+                        String dir = "C:\\Users\\504\\springproject_animalhospital\\src\\main\\resources\\static\\upload\\";
                         String filepath = dir + uuidfile;
 
                         try {
@@ -456,7 +456,6 @@ public class BoardService {
     }
 
     public boolean rereplysave(int bno, int rindex, String reply) {
-        System.out.println(rindex);
 
         String mid = memberService.authenticationget();
         if( mid != null  ) {

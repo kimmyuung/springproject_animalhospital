@@ -4,25 +4,35 @@ function save(){
             alert("이미지를 하나 이상 등록해주세요");
         }else if($("#btitle").val()==""){
                      alert("제목을 입력해주세요");
-            }else{
-            let form = $("#saveform")[0];
-            let formdata = new FormData( form);
-            $.ajax({
-                url: "/board/write",
-                method: "POST",
-                data : formdata ,
-                contentType: false,
-                processData: false ,
-                success: function( re ){
-                    if(re){
-                         location.href ="list"
-                    }else{
-                        alert("로그인 후 이용해주세요!")
-                    }
+          }else{
+     let form = $("#saveform")[0];
+        let formdata = new FormData( form);
+        $.ajax({
+            url: "/board/write",
+            method: "POST",
+            data : formdata ,
+            contentType: false,
+            processData: false ,
+            success: function( re ){
+                if(re){
+                     location.href ="list"
+
+                }else{
+                    alert("로그인 후 이용해주세요!")
                 }
-            });
+            }
+        });
         }
 }
+$("#bimg").on('change',function(){
+  var fileName = $("#bimg").val();
+  $(".upload-name").val(fileName);
+});
+
+$("#bimg2").on('change',function(){
+  var fileName = $("#bimg2").val();
+  $(".upload-name2").val(fileName);
+});
 
 let current_page = 0;
 boardlist(0);
@@ -46,23 +56,23 @@ function boardlist( page){
                         '</div>';
                       }else{
                                 for( let i = 0 ; i<boardlist.blists.length ; i++ ){
-                                    if(i%3 ==0){
+                                    if(i%4 ==0){
 
                                          html +=
-                                            '<div class="row">'+
-                                                '<div class="card" style="width: 18rem;" >'+
-                                                '  <img src="/upload/'+boardlist.blists[i].bimg+'" class="card-img-top"  data-bs-toggle="modal" data-bs-target="#myModal2" onclick="bview('+boardlist.blists[i].bno+')">'+
-                                                '  <div class="card-body">'+
-                                                '    <h5 class="card-title">'+boardlist.blists[i].btitle+'</h5>'+
-                                                '    <p class="card-text d-flex justify-content-end">'+boardlist.blists[i].bdate+'</p>'+
-//                                                '    <p class="card-text">'+boardlist.blists[i].mid+boardlist.blists[i].bdate+'</p>'+
-//                                                '    <a href="#" class="btn btn-primary">Go somewhere</a>'+
-                                                '  </div>'+
-                                                '</div>';
+                                            '<div><div class="row">'+
+                                                  '<div class="card" style="width: 20rem;"   data-bs-toggle="modal" data-bs-target="#myModal2" onclick="bview('+boardlist.blists[i].bno+')">'+
+                                                  '<img src="/upload/'+boardlist.blists[i].bimg+'" class="card-img-top">'+
+                                                  '<div class="card-body">'+
+                                                  '<h5 class="card-title">'+boardlist.blists[i].btitle+'</h5>'+
+                                                   '<p class="card-text d-flex justify-content-end">'+boardlist.blists[i].bdate+'</p>'+
+                                                //                                                '    <p class="card-text">'+boardlist.blists[i].mid+boardlist.blists[i].bdate+'</p>'+
+                                                //                                                '    <a href="#" class="btn btn-primary">Go somewhere</a>'+
+                                                 '</div>'+
+                                                 '</div>';
 
-                                    }else if(i %3 ==1){
+                                    }else if(i % 4  ==1){
                                         html +=
-                                            '<div class="card" style="width: 18rem;" >'+
+                                            '<div class="card" style="width: 20rem;" >'+
                                                 '  <img src="/upload/'+boardlist.blists[i].bimg+'" class="card-img-top"  data-bs-toggle="modal" data-bs-target="#myModal2" onclick="bview('+boardlist.blists[i].bno+')">'+
                                                 '  <div class="card-body">'+
                                                 '    <h5 class="card-title">'+boardlist.blists[i].btitle+'</h5>'+
@@ -71,9 +81,9 @@ function boardlist( page){
 //                                                '    <a href="#" class="btn btn-primary">Go somewhere</a>'+
                                                 '  </div>'+
                                                 '</div>';
-                                    }else if(i %3 ==2){
+                                    }else if(i %4 ==2){
                                         html +=
-                                                '<div class="card" style="width: 18rem;" >'+
+                                                '<div class="card" style="width: 20rem;" >'+
                                                 '  <img src="/upload/'+boardlist.blists[i].bimg+'" class="card-img-top"  data-bs-toggle="modal" data-bs-target="#myModal2" onclick="bview('+boardlist.blists[i].bno+')">'+
                                                 '  <div class="card-body">'+
                                                 '    <h5 class="card-title">'+boardlist.blists[i].btitle+'</h5>'+
@@ -84,6 +94,19 @@ function boardlist( page){
                                                 '</div>';
                                             '</div>';
                                     }
+                                     else if(i %4 ==3){
+                                                html +=
+                                                        '<div class="card" style="width: 20rem;"   data-bs-toggle="modal" data-bs-target="#myModal2" onclick="bview('+boardlist.blists[i].bno+')">'+
+                                                        '  <img src="/upload/'+boardlist.blists[i].bimg+'" class="card-img-top">'+
+                                                        '  <div class="card-body">'+
+                                                        '    <h5 class="card-title">'+boardlist.blists[i].btitle+'</h5>'+
+                                                        '    <p class="card-text d-flex justify-content-end">'+boardlist.blists[i].bdate+'</p>'+
+        //                                                '    <p class="card-text">'+boardlist.blists[i].mid+boardlist.blists[i].bdate+'</p>'+
+        //                                                '    <a href="#" class="btn btn-primary">Go somewhere</a>'+
+                                                        '  </div>'+
+                                                        '</div>';
+                                                    '</div>';
+                                            }
                                 }
                     }
                      let pagehtml = "";
@@ -196,7 +219,9 @@ alert(bno);
             }
     })
 }
-function tipupdate(){
+
+
+function mypetupdate(){
     let form = $("#updateform")[0];
             let formdata = new FormData( form);
             $.ajax({
@@ -301,14 +326,14 @@ function getreply(){
                         replyhtml +=
                             '<div>'+
                                 '<div class="row">'+
-                                    '<div class="col-md-6">'+result[i].mid+'</div>'+
+                                     '<div class="col-md-6"><h5>'+result[i].mid+'</h5></div>'+
                                     '<div class="col-md-6 d-flex justify-content-end">'+result[i].createdate+'</div>'+
                                 '</div>'+
-                                '<div>'+result[i].rcontent+'</div>'+
-                                '<div id="repltbtn">'+
+                                '<div class="row"><div class="col-md-8">'+result[i].rcontent+'</div>'+
+                                '<div id="repltbtn" class="col-md-4 d-flex justify-content-end replyupdate">'+
                                     '<button type="button" onclick="rereplyinput('+result[i].rno+')">답글</button><button type="button" onclick="replyupdate('+result[i].rno+')">수정</button><button type="button" onclick="replydelete('+result[i].rno+')">삭제</button>'+
-                                '</div>'+
-                                '<div id = "'+result[i].rno+'"></div>'+
+                                '</div></div>'+
+                                '<div class="rereplytable" id = "'+result[i].rno+'"></div>'+
                             '</div>';
                     }else{
                         replyhtml +=
@@ -317,11 +342,11 @@ function getreply(){
                                     '<div class="col-md-6">'+result[i].mid+'</div>'+
                                     '<div class="col-md-6 d-flex justify-content-end">'+result[i].createdate+'</div>'+
                                 '</div>'+
-                                '<div>'+result[i].rcontent+'</div>'+
-                                '<div id="repltbtn">'+
+                                '<div class="row"><div class="col-md-8">'+result[i].rcontent+'</div>'+
+                                '<div id="repltbtn" class="col-md-4 d-flex justify-content-end replyupdate">'+
                                     '<button type="button" onclick="rereply('+result[i].rno+')">답글</button>'+
-                                '</div>'+
-                                '<div id="'+result[i].rno+'"></div>'+
+                                 '</div></div>'+
+                                 '<div  class="rereplytable" id="'+result[i].rno+'"></div>'+
                             '</div>';
                     }
                 }else{
@@ -349,15 +374,31 @@ function replyupdate(rno) {
         data : { "rno": rno },
         success : function(result){
             let html =
-                '<input type="text" id="reply" value="'+result.rcontent+'">'+
-                '<button type="button" onclick="reupdate('+rno+')">수정</button>';
-            $("#replyinput").html(html);
+               '<div class="row">'+
+               '<div class="col-md-6"><h5>'+result.member+'</h5></div>'+
+               '<div class="col-md-6 d-flex justify-content-end">'+result.createdate+'</div>'+
+               '</div>'+
+               '<input  class="mypetreply" type="text" id="rereply" value="'+result.rcontent+'">'+
+               '<button class="replybtn" type="button" onclick="reupdate('+rno+')">수정</button>';
+               $("#"+rno).html(html);
+                      }
+                  });
+              }
+function rereplyupdate(rno,rindex) {
+    $.ajax({
+        url: '/board/replyupdate',
+        data : { "rno": rno },
+        success : function(result){
+            let html =
+                '<input  class="mypetreply" type="text" id="rereply" value="'+result.rcontent+'">'+
+                '<button class="replybtn" type="button" onclick="reupdate('+rno+')">수정</button>';
+            $("#"+rindex).html(html);
         }
     });
 }
 
 function reupdate(rno){
-    let reply = $("#reply").val();
+    let reply = $("#rereply").val();
         $.ajax({
             url:'/board/reupdate',
             method : "POST",
@@ -370,14 +411,14 @@ function reupdate(rno){
 }
 function rereplyinput(rno){
         let html =
-            '<input type="text" id="reply"">'+
-            '<button type="button" onclick="rereply('+rno+')">답글</button>';
-        $("#replyinput").html(html);
+        '<input  class="mypetreply" type="text" id="rereply"  placeholder="답글을 입력해주세요">'+
+        '<button type="button" class="replybtn" onclick="rereply('+rno+')">답글</button>';
+        $("#"+rno).html(html);
 }
 
 function rereply(rno){
 
-    let reply = $("#reply").val();
+    let reply = $("#rereply").val();
     let rindex = rno;
     $.ajax({
         url:"/board/rereply",
@@ -385,7 +426,7 @@ function rereply(rno){
         data : {"reply": reply, "bno": bnum, "rindex":rindex},
         success : function(result){
             if(result){
-                $('#reply').val('');
+                $('#rereply').val('');
                 getreply();
             }else{
                 alert("로그인 후 이용해주세요!")
@@ -405,63 +446,31 @@ function getrereply(rno){
             for(let i = 0; i <result.length; i++){
                 if(result[i].same == true){
                     rereplyhtml +=
+                     '<div class="row replyc"><div class="col-md-1 addrereply">ㄴ</div><div class="col-md-11">'+
                         '<div>'+
                             '<div class="row">'+
-                                '<div class="col-md-6">'+result[i].mid+'</div>'+
+                                 '<div class="col-md-6"><h5>'+result[i].mid+'</h5></div>'+
                                 '<div class="col-md-6 d-flex justify-content-end">'+result[i].createdate+'</div>'+
                             '</div>'+
-                            '<div>'+result[i].rcontent+'</div>'+
-                            '<div id="repltbtn">'+
-                                '<button type="button" onclick="rereplyinput('+result[i].rno+')">답글</button><button type="button" onclick="replyupdate('+result[i].rno+')">수정</button><button type="button" onclick="replydelete('+result[i].rno+')">삭제</button>'+
-                            '</div>'+
-                        '</div>';
+                            '<div class="row"><div class="col-md-8">'+result[i].rcontent+'</div>'+
+                             '<div class="col-md-4 d-flex justify-content-end replyupdate" id="repltbtn">'+
+                             '<button class="replyupdatebtn" type="button" onclick="rereplyupdate('+result[i].rno+','+rindex+')">수정</button><button class="replyupdatebtn" type="button" onclick="replydelete('+result[i].rno+')">삭제</button>'+
+                             '</div></div>'+
+                             '</div></div></div>';
                 }else{
                     rereplyhtml +=
-                        '<div>'+
+                        '<div class="row"><div class="col-md-1 addrereply">ㄴ</div><div class="col-md-11">'+
+                            '<div class="rereply_t">'+
                             '<div class="row">'+
-                                '<div class="col-md-6">'+result[i].mid+'</div>'+
+                                 '<div class="col-md-6"><h5>'+result[i].mid+'</h5></div>'+
                                 '<div class="col-md-6 d-flex justify-content-end">'+result[i].createdate+'</div>'+
                             '</div>'+
                             '<div>'+result[i].rcontent+'</div>'+
-                            '<div id="repltbtn">'+
-                                '<button type="button" onclick="rereply('+result[i].rno+')">답글</button>'+
-                            '</div>'+
-                        '</div>';
+                        '</div></div></div>';
                 }
             }
             console.log(rereplyhtml);
             $("#"+ rindex).html(rereplyhtml);
         }
     });
-}
-function replyupdate(rno) {
-    $.ajax({
-        url: '/board/replyupdate',
-        data : { "rno": rno },
-        success : function(result){
-            let html =
-                '<input type="text" id="reply" value="'+result.rcontent+'">'+
-                '<button type="button" onclick="reupdate('+rno+')">수정</button>';
-            $("#replyinput").html(html);
-        }
-    });
-}
-
-function reupdate(rno){
-    let reply = $("#reply").val();
-        $.ajax({
-            url:'/board/reupdate',
-            method : "POST",
-            data : {"rno": rno,"reply": reply},
-            success : function(result){
-                $('#reply').val('');
-                getreply();
-            }
-        });
-}
-function rereplyinput(rno){
-        let html =
-            '<input type="text" id="reply"">'+
-            '<button type="button" onclick="rereply('+rno+')">답글</button>';
-        $("#replyinput").html(html);
 }

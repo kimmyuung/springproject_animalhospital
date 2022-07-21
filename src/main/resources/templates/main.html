@@ -10,12 +10,8 @@
 <div class="main_wrap">
     <div class="header_menu">
         <ul class="header_ul">
-            <p th:text="${#authentication.principal}"></p> <!-- 인증정보 객체 -->
-            <p sec:authentication="name"></p> <!-- 인증정보 객체 지저분하면 지워도 상관 없음 -->
-            <li sec:authorize="isAnonymous()" class="nav-item"> <a class="nav-link text-dark" href="/member/login"> 로그인 </a> </li>
-            <li sec:authorize="isAuthenticated()" class="nav-item"> <a class="nav-link text-dark" href ="/member/logout"> 로그아웃 </a> </li>
-            <li sec:authorize="isAuthenticated()" class="nav-item"><button onclick="mdelete()">회원탈퇴</button> </li>
-            <li sec:authorize="hasRole('ADMIN')" class="nav-item"> <a class="nav-link text-dark" href ="/admin/binlist"> 관리자모드 </a> </li>
+
+
         </ul>
     </div>
 
@@ -78,7 +74,7 @@
         </div>
     </div>
 </div>
-
+<div th:replace="footer.html :: footer"></div>
 
 <script  src="http://code.jquery.com/jquery-latest.min.js"></script>
 <!-- 부트스트랩 js  -->

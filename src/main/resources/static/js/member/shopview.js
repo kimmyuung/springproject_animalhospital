@@ -75,8 +75,7 @@ $.ajax({
     $("#likesave").css("display", "block");
     $("#unlikesave").css("display", "none");
     }
-    else if(re == 3){ }
-    else if(re == 4){ alert("프로그램 오류 : 관리자에게 문의"); }
+    else if(re == 3 || re == 4){ }
     }
 });
 
@@ -148,8 +147,7 @@ $.ajax({
             $("#itemdelete").css("display", "none");
             pass = true;
            }
-           else if(re == 3) {pass = false;}
-           else if(re == 4) {alert("아이디 체크 오류 관리자에게 문의"); pass = false; }
+           else if(re == 3 || re == 4) {pass = false;}
            }
     });
 }

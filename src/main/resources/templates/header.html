@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" th:fragment="header">
+<html lang="en" th:fragment="header" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
@@ -47,8 +47,20 @@
       </li>
     </ul>
     <div class="menu b  login">
-      <button>로그인</button>
+      <a sec:authorize="isAnonymous()" class="nav-link text-dark" href="/member/login"> 로그인 </a>
     </div>
+    <div class="menu b  login">
+      <a sec:authorize="isAuthenticated()" class="nav-link text-dark" href ="/member/logout"> 로그아웃 </a>
+    </div>
+      <div class="menu b  login">
+        <button sec:authorize="hasRole('MEMBER')" onclick="mdelete()">회원탈퇴</button>
+      </div>
+      <div class="menu b  login">
+        <a sec:authorize="hasRole('ADMIN')" class="nav-link text-dark" href ="/admin/binlist"> 관리자모드 </a>
+      </div>
+      <div>
+        <a sec:authorize="hasRole('ADMIN')" class="nav-link text-dark" href ="/admin/getchart"> 일일방문자통계 </a>
+      </div>
   </div>
 
 </div>

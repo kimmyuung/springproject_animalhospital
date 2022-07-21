@@ -65,3 +65,13 @@ ul li {
 
 
 }
+
+.login{
+       width: 100px;
+       float: right;
+}
+.login_btnwrap{
+    text-align: center;
+    margin-bottom : 10px;
+
+}

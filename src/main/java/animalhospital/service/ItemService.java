@@ -111,6 +111,7 @@ public class ItemService {
 
         int btncount = 5;
         int startbtn  = ( page / btncount ) * btncount + 1;
+        System.out.println("시작" + startbtn);
         int endhtn = startbtn + btncount -1;
         if( endhtn > shopEntities.getTotalPages() ) endhtn = shopEntities.getTotalPages();
 
@@ -122,11 +123,11 @@ public class ItemService {
             map.put("stitle", entity.getStitle());
             map.put("scontent", entity.getScontent());
             map.put("sprice", entity.getPrice()+"");
-//            if(entity.getShopimgEntities().get(0).getSimg().equals("")){
-//                map.put("simg", "이미지가 없습니다.");
-//            } else {
-//                map.put("simg", entity.getShopimgEntities().get(0).getSimg());
-//            }
+            if(entity.getShopimgEntities().get(0).getSimg().equals("")){
+                map.put("simg", "이미지가 없습니다.");
+            } else {
+                map.put("simg", entity.getShopimgEntities().get(0).getSimg());
+            }
             // 경로가 달라 이미지가 저장되지 않음
             map.put( "startbtn" , startbtn+"" );
             map.put("mid", entity.getMember().getMid());

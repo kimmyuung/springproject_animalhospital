@@ -1,30 +1,29 @@
-
 //쪽지 메소드
 $(document).ready(function(){
     let mid = "";
     let hname = "";
     let hdate = "";
+
     $.ajax({
         url: '/member/getinfo',
         success: function(result){
+             mid= result;
+             hname = result.hname;
+             hdate = result.hdate;
             console.log(result);
-            mid = result.mid;
-            hname = result.hname;
-            hdate = result.hdate;
         }
     });
 
      $("#sendmsg").click(function(){
-     console.log(mid);
-     console.log(hname);
-//        let from = mid;
-//        let to = hname+hdate;
+
+        let from = mid;
+        let to = info.hname+info.hdate;
         let msg = $("#msginput").val();
         let jsonmsg = {
-
             "from" : mid,
             "to" : hname+hdate ,
-            "msg" :msg
+            "msg" :msg,
+            "type" : "2"
         }
         console.log(jsonmsg);
         send(jsonmsg);

@@ -19,4 +19,5 @@ public interface RequestRepository extends JpaRepository<RequestEntity, Integer>
 
     @Query( value = "select * from request where hospital = :hospital" , nativeQuery = true )
     Optional< RequestEntity > findbyhospital ( String hospital );
+
 }

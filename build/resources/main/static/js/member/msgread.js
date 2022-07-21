@@ -1,4 +1,3 @@
-
 gettomsglist(1);
 $("#v-pills-home-tab").click(function(){
     gettomsglist(1);
@@ -22,7 +21,7 @@ function gettomsglist(type){
         url: '/member/gettomsglist',
         data :{"type" : type},
         success: function(object){
-
+              console.log(object);
             msg = object;
             let html =
                 '<tr>'+
@@ -61,10 +60,7 @@ function gettomsglist(type){
         }
     });
 }
-<<<<<<< HEAD
-=======
 
->>>>>>> yhj2
 function getfrommsglist(type){
     $.ajax({
         url: '/member/getfrommsglist',
@@ -86,7 +82,7 @@ function getfrommsglist(type){
                 let senddate = object[i].date.substr(0, 10);
                 console.log(senddate);
                 if(senddate == gettoday){
-                    mdate = object[i].date.substr(11, 8);
+                    mdate = object[i].date.substr(11, 18);
                 }else{
                     mdate = senddate;
                 }
@@ -164,7 +160,9 @@ function msgdelete(){
         success: function(object){
             if(object){
                 alert("삭제 성공");
+                 $(".msgtable").load(window.location.href + ".msgtable");
                 deletelist=[];
+                gettomsglist(1);
             }
         }
     });
@@ -178,7 +176,8 @@ $(document).ready(function(){
         let jsonmsg = {
             "from" : mid,
             "to" : to ,
-            "msg" : msg
+            "msg" : msg,
+            "type" : 2
         }
         console.log(jsonmsg);
         send(jsonmsg);
@@ -186,26 +185,17 @@ $(document).ready(function(){
         $(".btn-close").trigger("click");
     });
 
-   // 1. 웹소켓 객체 생성
    let msgwebsocket = new WebSocket("ws://localhost:8082/ws/answer/"+mid);
 
-   // 2. 웹소켓 객체에 구현된 메소드 저장
    msgwebsocket.onopen = onOpen;
    msgwebsocket.onclose = onClose;
    msgwebsocket.onmessage = onMessage;
 
-   // 3. 각 메소드 구현
-   function onOpen(){
-        alert("입장");
-   }
+   function onOpen(){}
 
-   function onClose(){
-        alert("퇴장");
-   }
+   function onClose(){}
 
-   function onMessage(){
-        alert("메시지");
-   }
+   function onMessage(){}
 
    function send(jsonmsg){
         msgwebsocket.send(JSON.stringify(jsonmsg));

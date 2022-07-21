@@ -9,28 +9,43 @@ this.current_page = page;
 
 $.ajax({
     url : '/member/getitemlist',
-    data : {"page" : page },
+    data : {"page" : this.current_page },
     success : function(json) {
 
-    let html = "<tr> <th> 상품 이름 </th> <th> 상품 설명 </th> <th> 등록일 </th> <th> 가격 </th><th>판매자</th> <th>비고</th> </tr>";
+    let html = "";
     let html2 = '';
     console.log(json);
 
-
     if(json.itemlist.length == 0) {
-                                html += '<tr>' +
-                                '<td colspan="5"> 검색 결과가 존재하지 않습니다. </td> ' +
-                                '</tr>';
+                                html += '<div>' +
+                                '검색 결과가 존재하지 않습니다. ' +
+                                '</div>';
                                 }else{
        for(let i = 0; i < json.itemlist.length; i++) {
-            html += '<tr>' +
-            '<td>'+ json.itemlist[i].stitle +'</td>' +
-            '<td>'+ json.itemlist[i].scontent + '</td>' +
-            '<td>'+ json.itemlist[i].bdate + '</td>' +
-            '<td>'+ json.itemlist[i].sprice + '</td>' +
-            '<td>'+ json.itemlist[i].mid + '</td>' +
-            '<td> <button type="button" onclick="itemview('+json.itemlist[i].sno+')">상품 상세보기</button>' +
-             '</td></tr>';
+       html+=
+               '<div class="item grid-group-item col-xs-4 col-lg-4">' +
+                   '<div class="thumbnail">' ;
+                   if(json.itemlist[i].simg != null) {
+                     html +=  '<img class="group list-group-image d-block w-100" src="/shopupload/'+json.itemlist[i].simg+'"/>' ;
+                     }
+                   html +=  '<div class="caption">' +
+                           '<h4 class="group inner list-group-item-heading">상품 이름 : ' +
+                               json.itemlist[i].stitle + '</h4>' +
+                           '<p class="group inner list-group-item-text">상품 설명 : ' +
+                              json.itemlist[i].scontent + '</p>' +
+                           '<div class="row">' +
+                               '<div class="col-xs-12 col-md-6">' +
+                                   '<p class="lead">가격 : ' +
+                                       + json.itemlist[i].sprice +
+                                       '</p>' +
+                               '</div>' +
+                               '<div class="col-xs-12 col-md-6">' +
+                                   '<a class="btn btn-success" onclick="itemview('+json.itemlist[i].sno+')">상세 보기</a>' +
+                               '</div>' +
+                           '</div>' +
+                       '</div>' +
+                   '</div>' +
+               '</div>';
              }
                ////////////////////////////////////// 이전 /////////////////////////////////////////////
              if( page == 0 )
@@ -42,11 +57,11 @@ $.ajax({
                     }
                                ////////////////////////////////////// 페이징 ////////////////////////////////////////////
               for( let i = json.itemlist[0].startbtn ; i <=  json.itemlist[0].endbtn; i++) {
-                    html2 += '<div class="page-item col-md-2"><button class="btn btn-primary mx-1" onclick="getitemlist(' + i +')">'
+                    html2 += '<div class="page-item col-md-2"><button class="btn btn-primary mx-1" onclick="getitemlist(' + (i-1) +')">'
                     + (i) + '</button></div>';
                      }
                              ////////////////////////////////////// 이후 버튼 //////////////////////////////////////////
-                             if(page == json.itemlist[0].totalpage -1){
+                             if(page == json.itemlist[0].totalpage -1 ){
                              html2 +=
                               ' <div class="page-item col-md-2"><a class="page-link" onclick="getitemlist('+ (page) +')">Next</a></div>' ;
                              }
@@ -57,7 +72,7 @@ $.ajax({
 
 
         }
-        $("#itemtable").html(html);
+        $("#products").html(html);
         $("#btnbox").html( html2 );// 페이징버튼 html 넣기
     }
 });
@@ -95,3 +110,31 @@ function itemview(sno) {
 
 location.href = '/member/itemview?sno='+ sno;
 }
+
+$(function() {
+    // Multiple images preview in browser
+    var imagesPreview = function(input, placeToInsertImagePreview) {
+
+        if (input.files) {
+            var filesAmount = input.files.length;
+//               $(".preview").html("");
+            for (i = 0; i < 1; i++) {
+                var reader = new FileReader();
+
+                reader.onload = function(event) {
+                  $($("#img_preview")).attr('src', event.target.result).appendTo(placeToInsertImagePreview);
+//                    $($.parseHTML('<img>')).attr('src', event.target.result).appendTo(placeToInsertImagePreview);
+                     $($.parseHTML('<img>')).attr('style', 'width:80%');
+                }
+
+                reader.readAsDataURL(input.files[i]);
+            }
+        }
+
+    };
+
+    $('#simg').on('change', function() {
+        imagesPreview(this, 'div.preview');
+    });
+});
+

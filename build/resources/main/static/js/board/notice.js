@@ -16,7 +16,7 @@ $.ajax({
     type : 'post',
     data : {"page" : page },
     success : function(json) {
-    let html = "<tr> <th> 제목 </th><th> 작성날짜 </th><th>비고</th> </tr>";
+    let html = '<tr> <th width="20%" style="padding-left:50px;"> 제목 </th><th width="40%" style="text-align:center"> 내용 </th><th width="10%" style="text-align:center"> 작성날짜 </th><th width="20%" style="text-align:center">비고</th> </tr>';
     let html2 = '';
     console.log(json);
     if(json.data.length == 0) {
@@ -34,11 +34,12 @@ $.ajax({
        	}
 
             html += '<tr>' +
-            '<td width="60%" style="padding-left:50px;">'+ json.data[i]["btitle"] +'</td>' +
+            '<td width="20%" style="padding-left:50px;">'+ json.data[i]["btitle"] +'</td>' +
+            '<td width="40%" style="text-align:center">'+ json.data[i]["bcontent"] +'</td>' +
             '<td width="20%" style="text-align:center">'+ json.data[i]["bindate"] + '</td>' +
             '<td width="20%" style="text-align:center"> <button type="button" onclick="bnosave('+json.data[i]["bno"]+')" data-bs-toggle="modal" data-bs-target="#myModal2")">공지사항 수정</button>' +
                  '<button type="button" onclick="noticedelete('+json.data[i]["bno"]+')">공지사항 삭제</button>' +
-             '</td></tr>';
+             '</li></td></tr>';
              }
                ////////////////////////////////////// 이전 /////////////////////////////////////////////
              if( page == 0 )
