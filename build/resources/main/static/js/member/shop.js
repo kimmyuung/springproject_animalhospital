@@ -83,6 +83,10 @@ function itemsave() {
 
 if($("#stitle").val() == "") {alert("상품 제목을 입력해주세요"); return;}
 if($("#scontent").val() == "") {alert("상품에 대한 설명을 입력해주세요"); return;}
+let check = /^[0-9]+$/;
+if (!check.test($("#sprice").val() ) ) {   alert("가격은 숫자만 입력해야 합니다."); return;}
+
+
 let form = $("#saveform")[0]; // [0] : 폼내 입력 데이터 //
     //[0]을 안하면 데이터 + 설정값까지 같이 보내지게 됨
     let formData = new FormData(form);
