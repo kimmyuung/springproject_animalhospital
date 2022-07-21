@@ -11,7 +11,7 @@
 <div th:replace="header.html :: header"></div>
 
 <h3>동물 관련 물품 판매(로그인된 회원만 이용이 가능)</h3>
-<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal">
+<button sec:authorize="isAuthenticated()" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal">
     상품올리기
 </button>
 
