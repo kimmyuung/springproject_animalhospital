@@ -189,7 +189,7 @@ $(document).ready(function(){
                    }
             });
 
-            let msgwebsocket = new WebSocket("ws://ec2-3-37-55-156.ap-northeast-2.compute.amazonaws.com:8082/ws/message/"+mid);
+            let msgwebsocket = new WebSocket("ws://ec2-43-200-181-29.ap-northeast-2.compute.amazonaws.com/ws/message/"+mid);
             msgwebsocket.onopen = onOpen;
             msgwebsocket.onclose = onClose;
             msgwebsocket.onmessage = onMessage;

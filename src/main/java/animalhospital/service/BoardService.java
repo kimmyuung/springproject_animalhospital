@@ -441,7 +441,8 @@ public class BoardService {
         JSONObject object = new JSONObject();
         object.put("rno", replyEntity.getRno());
         object.put("rcontent", replyEntity.getRcontent());
-        object.put("member", replyEntity.getMemberEntity());
+        object.put("createdate", replyEntity.getModifiedate());
+        object.put("member", replyEntity.getMemberEntity().getMid());
         object.put("board", replyEntity.getBoardEntity());
         return object;
     }

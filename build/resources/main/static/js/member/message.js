@@ -32,7 +32,7 @@ $(document).ready(function(){
     });
 
    // 1. 웹소켓 객체 생성
-   let msgwebsocket = new WebSocket("ws://ec2-3-37-55-156.ap-northeast-2.compute.amazonaws.com:8082/ws/message/"+mid);
+   let msgwebsocket = new WebSocket("ws://ec2-43-200-181-29.ap-northeast-2.compute.amazonaws.com/ws/message/"+mid);
 
    // 2. 웹소켓 객체에 구현된 메소드 저장
    msgwebsocket.onopen = onOpen;

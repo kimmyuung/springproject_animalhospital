@@ -346,9 +346,28 @@ function getreviewstarlist(hname,hdate){
              fac+= parseInt( reviewlist.data[i].rfac);
               price+= parseInt( reviewlist.data[i].rprice);
               }
-                let rk =	parseFloat(parseInt(kind)/parseInt(totalcount));
-                let rf =	parseFloat(parseInt(fac)/parseInt(totalcount));
-                let rp =	parseFloat(parseInt(price)/parseInt(totalcount));
+
+                let rrk=   parseFloat(parseInt(kind)/parseInt(totalcount));
+                  let rrf=   parseFloat(parseInt(fac)/parseInt(totalcount));
+                    let rrp=   parseFloat(parseInt(price)/parseInt(totalcount));
+                let rk =	0;
+                 let rf =	0;
+                  let rp =	0;
+                if(isNaN(rrk)==true){
+                    rk=0;
+                }else{
+                    rk=rrk;
+                }
+                if(isNaN(rrf)==true){
+                    rf=0;
+                }else{
+                    rf=rrf;
+                }
+            if(isNaN(rrp)==true){
+                    rp=0;
+                }else{
+                    rp=rrp;
+                }
                     if(rk<=0){
                          kindavg = '<img  class="star1" src="/img/star1.png">'+
                           '<img  class="star1" src="/img/star1.png">'+
