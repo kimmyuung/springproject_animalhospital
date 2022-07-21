@@ -119,7 +119,8 @@ public class MapService {
                     MultipartFile file = reviewDto.getRimg1();
                     UUID uuid = UUID.randomUUID();
                     uuidfile = uuid.toString() + "_" + file.getOriginalFilename().replaceAll("_", "-");
-                    String dir = "C:\\Users\\504\\git\\springproject_animalhospital\\build\\resources\\main\\static\\upload\\";
+                    String dir = "/home/ec2-user/app/springproject_animalhospital/build/resources/main/static/upload/";
+                  //  String dir = "C:\\Users\\504\\git\\springproject_animalhospital\\build\\resources\\main\\static\\upload\\";
                     // 배포용도 필요하다...
                     String filepath = dir + uuidfile;
                     try {
@@ -281,7 +282,8 @@ public class MapService {
             UUID uuid = UUID.randomUUID();
             uuidfile = uuid.toString() + "_" + file.getOriginalFilename().replaceAll("_", "-");
             // String dir = "C:\\Users\\504\\springproject_animalhospital\\src\\main\\resources\\static\\upload\\";
-            String dir = "C:\\Users\\82102\\IdeaProjects\\springproject_animalhospital\\src\\main\\resources\\static\\upload\\";
+           // String dir = "C:\\Users\\82102\\IdeaProjects\\springproject_animalhospital\\src\\main\\resources\\static\\upload\\";
+            String dir = "/home/ec2-user/app/springproject_animalhospital/build/resources/main/static/upload/";
             String filepath = dir + uuidfile;
             try {
                 file.transferTo(new File(filepath));
@@ -294,7 +296,8 @@ public class MapService {
             MultipartFile file2 = reviewDto.getRimg2();
             UUID uuid2 = UUID.randomUUID();
             uuidfile2 = uuid2.toString() + "_" + file2.getOriginalFilename().replaceAll("_", "-");
-            String dir2 = "C:\\Users\\504\\springproject_animalhospital\\src\\main\\resources\\static\\upload\\";
+            String dir2 = "/home/ec2-user/app/springproject_animalhospital/build/resources/main/static/upload/";
+            //String dir2 = "C:\\Users\\504\\springproject_animalhospital\\src\\main\\resources\\static\\upload\\";
             //String dir2 = "C:\\Users\\82102\\IdeaProjects\\springproject_animalhospital\\src\\main\\resources\\static\\upload\\";
             String filepath2 = dir2 + uuidfile2;
 
