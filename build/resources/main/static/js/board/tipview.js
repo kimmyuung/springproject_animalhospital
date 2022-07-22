@@ -23,17 +23,17 @@ function gettip(){
 
                     }
                      if(board.same=="true"){
-                              $("#deletebutton1").html(
+                             $("#deletebutton1").html(
                              '<input type="hidden" id="bno" value="'+board.bno+'">'+
                              '<button type="button" class="btn btn-primary myreplyupdate" onclick="bdelete('+board.bno+')">삭제</button>'+
                              '<button type="button" class="btn btn-primary myreplyupdate" onclick="bupdate('+board.bno+')" data-bs-toggle="modal" data-bs-target="#myModal">수정</button>');
 
                     }
                     $("#bwiter").html( board.mid );
-                     $("#getbtitle").html( board.btitle );
-                     $("#getbcontent").html( board.bcontent );
+                    $("#getbtitle").html( board.btitle );
+                    $("#getbcontent").html( board.bcontent );
                     $("#getbimg").html( imgtag );
-                     $("#bdate").html(  board.modifiedate.substring(0, 10));
+                    $("#bdate").html(  board.modifiedate.substring(0, 10));
                 }
             });
 
@@ -133,7 +133,7 @@ function replysave(){
         success : function(result){
             if(result){
                 $('#reply').val('');
-                getreply();
+                getreply(bno);
             }else{
                 alert("로그인 후 이용해주세요!")
             }
@@ -152,7 +152,7 @@ function getreply(bnum){
                 if(result[i].rindex == 0){
                     if(result[i].same == true){
                         replyhtml +=
-                             '<div class="replytable">'+
+                            '<div class="replytable">'+
                                 '<div class="row">'+
                                     '<div class="col-md-6"><h5>'+result[i].mid+'</h5></div>'+
                                     '<div class="col-md-6 d-flex justify-content-end">'+result[i].createdate+'</div>'+
@@ -172,7 +172,6 @@ function getreply(bnum){
                                 '</div>'+
                                 '<div>'+result[i].rcontent+'</div>'+
                                 '<div id="repltbtn">'+
-                                    '<button type="button" onclick="rereply('+result[i].rno+')">답글</button>'+
                                 '</div>'+
                                 '<div id="'+result[i].rno+'"></div>'+
                             '</div>';
@@ -188,11 +187,12 @@ function getreply(bnum){
 }
 
 function replydelete(rno) {
+let bno = $("#bno").val();
     $.ajax({
         url: '/board/replydelete',
         data : { "rno": rno },
         success : function(result){
-            getreply();
+            getreply(bno);
         }
     });
 }
@@ -210,14 +210,14 @@ function replyupdate(rno) {
 }
 
 function reupdate(rno){
-    let reply = $("#rereply").val();
+    let bno = $("#bno").val();
         $.ajax({
             url:'/board/reupdate',
             method : "POST",
             data : {"rno": rno,"reply": reply},
             success : function(result){
                 $('#reply').val('');
-                getreply();
+                 getreply(bno);
             }
         });
 }

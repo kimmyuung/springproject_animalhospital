@@ -68,8 +68,8 @@ public class BoardService {
                         UUID uuid = UUID.randomUUID();
 
                         uuidfile = uuid.toString() + "_" + file.getOriginalFilename().replaceAll("_", "-");
+                        String dir = "/home/ec2-user/app/springproject_animalhospital/build/resources/main/static/upload/";
                         //String dir = "C:\\Users\\504\\springproject_animalhospital\\src\\main\\resources\\static\\upload\\";
-                        String dir = "C:\\Users\\504\\springproject_animalhospital\\src\\main\\resources\\static\\upload\\";
                         String filepath = dir + uuidfile;
 
                         try {
@@ -203,7 +203,9 @@ public class BoardService {
             Map<String, String> map = new HashMap<>();
             map.put("bno", entity.getBno()+"" );
             map.put("btitle", entity.getBtitle());
-            map.put("bimg", entity.getBoardimgEntities().get(0).getBimg());
+            if(entity.getBoardimgEntities().size() != 0) {
+                map.put("bimg", entity.getBoardimgEntities().get(0).getBimg());
+            }
             map.put( "startbtn" , startbtn+"" );
             map.put("mid", entity.getMemberEntity().getMid());
             map.put("bdate",  entity.getCreatedate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
@@ -237,7 +239,7 @@ public class BoardService {
                 JSONObject object = new JSONObject();
                 object.put("bno", entity.getBno());
                 object.put("btitle", entity.getBtitle());
-                object.put("bcontent", entity.getBtitle());
+                object.put("bcontent", entity.getBcontent());
                 object.put("bindate", entity.getCreatedate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss")));
                 object.put("mid", entity.getMemberEntity().getMid());
                 jsonArray.put(object);
@@ -255,6 +257,7 @@ public class BoardService {
         jo.put("endbtn", endbtn);
         jo.put("data", jsonArray);
         jo.put("totalpage", boardEntities.getTotalPages()); // 전체 페이지 수
+        jo.put("username", memberService.authenticationget());
         return jo;
     }
 
@@ -440,7 +443,8 @@ public class BoardService {
         JSONObject object = new JSONObject();
         object.put("rno", replyEntity.getRno());
         object.put("rcontent", replyEntity.getRcontent());
-        object.put("member", replyEntity.getMemberEntity());
+        object.put("createdate", replyEntity.getModifiedate());
+        object.put("member", replyEntity.getMemberEntity().getMid());
         object.put("board", replyEntity.getBoardEntity());
         return object;
     }
@@ -557,7 +561,9 @@ public class BoardService {
                    UUID uuid = UUID.randomUUID();
 
                    uuidfile = uuid.toString() + "_" + file.getOriginalFilename().replaceAll("_", "-");
-                   String dir = "C:\\Users\\504\\springproject_animalhospital\\src\\main\\resources\\static\\upload\\";
+                   //String dir = "C:\\Users\\504\\springproject_animalhospital\\src\\main\\resources\\static\\upload\\";
+                   String dir = "/home/ec2-user/app/springproject_animalhospital/build/resources/main/static/upload/";
+
                    String filepath = dir + uuidfile;
 
                    try {

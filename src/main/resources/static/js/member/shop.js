@@ -1,6 +1,11 @@
 let current_page = 0;
 let updatebno = 0;
+
+$(document).ready(function(){
+
 getitemlist(0);
+
+});
 
 function getitemlist(page) {
 
@@ -11,7 +16,6 @@ $.ajax({
     url : '/member/getitemlist',
     data : {"page" : this.current_page },
     success : function(json) {
-
     let html = "";
     let html2 = '';
     console.log(json);
@@ -20,36 +24,34 @@ $.ajax({
                                 html += '<div>' +
                                 '검색 결과가 존재하지 않습니다. ' +
                                 '</div>';
-                                }else{
+                                }
+                                else if(json.itemlist.length != 0){
        for(let i = 0; i < json.itemlist.length; i++) {
        html+=
-            '<li onclick="itemview('+json.itemlist[i].sno+')">'+
-               '<div class="">' +
-                   '<div class="thumbnail">' ;
-                   if(json.itemlist[i].simg != null) {
-                     html +=
-                     '<div id="imgwrap">'+
-                     '<img id="pimg" src="/shopupload/'+json.itemlist[i].simg+'"/>' +
-                     '<div>';
+              '<li onclick="itemview('+json.itemlist[i].sno+')">'+
+                             '<div class="">';
+                   if( json.itemlist[i].simg != null ) {
+                      html +=
+                        '<div id="imgwrap">'+
+                        '<img id="pimg" src="/upload/'+json.itemlist[i].simg+'"/>' +
+                        '<div>';
                      }
                    html +=  '<div class="caption">' +
                            '<h4 class="">상품 이름 : ' +
                                json.itemlist[i].stitle + '</h4>' +
                            '<p class="">상품 설명 : ' +
                               json.itemlist[i].scontent + '</p>' +
-                           '<div class="">' +
-                               '<div class="">' +
+                          '<div class="">' +
+                             '<div class="">' +
                                    '<p class="lead">가격 : ' +
                                        + json.itemlist[i].sprice +
                                        '</p>' +
                                '</div>' +
-
                            '</div>' +
                        '</div>' +
                    '</div>' +
                '</div>' +
                '</li>';
-
              }
                ////////////////////////////////////// 이전 /////////////////////////////////////////////
              if( page == 0 )
@@ -71,22 +73,33 @@ $.ajax({
                              }
                              else {
                               html2 +=
-                              ' <div class="page-item"><a class="page-link" onclick="getitemlist('+(page+1)+')">다음</a></div>' ;
+                              ' <div class="page-item "><a class="page-link" onclick="getitemlist('+(page+1)+')">다음</a></div>' ;
                               }
 
 
         }
-        $("#products2").html(html);
+        else {
+        alert("프로그램 오류!");
+        }
+         $("#products2").html(html);
         $("#btnbox").html( html2 );// 페이징버튼 html 넣기
     }
 });
 
 }
 
+
 function itemsave() {
 
 if($("#stitle").val() == "") {alert("상품 제목을 입력해주세요"); return;}
 if($("#scontent").val() == "") {alert("상품에 대한 설명을 입력해주세요"); return;}
+let check = /^[0-9]+$/;
+
+alert( $("#price").val() );
+
+if (! check.test($("#price").val() ) ) {   alert("가격은 숫자만 입력해야 합니다."); return;}
+
+
 let form = $("#saveform")[0]; // [0] : 폼내 입력 데이터 //
     //[0]을 안하면 데이터 + 설정값까지 같이 보내지게 됨
     let formData = new FormData(form);
@@ -99,10 +112,12 @@ $.ajax({
             processData : false,
             success : function(re) {
             console.log(re);
-           if(re == true) {alert("등록 성공"); getitemlist(0);
-           $("#sprcie").val('');
+           if(re == true) {alert("등록 성공");
+           getitemlist(0);
+           $("#price").val('');
            $("#stitle").val('');
            $("#scontent").val('');
+           $('#myModal').modal('hide')
            }
            else { alert("등록 실패");}
            }

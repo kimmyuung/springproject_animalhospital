@@ -17,7 +17,8 @@ public interface MemberRepository extends JpaRepository<MemberEntity , Integer> 
 
     MemberEntity findBymno (int mno);
 
-
+    @Query( value = "select mid from member where mno = :mno" , nativeQuery = true )
+    String findbymno (int mno);
 
 }
 

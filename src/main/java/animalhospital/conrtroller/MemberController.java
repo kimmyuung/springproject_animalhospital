@@ -39,6 +39,7 @@ public class MemberController {
 
     @GetMapping("/memberinfo")
     public String memberinfo(){return "member/memberinfo";}
+
     @GetMapping("/request")
     public String request() {return "member/request";}
 
@@ -101,7 +102,7 @@ public class MemberController {
 
     @GetMapping("/getinfo")
     @ResponseBody
-    public void getinfo(HttpServletRequest request, HttpServletResponse response){
+    public void getinfo(HttpServletResponse response){
         try {
             response.setCharacterEncoding("UTF-8");
             response.setContentType("application/json");
@@ -110,6 +111,19 @@ public class MemberController {
             e.printStackTrace();
         }
     }
+
+    @GetMapping("/findhospital")
+    @ResponseBody
+    public void findhospital(HttpServletResponse response,@RequestParam("hospital") String hospital){
+        try {
+            response.setCharacterEncoding("UTF-8");
+            response.setContentType("application/json");
+            response.getWriter().println(memberService.findhospital(hospital));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     @GetMapping("/message")
     public String message(){ return "member/message";}
 

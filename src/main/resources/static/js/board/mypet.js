@@ -24,6 +24,7 @@ function save(){
         });
         }
 }
+
 $("#bimg").on('change',function(){
   var fileName = $("#bimg").val();
   $(".upload-name").val(fileName);
@@ -60,20 +61,20 @@ function boardlist( page){
 
                                          html +=
                                             '<div><div class="row">'+
-                                                  '<div class="card" style="width: 20rem;"   data-bs-toggle="modal" data-bs-target="#myModal2" onclick="bview('+boardlist.blists[i].bno+')">'+
-                                                  '<img src="/upload/'+boardlist.blists[i].bimg+'" class="card-img-top">'+
-                                                  '<div class="card-body">'+
-                                                  '<h5 class="card-title">'+boardlist.blists[i].btitle+'</h5>'+
-                                                   '<p class="card-text d-flex justify-content-end">'+boardlist.blists[i].bdate+'</p>'+
-                                                //                                                '    <p class="card-text">'+boardlist.blists[i].mid+boardlist.blists[i].bdate+'</p>'+
-                                                //                                                '    <a href="#" class="btn btn-primary">Go somewhere</a>'+
-                                                 '</div>'+
-                                                 '</div>';
+                                                '<div class="card" style="width: 20rem;"   data-bs-toggle="modal" data-bs-target="#myModal2" onclick="bview('+boardlist.blists[i].bno+')">'+
+                                                '  <img src="/upload/'+boardlist.blists[i].bimg+'" class="card-img-top">'+
+                                                '  <div class="card-body">'+
+                                                '    <h5 class="card-title">'+boardlist.blists[i].btitle+'</h5>'+
+                                                '    <p class="card-text d-flex justify-content-end">'+boardlist.blists[i].bdate+'</p>'+
+//                                                '    <p class="card-text">'+boardlist.blists[i].mid+boardlist.blists[i].bdate+'</p>'+
+//                                                '    <a href="#" class="btn btn-primary">Go somewhere</a>'+
+                                                '  </div>'+
+                                                '</div>';
 
-                                    }else if(i % 4  ==1){
+                                    }else if(i %4 ==1){
                                         html +=
-                                            '<div class="card" style="width: 20rem;" >'+
-                                                '  <img src="/upload/'+boardlist.blists[i].bimg+'" class="card-img-top"  data-bs-toggle="modal" data-bs-target="#myModal2" onclick="bview('+boardlist.blists[i].bno+')">'+
+                                            '<div class="card" style="width: 20rem;"   data-bs-toggle="modal" data-bs-target="#myModal2" onclick="bview('+boardlist.blists[i].bno+')">'+
+                                                '  <img src="/upload/'+boardlist.blists[i].bimg+'" class="card-img-top">'+
                                                 '  <div class="card-body">'+
                                                 '    <h5 class="card-title">'+boardlist.blists[i].btitle+'</h5>'+
                                                 '    <p class="card-text d-flex justify-content-end">'+boardlist.blists[i].bdate+'</p>'+
@@ -83,8 +84,8 @@ function boardlist( page){
                                                 '</div>';
                                     }else if(i %4 ==2){
                                         html +=
-                                                '<div class="card" style="width: 20rem;" >'+
-                                                '  <img src="/upload/'+boardlist.blists[i].bimg+'" class="card-img-top"  data-bs-toggle="modal" data-bs-target="#myModal2" onclick="bview('+boardlist.blists[i].bno+')">'+
+                                                '<div class="card" style="width: 20rem;"   data-bs-toggle="modal" data-bs-target="#myModal2" onclick="bview('+boardlist.blists[i].bno+')">'+
+                                                '  <img src="/upload/'+boardlist.blists[i].bimg+'" class="card-img-top">'+
                                                 '  <div class="card-body">'+
                                                 '    <h5 class="card-title">'+boardlist.blists[i].btitle+'</h5>'+
                                                 '    <p class="card-text d-flex justify-content-end">'+boardlist.blists[i].bdate+'</p>'+
@@ -94,7 +95,7 @@ function boardlist( page){
                                                 '</div>';
                                             '</div>';
                                     }
-                                     else if(i %4 ==3){
+                                    else if(i %4 ==3){
                                                 html +=
                                                         '<div class="card" style="width: 20rem;"   data-bs-toggle="modal" data-bs-target="#myModal2" onclick="bview('+boardlist.blists[i].bno+')">'+
                                                         '  <img src="/upload/'+boardlist.blists[i].bimg+'" class="card-img-top">'+
@@ -164,19 +165,19 @@ function bview(bno){
                      if( i == 0 ){  // 첫번째 이미지만 active 속성 추가
                         imgtag +=
                                      '<div class="carousel-item active">'+
-                                         '<img id="preview" src="/upload/'+board.bimglist[i]+'" class="d-block w-100" alt="...">'+
+                                         '<img id="preview" src="/upload/'+board.bimglist[i]+'" class="d-block w-100 modalimg" alt="...">'+
                                     '</div>';
                      }else{
                         imgtag +=
                                  '<div class="carousel-item">'+
-                                     '<img  id="preview" src="/upload/'+board.bimglist[i]+'" class="d-block w-100" alt="...">'+
+                                     '<img  id="preview" src="/upload/'+board.bimglist[i]+'" class="d-block w-100 modalimg" alt="...">'+
                                 '</div>';
                      }
                 }
                 if(board.same=="true"){
                     $("#deletebutton").html(
-                    '<button type="button" class="btn btn-primary" onclick="bdelete('+board.bno+')">삭제</button>'+
-                    '<button type="button" class="btn btn-primary" onclick="bupdate('+board.bno+')"   data-bs-toggle="modal" data-bs-target="#myModal3">수정</button>'
+                    '<button type="button" class="btn btn-primary mypetupdate" onclick="bdelete('+board.bno+')">삭제</button>'+
+                    '<button type="button" class="btn btn-primary mypetupdate" onclick="bupdate('+board.bno+')"   data-bs-toggle="modal" data-bs-target="#myModal3">수정</button>'
                  );
                 }
 
@@ -219,8 +220,6 @@ alert(bno);
             }
     })
 }
-
-
 function mypetupdate(){
     let form = $("#updateform")[0];
             let formdata = new FormData( form);
@@ -326,12 +325,12 @@ function getreply(){
                         replyhtml +=
                             '<div>'+
                                 '<div class="row">'+
-                                     '<div class="col-md-6"><h5>'+result[i].mid+'</h5></div>'+
+                                    '<div class="col-md-6"><h5>'+result[i].mid+'</h5></div>'+
                                     '<div class="col-md-6 d-flex justify-content-end">'+result[i].createdate+'</div>'+
                                 '</div>'+
-                                '<div class="row"><div class="col-md-8">'+result[i].rcontent+'</div>'+
+                                '<div class="row"><div  class="col-md-8">'+result[i].rcontent+'</div>'+
                                 '<div id="repltbtn" class="col-md-4 d-flex justify-content-end replyupdate">'+
-                                    '<button type="button" onclick="rereplyinput('+result[i].rno+')">답글</button><button type="button" onclick="replyupdate('+result[i].rno+')">수정</button><button type="button" onclick="replydelete('+result[i].rno+')">삭제</button>'+
+                                    '<button class="replyupdatebtn" type="button" onclick="rereplyinput('+result[i].rno+')">답글</button><button type="button" class="replyupdatebtn" onclick="replyupdate('+result[i].rno+')">수정</button><button  class="replyupdatebtn" type="button" onclick="replydelete('+result[i].rno+')">삭제</button>'+
                                 '</div></div>'+
                                 '<div class="rereplytable" id = "'+result[i].rno+'"></div>'+
                             '</div>';
@@ -339,14 +338,14 @@ function getreply(){
                         replyhtml +=
                             '<div>'+
                                 '<div class="row">'+
-                                    '<div class="col-md-6">'+result[i].mid+'</div>'+
+                                    '<div class="col-md-6"><h5>'+result[i].mid+'</h5></div>'+
                                     '<div class="col-md-6 d-flex justify-content-end">'+result[i].createdate+'</div>'+
                                 '</div>'+
                                 '<div class="row"><div class="col-md-8">'+result[i].rcontent+'</div>'+
                                 '<div id="repltbtn" class="col-md-4 d-flex justify-content-end replyupdate">'+
-                                    '<button type="button" onclick="rereply('+result[i].rno+')">답글</button>'+
-                                 '</div></div>'+
-                                 '<div  class="rereplytable" id="'+result[i].rno+'"></div>'+
+                                    '<button  class="replyupdatebtn" type="button" onclick="rereply('+result[i].rno+')">답글</button>'+
+                                '</div></div>'+
+                                '<div  class="rereplytable" id="'+result[i].rno+'"></div>'+
                             '</div>';
                     }
                 }else{
@@ -374,16 +373,16 @@ function replyupdate(rno) {
         data : { "rno": rno },
         success : function(result){
             let html =
-               '<div class="row">'+
-               '<div class="col-md-6"><h5>'+result.member+'</h5></div>'+
-               '<div class="col-md-6 d-flex justify-content-end">'+result.createdate+'</div>'+
-               '</div>'+
-               '<input  class="mypetreply" type="text" id="rereply" value="'+result.rcontent+'">'+
-               '<button class="replybtn" type="button" onclick="reupdate('+rno+')">수정</button>';
-               $("#"+rno).html(html);
-                      }
-                  });
-              }
+            '<div class="row">'+
+                '<div class="col-md-6"><h5>'+result.member+'</h5></div>'+
+                '<div class="col-md-6 d-flex justify-content-end">'+result.createdate+'</div>'+
+            '</div>'+
+                '<input  class="mypetreply" type="text" id="rereply" value="'+result.rcontent+'">'+
+                '<button class="replybtn" type="button" onclick="reupdate('+rno+')">수정</button>';
+            $("#"+rno).html(html);
+        }
+    });
+}
 function rereplyupdate(rno,rindex) {
     $.ajax({
         url: '/board/replyupdate',
@@ -409,10 +408,13 @@ function reupdate(rno){
             }
         });
 }
+
+
+
 function rereplyinput(rno){
         let html =
-        '<input  class="mypetreply" type="text" id="rereply"  placeholder="답글을 입력해주세요">'+
-        '<button type="button" class="replybtn" onclick="rereply('+rno+')">답글</button>';
+            '<input  class="mypetreply" type="text" id="rereply"  placeholder="답글을 입력해주세요">'+
+            '<button type="button" class="replybtn" onclick="rereply('+rno+')">답글</button>';
         $("#"+rno).html(html);
 }
 
@@ -449,24 +451,24 @@ function getrereply(rno){
                      '<div class="row replyc"><div class="col-md-1 addrereply">ㄴ</div><div class="col-md-11">'+
                         '<div>'+
                             '<div class="row">'+
-                                 '<div class="col-md-6"><h5>'+result[i].mid+'</h5></div>'+
+                                '<div class="col-md-6"><h5>'+result[i].mid+'</h5></div>'+
                                 '<div class="col-md-6 d-flex justify-content-end">'+result[i].createdate+'</div>'+
                             '</div>'+
                             '<div class="row"><div class="col-md-8">'+result[i].rcontent+'</div>'+
-                             '<div class="col-md-4 d-flex justify-content-end replyupdate" id="repltbtn">'+
-                             '<button class="replyupdatebtn" type="button" onclick="rereplyupdate('+result[i].rno+','+rindex+')">수정</button><button class="replyupdatebtn" type="button" onclick="replydelete('+result[i].rno+')">삭제</button>'+
-                             '</div></div>'+
-                             '</div></div></div>';
+                            '<div class="col-md-4 d-flex justify-content-end replyupdate" id="repltbtn">'+
+                                '<button class="replyupdatebtn" type="button" onclick="rereplyupdate('+result[i].rno+','+rindex+')">수정</button><button class="replyupdatebtn" type="button" onclick="replydelete('+result[i].rno+')">삭제</button>'+
+                            '</div></div>'+
+                        '</div></div></div>';
                 }else{
                     rereplyhtml +=
-                        '<div class="row"><div class="col-md-1 addrereply">ㄴ</div><div class="col-md-11">'+
-                            '<div class="rereply_t">'+
+                                     '<div class="row"><div class="col-md-1 addrereply">ㄴ</div><div class="col-md-11">'+
+                        '<div class="rereply_t">'+
                             '<div class="row">'+
-                                 '<div class="col-md-6"><h5>'+result[i].mid+'</h5></div>'+
+                                '<div class="col-md-6"><h5>'+result[i].mid+'</h5></div>'+
                                 '<div class="col-md-6 d-flex justify-content-end">'+result[i].createdate+'</div>'+
                             '</div>'+
                             '<div>'+result[i].rcontent+'</div>'+
-                        '</div></div></div>';
+                          '</div></div></div>';
                 }
             }
             console.log(rereplyhtml);
