@@ -29,9 +29,8 @@ public class MemberController {
 
    @DeleteMapping("/delete")
    @ResponseBody
-    public boolean delete(HttpServletRequest request) {
-        OauthDto oauthDto = (OauthDto)request.getSession().getAttribute("login");
-       return memberService.delete(oauthDto);
+    public boolean delete() {
+       return memberService.delete();
     }
 
     @GetMapping("/shop")
