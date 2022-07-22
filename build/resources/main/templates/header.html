@@ -42,7 +42,7 @@
       </li>
       <li class="menu_li">
         <div class="menu b">
-          <a href="/member/memberinfo">회원정보</a>
+          <a sec:authorize="isAuthenticated()" href="/member/memberinfo">회원정보</a>
         </div>
       </li>
     </ul>

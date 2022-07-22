@@ -238,7 +238,7 @@ public class BoardService {
                 JSONObject object = new JSONObject();
                 object.put("bno", entity.getBno());
                 object.put("btitle", entity.getBtitle());
-                object.put("bcontent", entity.getBtitle());
+                object.put("bcontent", entity.getBcontent());
                 object.put("bindate", entity.getCreatedate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss")));
                 object.put("mid", entity.getMemberEntity().getMid());
                 jsonArray.put(object);
@@ -256,6 +256,7 @@ public class BoardService {
         jo.put("endbtn", endbtn);
         jo.put("data", jsonArray);
         jo.put("totalpage", boardEntities.getTotalPages()); // 전체 페이지 수
+        jo.put("username", memberService.authenticationget());
         return jo;
     }
 

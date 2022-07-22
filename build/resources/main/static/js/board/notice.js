@@ -37,9 +37,14 @@ $.ajax({
             '<td width="20%" style="padding-left:50px;">'+ json.data[i]["btitle"] +'</td>' +
             '<td width="40%" style="text-align:center">'+ json.data[i]["bcontent"] +'</td>' +
             '<td width="20%" style="text-align:center">'+ json.data[i]["bindate"] + '</td>' +
-            '<td width="20%" style="text-align:center"> <button type="button" onclick="bnosave('+json.data[i]["bno"]+')" data-bs-toggle="modal" data-bs-target="#myModal2")">공지사항 수정</button>' +
-                 '<button type="button" onclick="noticedelete('+json.data[i]["bno"]+')">공지사항 삭제</button>' +
-             '</li></td></tr>';
+            '<td width="20%" style="text-align:center">' ;
+            if(json.username == 'admin'){
+             html +=
+             '<button type="button" onclick="bnosave('+json.data[i]["bno"]+')" data-bs-toggle="modal" data-bs-target="#myModal2")">공지사항 수정</button>' +
+             '<button type="button" onclick="noticedelete('+json.data[i]["bno"]+')">공지사항 삭제</button>';
+            }
+            html +=
+             '</td></tr>';
              }
                ////////////////////////////////////// 이전 /////////////////////////////////////////////
              if( page == 0 )
