@@ -37,6 +37,7 @@ function request(){
         alert("모두 입력해주세요!");
     }else {
         let formData = new FormData($("#requestform")[0]);
+
         $.ajax({
             url: '/member/requestsave',
             method: "POST",

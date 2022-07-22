@@ -50,7 +50,6 @@ public class MapService {
         try {
             JSONArray hospital = null;
             for (int i = 1; i < 4; i++) {
-
                 //공공데이터 포털
                 //1. url 가져오기 [URL : java.net패키지]
                 URL url = new URL("https://openapi.gg.go.kr/Animalhosptl?&pIndex=" + i + "&pSize=1000&Key=47d367a4e715424e8c25f17ff85a81ea&type=json");
