@@ -19,7 +19,7 @@ $.ajax({
     let html = "";
     let html2 = '';
     console.log(json);
-
+    var reg = /(.*?)\.(jpg|jpeg|png|gif|bmp)$/;
     if(json.itemlist.length == 0) {
                                 html += '<div>' +
                                 '검색 결과가 존재하지 않습니다. ' +
@@ -33,7 +33,7 @@ $.ajax({
                    if( json.itemlist[i].bimg != null ) {
                       html +=
                         '<div id="imgwrap">'+
-                        '<img id="pimg" src="/upload/'+json.itemlist[i].bimg+'">' +
+                        '<img id="pimg" src="/shopupload/'+json.itemlist[i].bimg+'">' +
                         '<div>';
                      }
                    html +=  '<div class="caption">' +
