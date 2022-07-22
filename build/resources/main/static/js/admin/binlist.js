@@ -20,7 +20,7 @@ function list(){
                 html +=
                     '<tr>'+
                     '    <td>'+result[i].mid+'</td><td>'+result[i].hospital+'</td><td><input type="text" id="bin" name="bin"></td>'+
-                    '<td><img  onclick="fnImgPop(this.src)" data-bs-toggle="modal" data-bs-target="#exampleModal" style="width:100px;" src="/upload/'+result[i].binimg+'"></td>'+
+                    '<td><img onclick="fnImgPop(this.src)" data-bs-toggle="modal" data-bs-target="#exampleModal" style="width:100px;" src="/upload/'+result[i].binimg+'"></td>'+
                     '<td><button type="button" class="btn btn-primary" onclick="setrole('+i+')">허가</button></td>'+
                     '</tr>';
             }

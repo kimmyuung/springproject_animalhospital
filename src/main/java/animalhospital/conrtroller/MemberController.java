@@ -43,6 +43,7 @@ public class MemberController {
     public String request() {return "member/request";}
 
     @GetMapping("/getitem")
+
     @ResponseBody
     public void getitem(HttpServletResponse response,  @RequestParam("sno") int sno) {
         try{
