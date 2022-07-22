@@ -35,14 +35,14 @@ public class BoardController {
     public String tipview( @PathVariable("bno") int bno){
         request.getSession().setAttribute("bno", bno);
         System.out.println(bno);
-        return "board/tipview";
-    }
+        return "board/tipview";}
 
 
     @PostMapping("/write")
     @ResponseBody
     public boolean write_save( BoardDto boardDto ){
         boardDto.setCno(2);
+        boardDto.setBcontent(boardDto.getBcontent().replace("\r\n", "<br>"));
         System.out.println("컨트롤러"+boardDto);
         boolean result = boardService.save( boardDto );
 
@@ -52,6 +52,7 @@ public class BoardController {
     @ResponseBody
     public boolean tipwrite_save( BoardDto boardDto ){
         boardDto.setCno(3);
+        boardDto.setBcontent(boardDto.getBcontent().replace("\r\n", "<br>"));
         boolean result = boardService.save( boardDto );
 
         return result;
@@ -68,6 +69,7 @@ public class BoardController {
 
         return result;
     }
+
     @PutMapping("/mypetupdate")
     @ResponseBody
     public boolean mypetupdate( BoardDto boardDto ){
@@ -79,7 +81,6 @@ public class BoardController {
 
         return result;
     }
-
 
 
     @PostMapping("/blist")
@@ -99,6 +100,7 @@ public class BoardController {
     @GetMapping("/getboard")
     public void getboard( @RequestParam("bno") int bno ,
                           HttpServletResponse response  ){
+        request.getSession().setAttribute("bno", bno);
         try{
             JSONObject object =  boardService.getboard( bno );
             response.setCharacterEncoding("UTF-8");
@@ -118,7 +120,7 @@ public class BoardController {
     @PostMapping("/search")
     @ResponseBody
     public void videosearch(@RequestParam("search") String search
-                            , HttpServletResponse response )
+            , HttpServletResponse response )
     {
         try{
 

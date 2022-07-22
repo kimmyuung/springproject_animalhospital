@@ -224,3 +224,9 @@ let bno = $("#bno").val();
             }
         });
 }
+
+
+$("#bimg").on('change',function(){
+  var fileName = $("#bimg").val();
+  $(".upload-name").val(fileName);
+});
