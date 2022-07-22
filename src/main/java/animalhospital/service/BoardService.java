@@ -85,7 +85,8 @@ public class BoardService {
                         UUID uuid = UUID.randomUUID();
 
                         uuidfile = uuid.toString() + "_" + file.getOriginalFilename().replaceAll("_", "-");
-                        String dir = "C:\\Users\\504\\springproject_animalhospital\\src\\main\\resources\\static\\upload\\";
+                        String dir = "/home/ec2-user/app/springproject_animalhospital/build/resources/main/static/upload/";
+                     //   String dir = "C:\\Users\\504\\springproject_animalhospital\\src\\main\\resources\\static\\upload\\";
 
                         String filepath = dir + uuidfile;
 
@@ -606,7 +607,8 @@ public class BoardService {
                     UUID uuid = UUID.randomUUID();
 
                     uuidfile = uuid.toString() + "_" + file.getOriginalFilename().replaceAll("_", "-");
-                    String dir = "C:\\Users\\504\\springproject_animalhospital\\src\\main\\resources\\static\\upload\\";
+                  //  String dir = "C:\\Users\\504\\springproject_animalhospital\\src\\main\\resources\\static\\upload\\";
+                    String dir = "/home/ec2-user/app/springproject_animalhospital/build/resources/main/static/upload/";
                     String filepath = dir + uuidfile;
 
                     try {
