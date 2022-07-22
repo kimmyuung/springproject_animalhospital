@@ -66,6 +66,7 @@ function getfrommsglist(type){
         url: '/member/getfrommsglist',
         data :{"type" : type},
         success: function(object){
+        console.log(object);
             msg = object;
             let html =
                     '<tr>'+
