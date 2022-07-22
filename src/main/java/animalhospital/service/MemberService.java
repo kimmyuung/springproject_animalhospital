@@ -239,10 +239,13 @@ public class MemberService implements OAuth2UserService<OAuth2UserRequest ,OAuth
     public JSONArray getbinlist() {
         JSONArray jsonArray = new JSONArray();
         List<RequestEntity> entities = requestRepository.findBybinlist();
-        System.out.println(entities);
+
         for (RequestEntity entity : entities ){
+            String id = memberRepository.findbymno(entity.getMno());
+
             JSONObject object = new JSONObject();
             object.put("hno", entity.getHno());
+            object.put("mid", id);
             object.put("hospital", entity.getHospital());
             object.put("mno", entity.getMno());
             object.put("binimg", entity.getBinimg());

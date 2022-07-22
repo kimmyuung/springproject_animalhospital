@@ -106,6 +106,8 @@ function getfrommsglist(type){
 let fromid = "";
 function tomsgread( i ){
     fromid = msg[i].from;
+
+
     let html =
         '<div><span>보낸사람</span><span> '+msg[i].from+'</span></div>'+
         '<div><span>받은시간</span><span> '+msg[i].date+'</span></div>'+
@@ -174,11 +176,12 @@ function msgdelete(){
         }
     });
 }
-
 $(document).ready(function(){
+
 
      $("#answer").click(function(){
         let msg = $("#msginput").val();
+        mid = mid.replace(/\n|\r|\s*/g, "");
         let to = fromid;
         let jsonmsg = {
             "from" : mid,
