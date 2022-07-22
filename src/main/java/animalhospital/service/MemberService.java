@@ -144,9 +144,11 @@ public class MemberService implements OAuth2UserService<OAuth2UserRequest ,OAuth
         );
     }
 
-    public boolean delete(OauthDto oauthDto) {
-        Optional<MemberEntity> optional = memberRepository.findBymid(oauthDto.getMid());
+    public boolean delete() {
+        System.out.println("삭제 시작");
+        Optional<MemberEntity> optional = memberRepository.findBymid(authenticationget());
         if(optional.isPresent()) {
+            System.out.println("삭제 엔티티 찾기 성공");
             MemberEntity memberEntity = optional.get();
             memberRepository.delete(memberEntity);
             return true;
