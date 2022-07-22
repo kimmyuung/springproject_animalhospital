@@ -2,6 +2,7 @@ package animalhospital.domain.member;
 
 
 import animalhospital.domain.BaseTime;
+import animalhospital.domain.board.BoardEntity;
 import animalhospital.domain.message.MessageEntity;
 import animalhospital.domain.shop.ShopEntity;
 
@@ -19,6 +20,7 @@ import java.util.List;
 @Builder
 @Getter @Setter
 @AllArgsConstructor @NoArgsConstructor
+@ToString
 public class MemberEntity {
 
     @Id
@@ -38,6 +40,10 @@ public class MemberEntity {
     public String getrolekey() {  // 시큐리티에서 인증허가 된 리스트에 보관하기 위해서
         return role.getKey();
     }
+
+    @Builder.Default    // 빌더 사용시 초기값 설정
+    @OneToMany( mappedBy ="memberEntity" , cascade = CascadeType.ALL)  // 1:M
+    List<BoardEntity> boardEntities = new ArrayList<>();
 
     @Builder.Default    // 빌더 사용시 초기값 설정
     @OneToMany( mappedBy ="toentity" , cascade = CascadeType.ALL)  // 1:M

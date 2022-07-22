@@ -54,8 +54,7 @@ public class BoardController {
         boardDto.setCno(3);
         boardDto.setBcontent(boardDto.getBcontent().replace("\r\n", "<br>"));
         boolean result = boardService.save( boardDto );
-
-        return result;
+        return  result;
     }
 
     @PutMapping("/tipupdate")

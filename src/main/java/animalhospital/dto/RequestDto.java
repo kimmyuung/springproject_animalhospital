@@ -24,8 +24,6 @@ public class RequestDto {
     public RequestEntity toentity() {
         return RequestEntity.builder()
                 .hno( this.hno )
-                .hname(this.hname)
-                .hdate(this.hdate)
                 .hospital(this.hospital)
                 .bin(this.bin)
                 .active(this.active)

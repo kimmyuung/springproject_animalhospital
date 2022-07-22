@@ -144,9 +144,11 @@ public class MemberService implements OAuth2UserService<OAuth2UserRequest ,OAuth
         );
     }
 
-    public boolean delete(OauthDto oauthDto) {
-        Optional<MemberEntity> optional = memberRepository.findBymid(oauthDto.getMid());
+    public boolean delete() {
+        System.out.println("삭제 시작");
+        Optional<MemberEntity> optional = memberRepository.findBymid(authenticationget());
         if(optional.isPresent()) {
+            System.out.println("삭제 엔티티 찾기 성공");
             MemberEntity memberEntity = optional.get();
             memberRepository.delete(memberEntity);
             return true;
@@ -210,7 +212,6 @@ public class MemberService implements OAuth2UserService<OAuth2UserRequest ,OAuth
             if (optionalMember.isPresent()) {
                 int mno = optionalMember.get().getMno();
                 RequestEntity requestEntity = requestDto.toentity();
-                requestEntity.setMid(mid);
                 requestEntity.setMno(mno);
                 requestEntity.setHospital(requestEntity.getHospital());
                 String uuidfile = null;
@@ -218,7 +219,8 @@ public class MemberService implements OAuth2UserService<OAuth2UserRequest ,OAuth
                 MultipartFile file = requestDto.getBinimg();
                 uuidfile = uuid.toString() + "_" + file.getOriginalFilename().replaceAll("_", "-");
                 String dir = "/home/ec2-user/app/springproject_animalhospital/build/resources/main/static/upload/";
-               // String dir = "C:\\Users\\504\\Desktop\\springproject_animalhospital\\src\\main\\resources\\static\\upload\\";
+
+                //String dir = "C:\\Users\\504\\Desktop\\springproject_animalhospital\\src\\main\\resources\\static\\upload\\";
                 String filepath = dir + uuidfile;
                 try {
 
@@ -245,7 +247,6 @@ public class MemberService implements OAuth2UserService<OAuth2UserRequest ,OAuth
             JSONObject object = new JSONObject();
             object.put("hno", entity.getHno());
             object.put("hospital", entity.getHospital());
-            object.put("mid", entity.getMid());
             object.put("mno", entity.getMno());
             object.put("binimg", entity.getBinimg());
             jsonArray.put(object);
@@ -286,15 +287,18 @@ public class MemberService implements OAuth2UserService<OAuth2UserRequest ,OAuth
         String to = (String) object.get("to");
         String msg = (String) object.get("msg");
         int type = (int) object.get("type");
+
         MemberEntity fromentity = null;
         Optional<MemberEntity> optionalMember1 = memberRepository.findBymid(from);
+
         if(optionalMember1.isPresent()){
             fromentity = optionalMember1.get();
         }else {
             return false;
         }
 
-        String tomid =requestRepository.findByhospital(to);
+        int tomno = Integer.parseInt(requestRepository.findByhospital(to));
+        String tomid = String.valueOf(memberRepository.findbymno(tomno));
         MemberEntity toentity = null;
         if(tomid != null) {
             Optional<MemberEntity> optionalMember2 = memberRepository.findBymid(tomid);
@@ -330,14 +334,15 @@ public class MemberService implements OAuth2UserService<OAuth2UserRequest ,OAuth
 
 
     public JSONArray gettomsglist(int type){
-        OauthDto oauthDto = (OauthDto)request.getSession().getAttribute("login");
-        Optional<MemberEntity> optional =  memberRepository.findBymid(oauthDto.getMid());
+        String mid = authenticationget();
+        Optional<MemberEntity> optional =  memberRepository.findBymid(mid);
+        System.out.println("gettomsglsit optional : "+optional);
         int mno=0;
         if(optional.isPresent()){
             MemberEntity memberEntity = optional.get();
+            System.out.println("gettomsglist member : " + memberEntity);
             mno = memberEntity.getMno();
         }
-
         List<MessageEntity>list = messageRepository.gettomsglist(mno, type);
         //JSON형 변환
         JSONArray jsonArray = new JSONArray();
@@ -356,8 +361,8 @@ public class MemberService implements OAuth2UserService<OAuth2UserRequest ,OAuth
     }
 
     public JSONArray getfrommsglist(int type){
-        OauthDto oauthDto = (OauthDto)request.getSession().getAttribute("login");
-        Optional<MemberEntity> optional =  memberRepository.findBymid(oauthDto.getMid());
+        String mid = authenticationget();
+        Optional<MemberEntity> optional =  memberRepository.findBymid(mid);
         System.out.println(optional);
         int mno=0;
         if(optional.isPresent()){
@@ -388,25 +393,21 @@ public class MemberService implements OAuth2UserService<OAuth2UserRequest ,OAuth
     @Autowired
     private HttpServletRequest request;
     public JSONObject getinfo() {
-
-        OauthDto oauthDto = (OauthDto)request.getSession().getAttribute("login");
-        String mid = oauthDto.getMid();
+        String mid = authenticationget();
         String hname =  (String) request.getSession().getAttribute("hname");
         String hdate =  (String) request.getSession().getAttribute("hdate");
+        String hospital = hname+hdate;
+        System.out.println(mid);
+        System.out.println(hospital);
         JSONObject object = new JSONObject();
         object.put("mid", mid);
-        object.put("hname",hname);
-        object.put("hdate",hdate);
+        object.put("hospital",hospital);
         return object;
 
     }
 
 
-    public String getmid() {
-        OauthDto oauthDto = (OauthDto)request.getSession().getAttribute("login");
-        String mid = oauthDto.getMid();
-        return mid;
-    }
+    public String getmid() {return authenticationget();}
 
     @Transactional
     public boolean messageanswer(JSONObject object){
@@ -445,6 +446,7 @@ public class MemberService implements OAuth2UserService<OAuth2UserRequest ,OAuth
         return true;
 
     }
+
 
     @Transactional
     public boolean isread(int msgno){
@@ -487,5 +489,16 @@ public class MemberService implements OAuth2UserService<OAuth2UserRequest ,OAuth
             messageRepository.delete(entity);
         }
         return true;
+    }
+
+    public boolean findhospital(String hospital) {
+        Optional<RequestEntity> requestEntity = requestRepository.findbyhospital(hospital);
+
+        System.out.println(requestEntity.toString());
+        if(requestEntity.isPresent()){
+            return true;
+        }else {
+            return false;
+        }
     }
 }

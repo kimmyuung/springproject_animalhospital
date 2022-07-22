@@ -16,14 +16,10 @@ public class RequestEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY )
     private int hno;
-
-    private String hname;
-    private String hdate;
     private String hospital;
     private String bin;
     private boolean active;
     private int mno;
-    private String mid;
     private String binimg;
 
 }

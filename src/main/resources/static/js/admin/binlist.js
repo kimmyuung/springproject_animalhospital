@@ -13,7 +13,7 @@ function list(){
             for(let i=0; i<result.length; i++){
                 html +=
                     '<tr>'+
-                    '    <td>'+result[i].mid+'</td><td>'+result[i].hospital+'</td><td><input type="text" id="bin" name="bin"></td><td><img style="width:100px;" src="/upload/'+result[i].binimg+'"></td><td><button type="button" onclick="setrole('+i+')">허가</button></td>'+
+                     '<td>'+result[i].mid+'</td><td>'+result[i].hospital+'</td><td><input type="text" id="bin" name="bin"></td><td><img  onclick="fnImgPop(this.src)" id="imgControll" name="imgControll"  style="width:100px;" src="/upload/'+result[i].binimg+'"></td><td><button type="button" onclick="setrole('+i+')">허가</button></td>'+
                     '</tr>';
             }
             console.log(result);
@@ -21,6 +21,17 @@ function list(){
         }
     });
 }
+
+function fnImgPop(url){
+  var img=new Image();
+  img.src=url;
+  var img_width=img.width;
+  var win_width=img.width+25;
+  var img_height=img.height;
+  var win=img.height+30;
+  var OpenWindow=window.open('','_blank', 'width='+img_width+', height='+img_height+', menubars=no, scrollbars=auto');
+  OpenWindow.document.write("<style>body{margin:0px;}</style><img src='"+url+"' width='"+win_width+"'>");
+ }
 
 function setrole(i){
     let mno = blist[i].mno;

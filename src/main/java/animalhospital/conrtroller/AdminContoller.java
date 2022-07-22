@@ -45,10 +45,7 @@ public class AdminContoller {
         }
     }
     @GetMapping("/getchart")
-    public String  getchart(){
-        System.out.println("dd"+memberService.todaycount());
-        return "admin/chart";
-    }
+    public String  getchart(){return "admin/chart";}
 
     @GetMapping("/getchartview")
     @ResponseBody
@@ -57,8 +54,6 @@ public class AdminContoller {
             response.setCharacterEncoding("UTF-8");
             response.setContentType("application/json");
             response.getWriter().print(memberService.todaycount());
-        }catch (Exception e) {
-
-        }
+        }catch (Exception e) {e.printStackTrace();}
     }
 }

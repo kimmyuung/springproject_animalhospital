@@ -29,9 +29,8 @@ public class MemberController {
 
    @DeleteMapping("/delete")
    @ResponseBody
-    public boolean delete(HttpServletRequest request) {
-        OauthDto oauthDto = (OauthDto)request.getSession().getAttribute("login");
-       return memberService.delete(oauthDto);
+    public boolean delete() {
+       return memberService.delete();
     }
 
     @GetMapping("/shop")
@@ -102,7 +101,7 @@ public class MemberController {
 
     @GetMapping("/getinfo")
     @ResponseBody
-    public void getinfo(HttpServletRequest request, HttpServletResponse response){
+    public void getinfo(HttpServletResponse response){
         try {
             response.setCharacterEncoding("UTF-8");
             response.setContentType("application/json");
@@ -111,6 +110,19 @@ public class MemberController {
             e.printStackTrace();
         }
     }
+
+    @GetMapping("/findhospital")
+    @ResponseBody
+    public void findhospital(HttpServletResponse response,@RequestParam("hospital") String hospital){
+        try {
+            response.setCharacterEncoding("UTF-8");
+            response.setContentType("application/json");
+            response.getWriter().println(memberService.findhospital(hospital));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     @GetMapping("/message")
     public String message(){ return "member/message";}
 

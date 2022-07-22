@@ -18,8 +18,8 @@ public interface ShopRepository extends JpaRepository<ShopEntity, Integer> {
     @Query( value = "select * from shop where sno = :sno" , nativeQuery = true )
     List<ShopEntity> findbynoticelist(int sno, Pageable pageable);
 
-    @Query( value = "select * from shop where mnoitem = :mnoitem" , nativeQuery = true )
-    Optional<ShopEntity> findbymnoitem(int mnoitem);
+    @Query( value = "select * from shop where mnoitem = :mnoitem and sno = :sno" , nativeQuery = true )
+    Optional<ShopEntity> findbymnoitem(int mnoitem, @Param("sno") int sno);
 
 
 }

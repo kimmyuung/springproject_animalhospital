@@ -1,6 +1,11 @@
 let current_page = 0;
 let updatebno = 0;
+
+$(document).ready(function(){
+
 getitemlist(0);
+
+});
 
 function getitemlist(page) {
 
@@ -11,7 +16,6 @@ $.ajax({
     url : '/member/getitemlist',
     data : {"page" : this.current_page },
     success : function(json) {
-
     let html = "";
     let html2 = '';
     console.log(json);
@@ -20,71 +24,80 @@ $.ajax({
                                 html += '<div>' +
                                 '검색 결과가 존재하지 않습니다. ' +
                                 '</div>';
-                                }else{
+                                }
+                                else if(json.itemlist.length != 0){
        for(let i = 0; i < json.itemlist.length; i++) {
        html+=
-               '<div class="item grid-group-item col-xs-4 col-lg-4">' +
-                   '<div class="thumbnail">' ;
-                   if(json.itemlist[i].simg != null) {
-                     html +=  '<img class="group list-group-image d-block w-100" src="/shopupload/'+json.itemlist[i].simg+'"/>' ;
+              '<li onclick="itemview('+json.itemlist[i].sno+')">'+
+                             '<div class="">';
+                   if( json.itemlist[i].simg != null ) {
+                      html +=
+                        '<div id="imgwrap">'+
+                        '<img id="pimg" src="/upload/'+json.itemlist[i].simg+'"/>' +
+                        '<div>';
                      }
                    html +=  '<div class="caption">' +
-                           '<h4 class="group inner list-group-item-heading">상품 이름 : ' +
+                           '<h4 class="">상품 이름 : ' +
                                json.itemlist[i].stitle + '</h4>' +
-                           '<p class="group inner list-group-item-text">상품 설명 : ' +
+                           '<p class="">상품 설명 : ' +
                               json.itemlist[i].scontent + '</p>' +
-                           '<div class="row">' +
-                               '<div class="col-xs-12 col-md-6">' +
+                          '<div class="">' +
+                             '<div class="">' +
                                    '<p class="lead">가격 : ' +
                                        + json.itemlist[i].sprice +
                                        '</p>' +
                                '</div>' +
-                               '<div class="col-xs-12 col-md-6">' +
-                                   '<a class="btn btn-success" onclick="itemview('+json.itemlist[i].sno+')">상세 보기</a>' +
-                               '</div>' +
                            '</div>' +
                        '</div>' +
                    '</div>' +
-               '</div>';
+               '</div>' +
+               '</li>';
              }
                ////////////////////////////////////// 이전 /////////////////////////////////////////////
              if( page == 0 )
               {
-              html2 += ' <div class="page-item col-md-2"><a class="page-link" onclick="getitemlist('+ (page)+')">Previous</a></div>' ;
+              html2 += ' <div class="page-item "><a class="page-link" onclick="getitemlist('+ (page)+')">이전</a></div>' ;
               } else{
                  html2 +=
-                   ' <div class="page-item col-md-2"><a class="page-link" onclick="getitemlist('+(page-1)+')">Previous</a></div>' ;
+                   ' <div class="page-item "><a class="page-link" onclick="getitemlist('+(page-1)+')">이전</a></div>' ;
                     }
                                ////////////////////////////////////// 페이징 ////////////////////////////////////////////
               for( let i = json.itemlist[0].startbtn ; i <=  json.itemlist[0].endbtn; i++) {
-                    html2 += '<div class="page-item col-md-2"><button class="btn btn-primary mx-1" onclick="getitemlist(' + (i-1) +')">'
+                    html2 += '<div class="page-item "><button class="btn btn-primary mx-1" onclick="getitemlist(' + (i-1) +')">'
                     + (i) + '</button></div>';
                      }
                              ////////////////////////////////////// 이후 버튼 //////////////////////////////////////////
                              if(page == json.itemlist[0].totalpage -1 ){
                              html2 +=
-                              ' <div class="page-item col-md-2"><a class="page-link" onclick="getitemlist('+ (page) +')">Next</a></div>' ;
+                              ' <div class="page-item "><a class="page-link" onclick="getitemlist('+ (page) +')">다음</a></div>' ;
                              }
                              else {
                               html2 +=
-                              ' <div class="page-item col-md-2"><a class="page-link" onclick="getitemlist('+(page+1)+')">Next</a></div>' ;
+                              ' <div class="page-item "><a class="page-link" onclick="getitemlist('+(page+1)+')">다음</a></div>' ;
                               }
 
 
         }
-        $("#products").html(html);
+        else {
+        alert("프로그램 오류!");
+        }
+         $("#products2").html(html);
         $("#btnbox").html( html2 );// 페이징버튼 html 넣기
     }
 });
 
 }
 
+
 function itemsave() {
 
 if($("#stitle").val() == "") {alert("상품 제목을 입력해주세요"); return;}
 if($("#scontent").val() == "") {alert("상품에 대한 설명을 입력해주세요"); return;}
 let check = /^[0-9]+$/;
-if (!check.test($("#sprice").val() ) ) {   alert("가격은 숫자만 입력해야 합니다."); return;}
+
+alert( $("#price").val() );
+
+if (! check.test($("#price").val() ) ) {   alert("가격은 숫자만 입력해야 합니다."); return;}
 
 
 let form = $("#saveform")[0]; // [0] : 폼내 입력 데이터 //
@@ -101,7 +114,7 @@ $.ajax({
             console.log(re);
            if(re == true) {alert("등록 성공");
            getitemlist(0);
-           $("#sprcie").val('');
+           $("#price").val('');
            $("#stitle").val('');
            $("#scontent").val('');
            $('#myModal').modal('hide')

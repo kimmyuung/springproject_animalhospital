@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+  <script src="https://kit.fontawesome.com/8b9b053bfd.js" crossorigin="anonymous"></script>
   <link  href="/css/header.css" rel="stylesheet">
 </head>
 <body>
@@ -42,25 +43,34 @@
       </li>
       <li class="menu_li">
         <div class="menu b">
-          <a sec:authorize="isAuthenticated()" href="/member/memberinfo">회원정보</a>
+          <a sec:authorize="isAuthenticated()" href="/member/message">쪽지</a>
         </div>
       </li>
+      <li class="menu_li">
+        <div class="menu b">
+          <a sec:authorize="isAuthenticated()" href="/member/request">병원등록</a>
+        </div>
+      </li>
+
     </ul>
-    <div class="menu b  login">
-      <a sec:authorize="isAnonymous()" class="nav-link text-dark" href="/member/login"> 로그인 </a>
+    <div class="login_btnwrap">
+      <div class="login">
+        <a sec:authorize="hasRole('ADMIN')"  href ="/admin/binlist"> 관리자모드 </a>
+      </div>
+      <div class="login">
+        <a sec:authorize="hasRole('ADMIN')"  href ="/admin/getchart"> 방문통계 </a>
+      </div>
+      <div class="login">
+        <a sec:authorize="isAuthenticated()"  href ="/member/logout"> 로그아웃 </a>
+      </div>
+      <div class="login">
+        <a sec:authorize="isAnonymous()"  href="/member/login"> 로그인 </a>
+      </div>
+      <div class="login">
+        <a sec:authorize="isAuthenticated()" > <button onclick="mdelete()">회원탈퇴</button> </a>
+      </div>
     </div>
-    <div class="menu b  login">
-      <a sec:authorize="isAuthenticated()" class="nav-link text-dark" href ="/member/logout"> 로그아웃 </a>
-    </div>
-      <div class="menu b  login">
-        <button sec:authorize="hasRole('MEMBER')" onclick="mdelete()">회원탈퇴</button>
-      </div>
-      <div class="menu b  login">
-        <a sec:authorize="hasRole('ADMIN')" class="nav-link text-dark" href ="/admin/binlist"> 관리자모드 </a>
-      </div>
-      <div>
-        <a sec:authorize="hasRole('ADMIN')" class="nav-link text-dark" href ="/admin/getchart"> 일일방문자통계 </a>
-      </div>
+
   </div>
 
 </div>
