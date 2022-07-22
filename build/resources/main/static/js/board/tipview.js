@@ -208,7 +208,6 @@ let bno = $("#bno").val();
                 '<input type="text" class="replyupdate" id="rereply" value="'+result.rcontent+'">'+
                 '<button type="button"  class="replyupdatebtn" onclick="reupdate('+rno+')">수정</button>';
             $("#"+rno).html(html);
-             getreply(bno);
         }
     });
 }
@@ -231,4 +230,3 @@ let bno = $("#bno").val();
   $('#bimg').on('change', function() {
         imagesPreview(this, 'div.preview');
     });
-});
