@@ -216,8 +216,9 @@ public class MemberService implements OAuth2UserService<OAuth2UserRequest ,OAuth
                 UUID uuid = UUID.randomUUID();
                 MultipartFile file = requestDto.getBinimg();
                 uuidfile = uuid.toString() + "_" + file.getOriginalFilename().replaceAll("_", "-");
-//                String dir = "C:\\Users\\504\\Desktop\\springproject_animalhospital\\src\\main\\resources\\static\\upload\\";
-                String dir = "C:\\Users\\504\\springproject_animalhospital\\src\\main\\resources\\static\\upload\\";
+                String dir = "/home/ec2-user/app/springproject_animalhospital/build/resources/main/static/upload/";
+
+                //String dir = "C:\\Users\\504\\Desktop\\springproject_animalhospital\\src\\main\\resources\\static\\upload\\";
                 String filepath = dir + uuidfile;
                 try {
 
@@ -239,13 +240,10 @@ public class MemberService implements OAuth2UserService<OAuth2UserRequest ,OAuth
     public JSONArray getbinlist() {
         JSONArray jsonArray = new JSONArray();
         List<RequestEntity> entities = requestRepository.findBybinlist();
-
+        System.out.println(entities);
         for (RequestEntity entity : entities ){
-            String id = memberRepository.findbymno(entity.getMno());
-
             JSONObject object = new JSONObject();
             object.put("hno", entity.getHno());
-            object.put("mid", id);
             object.put("hospital", entity.getHospital());
             object.put("mno", entity.getMno());
             object.put("binimg", entity.getBinimg());
@@ -293,7 +291,7 @@ public class MemberService implements OAuth2UserService<OAuth2UserRequest ,OAuth
 
         if(optionalMember1.isPresent()){
             fromentity = optionalMember1.get();
-        }else{
+        }else {
             return false;
         }
 
@@ -307,7 +305,8 @@ public class MemberService implements OAuth2UserService<OAuth2UserRequest ,OAuth
             } else {
                 return false; // 해당 되는 병원이 없음
             }
-        }else if(tomid == null) {
+        }
+        else if(tomid == null) {
             Optional<MemberEntity> optionalMember2 = memberRepository.findBymid(to);
             if(optionalMember2.isPresent()) {
                 toentity = optionalMember2.get();
@@ -315,12 +314,14 @@ public class MemberService implements OAuth2UserService<OAuth2UserRequest ,OAuth
                 return false; // 해당 되는 회원이 없음
             }
         }
+
         MessageEntity messageEntity = MessageEntity.builder()
                 .msg(msg)
                 .fromentity(fromentity)
                 .toentity(toentity)
                 .msgtype(type)
                 .build();
+
         messageRepository.save(messageEntity);
 
         fromentity.getFromentitylist().add(messageEntity);
@@ -331,7 +332,6 @@ public class MemberService implements OAuth2UserService<OAuth2UserRequest ,OAuth
 
 
     public JSONArray gettomsglist(int type){
-//        OauthDto oauthDto = (OauthDto)request.getSession().getAttribute("login");
         String mid = authenticationget();
         Optional<MemberEntity> optional =  memberRepository.findBymid(mid);
         System.out.println("gettomsglsit optional : "+optional);
@@ -341,7 +341,6 @@ public class MemberService implements OAuth2UserService<OAuth2UserRequest ,OAuth
             System.out.println("gettomsglist member : " + memberEntity);
             mno = memberEntity.getMno();
         }
-        System.out.println("gettomsglist mno : "+mno);
         List<MessageEntity>list = messageRepository.gettomsglist(mno, type);
         //JSON형 변환
         JSONArray jsonArray = new JSONArray();
@@ -360,8 +359,8 @@ public class MemberService implements OAuth2UserService<OAuth2UserRequest ,OAuth
     }
 
     public JSONArray getfrommsglist(int type){
-        OauthDto oauthDto = (OauthDto)request.getSession().getAttribute("login");
-        Optional<MemberEntity> optional =  memberRepository.findBymid(oauthDto.getMid());
+        String mid = authenticationget();
+        Optional<MemberEntity> optional =  memberRepository.findBymid(mid);
         System.out.println(optional);
         int mno=0;
         if(optional.isPresent()){
@@ -392,9 +391,6 @@ public class MemberService implements OAuth2UserService<OAuth2UserRequest ,OAuth
     @Autowired
     private HttpServletRequest request;
     public JSONObject getinfo() {
-
-//        OauthDto oauthDto = (OauthDto)request.getSession().getAttribute("login");
-//        String mid = oauthDto.getMid();
         String mid = authenticationget();
         String hname =  (String) request.getSession().getAttribute("hname");
         String hdate =  (String) request.getSession().getAttribute("hdate");
@@ -409,12 +405,7 @@ public class MemberService implements OAuth2UserService<OAuth2UserRequest ,OAuth
     }
 
 
-    public String getmid() {
-//        OauthDto oauthDto = (OauthDto)request.getSession().getAttribute("login");
-//        String mid = oauthDto.getMid();
-        String mid = authenticationget();
-        return mid;
-    }
+    public String getmid() {return authenticationget();}
 
     @Transactional
     public boolean messageanswer(JSONObject object){
@@ -422,18 +413,15 @@ public class MemberService implements OAuth2UserService<OAuth2UserRequest ,OAuth
         String from = (String) object.get("from");
         String to = (String) object.get("to");
         String msg = (String) object.get("msg");
-        System.out.println(from);
-        System.out.println(to);
-        System.out.println(msg);
+
         MemberEntity fromentity = null;
         Optional<MemberEntity> optionalMember1 = memberRepository.findBymid(from);
-        System.out.println("answerhosptl : " + optionalMember1);
         if(optionalMember1.isPresent()){
             fromentity = optionalMember1.get();
         }else {
             return false;
         }
-        System.out.println("msganswer - 2");
+        System.out.println("2");
         MemberEntity toentity = null;
         Optional<MemberEntity> optionalMember2 = memberRepository.findBymid(to);
         if(optionalMember2.isPresent()){
@@ -441,7 +429,7 @@ public class MemberService implements OAuth2UserService<OAuth2UserRequest ,OAuth
         }else {
             return false;
         }
-        System.out.println("msganswer - 3");
+        System.out.println("3");
         MessageEntity messageEntity = MessageEntity.builder()
                 .msg(msg)
                 .fromentity(fromentity)
@@ -456,6 +444,7 @@ public class MemberService implements OAuth2UserService<OAuth2UserRequest ,OAuth
         return true;
 
     }
+
 
     @Transactional
     public boolean isread(int msgno){

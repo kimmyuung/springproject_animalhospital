@@ -111,6 +111,7 @@ public class MemberController {
             e.printStackTrace();
         }
     }
+
     @GetMapping("/findhospital")
     @ResponseBody
     public void findhospital(HttpServletResponse response,@RequestParam("hospital") String hospital){

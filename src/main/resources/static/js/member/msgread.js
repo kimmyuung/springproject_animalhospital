@@ -72,10 +72,10 @@ function getfrommsglist(type){
                         '<th>선택</th><th>받은사람</th><th>내용</th><th>보낸 날짜/시간</th>'+
                     '</tr>';
             if(object.length == 0){
-                html +=
-                    '<tr>'+
-                        '<th colspan="4" class="text-center">받은 쪽지가 없습니다.</th>'+
-                    '</tr>';
+             html +=
+             '<tr>'+
+             '<th colspan="4" class="text-center">받은 쪽지가 없습니다.</th>'+
+             '</tr>';
             }
             for(let i=0; i<object.length; i++){
                 let msgtitle ="";
@@ -92,7 +92,6 @@ function getfrommsglist(type){
                 }else{
                     mdate = senddate;
                 }
-
                 html +=
                     '<tr>'+
                         '<td><input name="checkbox" type="checkbox" value="'+object[i].msgno+'" onclick="oncheckbox()"></td><td>'+object[i].to+'</td><td onclick="frommsgread('+i+')" data-bs-toggle="modal" data-bs-target="#exampleModal2">'+msgtitle+'</td><td>'+mdate+'</td>'+
@@ -176,8 +175,8 @@ function msgdelete(){
         }
     });
 }
-$(document).ready(function(){
 
+$(document).ready(function(){
 
      $("#answer").click(function(){
         let msg = $("#msginput").val();
@@ -195,7 +194,8 @@ $(document).ready(function(){
         $(".btn-close").trigger("click");
     });
 
-   let msgwebsocket = new WebSocket("ws://localhost:8082/ws/answer/"+mid);
+    let msgwebsocket = new WebSocket("ws://ec2-43-200-181-29.ap-northeast-2.compute.amazonaws.com/ws/message/"+mid);
+
 
    msgwebsocket.onopen = onOpen;
    msgwebsocket.onclose = onClose;

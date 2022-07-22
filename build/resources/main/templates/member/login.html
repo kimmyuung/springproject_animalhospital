@@ -21,23 +21,6 @@
         <img id="logo" src="/img/logo2.png">
     </div>
 
-    <h6>관리자 모드 로그인</h6>
-    <!-- DB에 아이디 : admin 비밀번호 : {noop}1234 role : ADMIN oauth : ADMIN!-->
-    <form method="post" action="/member/adminlogincontroller">
-        <div class ="input_form">
-            <input type="text" name="mid" placeholder="admin id" id="mid">
-        </div>
-        <div class ="input_form">
-            <input type="password" name ="mpassword" placeholder="admin password" id="mpassword">
-        </div>
-        <div class ="input_btn">
-            <input type="submit" value="AdminLogin">
-        </div>
-
-    </form>
-
-
-
     <div class = "sns_login">
         <button class="logintbn naver_login" onclick="location.href='/oauth2/authorization/naver'" > 네이버 로그인 </button>
     </div>
@@ -55,6 +38,20 @@
         <button class="logintbn" id="back" onclick="location.href='/'" > 뒤로가기 </button>
     </div>
 
+    <h6>관리자 모드 로그인</h6>
+    <!-- DB에 아이디 : admin 비밀번호 : {noop}1234 role : ADMIN oauth : ADMIN!-->
+    <form method="post" action="/member/adminlogincontroller">
+        <div class ="input_form">
+            <input type="text" name="mid" placeholder="admin id" id="mid">
+        </div>
+        <div class ="input_form">
+            <input type="password" name ="mpassword" placeholder="admin password" id="mpassword">
+        </div>
+        <div class ="input_btn">
+            <input type="submit" value="AdminLogin">
+        </div>
+
+    </form>
 </div>
 
 

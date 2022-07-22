@@ -346,10 +346,28 @@ function getreviewstarlist(hname,hdate){
              fac+= parseInt( reviewlist.data[i].rfac);
               price+= parseInt( reviewlist.data[i].rprice);
               }
-                let rk =   parseFloat(parseInt(kind)/parseInt(totalcount));
-                let rf =   parseFloat(parseInt(fac)/parseInt(totalcount));
-                let rp =   parseFloat(parseInt(price)/parseInt(totalcount));
-                    if(rk<=0){
+               let rk = parseFloat(parseInt(kind)/parseInt(totalcount));
+               let rf = parseFloat(parseInt(fac)/parseInt(totalcount));
+               let rp = parseFloat(parseInt(price)/parseInt(totalcount));
+               let rk =	0;
+               let rf =	0;
+               let rp =	0;
+                 if(isNaN(rrk)==true){
+                    rk=0;
+                     }else{
+                     rk=rrk;
+                      }
+                      if(isNaN(rrf)==true){
+                       rf=0;
+                       }else{
+                       rf=rrf;
+                       }
+                       if(isNaN(rrp)==true){
+                        rp=0;
+                        }else{
+                        rp=rrp;
+                        }
+                  if(rk<=0){
                          kindavg = '<img  class="star1" src="/img/star1.png">'+
                           '<img  class="star1" src="/img/star1.png">'+
                           '<img  class="star1"  src="/img/star1.png">'+
@@ -540,15 +558,15 @@ function getreviewlist(page,hname,hdate){
         this.page=page;
 
            $.ajax({
-                 url: "/map/getreviewlist",
-                  method: "POST",
-                  data: {"hname":this.hname,"hdate":this.hdate,"page":this.page},
-                 success: function(reviewlist){
-                 console.log(reviewlist);
-                     html = '';
-                     let star = [];
-                     let mupdate = [];
-                        let totalcount = 0;
+           		url: "/map/getreviewlist",
+           		 method: "POST",
+           		 data: {"hname":this.hname,"hdate":this.hdate,"page":this.page},
+           		success: function(reviewlist){
+           		console.log(reviewlist);
+           		    html = '';
+           		    let star = [];
+           		    let mupdate = [];
+           		       let totalcount = 0;
                             let ravg = '';
                              let kindavg = '';
                               let facavg = '';
@@ -556,7 +574,7 @@ function getreviewlist(page,hname,hdate){
                             let kind=0;
                             let fac =0;
                             let price=0;
-                   totalcount = reviewlist.data.length;
+           		  totalcount = reviewlist.data.length;
                        if( reviewlist.data.length == 0 ){ // 검색 결과가 존재하지 않으면
                                                  html +=
                                                        '<div>'+
@@ -741,9 +759,9 @@ function getreviewlist(page,hname,hdate){
 
 
 
-                 }
+           		}
 
-              });
+           	});
 
 
 }

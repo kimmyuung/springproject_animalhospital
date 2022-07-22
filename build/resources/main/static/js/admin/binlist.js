@@ -9,19 +9,14 @@ function list(){
     $.ajax({
         url: "/admin/getbinlist",
         success: function(result){
-            blist = result;
-            if(result.length == 0){
-                html +=
-                    '<tr>'+
-                    '    <td colspan="5" text-center>현재 신청 내역이 없습니다.</td>'+
-                    '</tr>';
-            }
+        blist = result;
             for(let i=0; i<result.length; i++){
                 html +=
                     '<tr>'+
                     '    <td>'+result[i].mid+'</td><td>'+result[i].hospital+'</td><td><input type="text" id="bin" name="bin"></td>'+
                     '<td><img  onclick="fnImgPop(this.src)" data-bs-toggle="modal" data-bs-target="#exampleModal" style="width:100px;" src="/upload/'+result[i].binimg+'"></td>'+
                     '<td><button type="button" class="btn btn-primary" onclick="setrole('+i+')">허가</button></td>'+
+                     '<td>'+result[i].mid+'</td><td>'+result[i].hospital+'</td><td><input type="text" id="bin" name="bin"></td><td><img  onclick="fnImgPop(this.src)" id="imgControll" name="imgControll"  style="width:100px;" src="/upload/'+result[i].binimg+'"></td><td><button type="button" onclick="setrole('+i+')">허가</button></td>'+
                     '</tr>';
             }
             $("#binlisttable").html(html);

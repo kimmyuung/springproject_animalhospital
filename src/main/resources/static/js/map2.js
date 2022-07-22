@@ -12,7 +12,7 @@ $.ajax({
 
 var mapContainer = document.getElementById('map'), // 지도를 표시할 div
     mapOption = {
-        center: new kakao.maps.LatLng(37.63457, 127.33838), // 지도의 중심좌표
+        center: new kakao.maps.LatLng(37.3084307, 126.850962), // 지도의 중심좌표
         level: 5, // 지도의 확대 레벨
         mapTypeId : kakao.maps.MapTypeId.ROADMAP // 지도종류
     };
@@ -36,7 +36,7 @@ var clusterer = new kakao.maps.MarkerClusterer({
 kakao.maps.event.addListener(map, 'idle', function() {
 
 let j =0;
-let html = "";
+let html ="";
 clusterer.clear(); // 클러스터 클리어
 
 
@@ -56,6 +56,7 @@ clusterer.clear(); // 클러스터 클리어
                     && neLatlng.La > list[i].logt
                     && neLatlng.Ma > list[i].lat
                 ) {
+
                        let marker = new kakao.maps.Marker({
                        position : new kakao.maps.LatLng(list[i].lat, list[i].logt),
                        map : map
@@ -67,30 +68,37 @@ clusterer.clear(); // 클러스터 클리어
                      // 마커에 클릭 이벤트를 등록한다 (우클릭 : rightclick)
                     kakao.maps.event.addListener(marker, 'click', function() {
 
-                     $.ajax({
-                        url: "/map/view",
-                        method: "GET",
-                        data: {"hname":list[i].name , "hdate": list[i].opendate, "hcity" : list[i].city, "haddress" : list[i].addr, "htel" : list[i].tel , "lat" : list[i].lat , "logt" : list[i].logt},
-                        success: function(re){
-                             alert(re);
-                             location.href = "/map/infopage";
-                        }
-                    });
+                                       $.ajax({
+                                                url: "/map/view",
+                                                method: "GET",
+                                                data: {"hname":list[i].name , "hdate": list[i].opendate, "hcity" : list[i].city, "haddress" : list[i].addr, "htel" : list[i].tel , "lat" : list[i].lat , "logt" : list[i].logt},
+                                                success: function(re){
+                                                     alert(re);
+                                                     location.href = "/map/infopage";
+                                                }
+                                            });
 
-                        });
-                        if(j<10){
-                            html +=
-                                '<div class="hospital-box" onclick="hview('+i+')" >'+
-                                    '<div >'+list[i].name+'</div>'+
-                                    '<div>'+list[i].addr+'</div>'+
-                                '</div>';
-                            j++;
-                        }
-                        clusterer.addMarker(marker);
-                    }//if end
+                                        });
 
-     } //if end
+                                        if(j<10){
+                                            html +=
+                                                '<div class="hospital-box" onclick="hview('+i+')" >'+
+                                                    '<div >'+list[i].name+'</div>'+
+                                                   '<div>'+list[i].addr+'</div>'+
+                                                '</div>';
+                                            j++;
+                                        }
+                                        clusterer.addMarker(marker);
 
+//                                    if(clusterer.getSize() == 0) {
+//                                       html +=
+//                                        '<div class="hospital-box" >'+
+//                                        '<div >주위에 병원이 없습니다.</div>' +
+//                                        '</div>';
+//                                         }
+                                    }//if end
+
+     } //for marker 찍기 end
          console.log( clusterer );
          $("#sidebar").html( html );
 
@@ -114,11 +122,12 @@ let searchresult;
 function search(){
     let keyword = $("#searchbar").val();
     if(keyword == "") {
-        alert("검색어를 입력해주세요"); return;
+    alert("검색어를 입력해주세요"); return;
+
     }
-    if(keyword == "동물병원" || keyword == "동물" || keyword == "병원" ) {
-        alert("검색되는 숫자가 너무 많습니다. 다른 검색어로 검색해주세요"); return;
-        $("#searchbar").val("");
+    if(keyword == "동물병원" || keyword == "동물" || keyword == "병원") {
+    alert("검색되는 숫자가 너무 많습니다. 다른 검색어로 검색해주세요"); return;
+    $("#searchbar").val("");
     }
     var pr = /^[가-힣0-9 ]{2,20}$/      //한글 3글자 이상 20글자 이하
     if(pr.test(keyword)) {
@@ -177,3 +186,9 @@ function infopage(i){
     });
 
 }
+
+
+
+
+
+

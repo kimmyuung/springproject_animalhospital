@@ -4,7 +4,8 @@ $(document).ready(function(){
     let hospital = "";
 
      $("#sendmsg").click(function(){
-         $.ajax({
+
+        $.ajax({
             url: '/member/findhospital',
             data :{"hospital" : hospital},
             success: function(result){
@@ -17,10 +18,9 @@ $(document).ready(function(){
         let from = mid;
         let to = hospital;
         let msg = $("#msginput").val();
-        console.log(msg);
         let jsonmsg = {
             "from" : mid,
-            "to" : hospital,
+            "to" : hospital ,
             "msg" :msg,
             "type" : 2
         }
@@ -28,31 +28,31 @@ $(document).ready(function(){
         send(jsonmsg);
         $("#exampleModal").load(window.location.href + "#exampleModal");
         $("#close").trigger("click");
-        alert("전송완료");
+        alert("전송 완료")
     });
 
+     $.ajax({
+            url: '/member/getinfo',
+            success: function(result){
+                mid= result.mid;
+                hospital = result.hospital;
+                console.log(result);
+            }
+        });
 
-    $.ajax({
-        url: '/member/getinfo',
-        success: function(result){
-            mid= result.mid;
-            hospital = result.hospital;
-            console.log(result);
-        }
-    });
+   // 1. 웹소켓 객체 생성
+   let msgwebsocket = new WebSocket("ws://ec2-43-200-181-29.ap-northeast-2.compute.amazonaws.com/ws/message/"+mid);
 
-   let msgwebsocket = new WebSocket("ws://localhost:8082/ws/message/"+mid);
-
+   // 2. 웹소켓 객체에 구현된 메소드 저장
    msgwebsocket.onopen = onOpen;
    msgwebsocket.onclose = onClose;
    msgwebsocket.onmessage = onMessage;
 
-   function onOpen(){}
-   function onClose(){}
-   function onMessage(){}
+   // 3. 각 메소드 구현
+  function onOpen(){}
+  function onClose(){}
+  function onMessage(){}
 
-   function send(jsonmsg){
-        msgwebsocket.send(JSON.stringify(jsonmsg));
-   }
+   function send(jsonmsg){  msgwebsocket.send(JSON.stringify(jsonmsg)); }
 
 });
