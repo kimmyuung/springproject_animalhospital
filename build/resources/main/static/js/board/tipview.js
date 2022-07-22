@@ -199,6 +199,7 @@ let bno = $("#bno").val();
     });
 }
 function replyupdate(rno) {
+let bno = $("#bno").val();
     $.ajax({
         url: '/board/replyupdate',
         data : { "rno": rno },
@@ -207,6 +208,7 @@ function replyupdate(rno) {
                 '<input type="text" class="replyupdate" id="rereply" value="'+result.rcontent+'">'+
                 '<button type="button"  class="replyupdatebtn" onclick="reupdate('+rno+')">수정</button>';
             $("#"+rno).html(html);
+             getreply(bno);
         }
     });
 }

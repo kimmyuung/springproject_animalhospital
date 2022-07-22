@@ -30,16 +30,16 @@ public class WebSocketHandler extends TextWebSocketHandler {
 
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
-
-        String json = message.getPayload();
-        JSONObject object = new JSONObject(json);
-        memberService.messagesend(object);
-        for( WebSocketSession socketSession :list.keySet() ){
-            if(list.get(socketSession).equals(object.get("to"))){
-                socketSession.sendMessage(message);
+        try {
+            String json = message.getPayload();
+            JSONObject object = new JSONObject(json);
+            memberService.messagesend(object);
+            for (WebSocketSession socketSession : list.keySet()) {
+                if (list.get(socketSession).equals(object.get("to"))) {
+                    socketSession.sendMessage(message);
+                }
             }
-        }
-
+        }catch (Exception e){e.printStackTrace();}
 //        super.handleTextMessage(session, message);
     }
 
