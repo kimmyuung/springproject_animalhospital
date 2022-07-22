@@ -162,14 +162,12 @@ public class BoardService {
             Map<String, String> map = new HashMap<>();
             map.put("bno", entity.getBno()+"" );
             map.put("btitle", entity.getBtitle());
-            map.put("mid", entity.getMemberEntity().getMid());
-            map.put("bdate",  entity.getCreatedate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
             map.put("bimg", entity.getBoardimgEntities().get(0).getBimg());
-            map.put( "startbtn" , startbtn+"" );
+            map.put("startbtn" , startbtn+"" );
             map.put("mid", entity.getMemberEntity().getMid());
             map.put("bdate",  entity.getCreatedate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
-            map.put( "endhtn" , endhtn+"" );
-            map.put( "totalpages" , boardEntitylist.getTotalPages()+"" );
+            map.put("endhtn" , endhtn+"" );
+            map.put("totalpages" , boardEntitylist.getTotalPages()+"" );
             // 4. 리스트 넣기
             Maplist.add(map);
         }

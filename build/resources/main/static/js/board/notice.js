@@ -88,7 +88,7 @@ $.ajax({
             data : {"btitle" : $("#btitle").val(),"bcontent" : $("#bcontent").val()} ,
             success : function(re) {
             console.log(re);
-           if(re == true) {alert("등록 성공"); getnotice(0);}
+           if(re == true) {alert("등록 성공"); getnotice(0);  $('#myModal').modal('hide')}
            else { alert("등록 실패");}
            }
     });
@@ -109,7 +109,7 @@ $.ajax({
             data : {"bno" : updatebno, "btitle" : $("#btitle2").val(),"bcontent" : $("#bcontent2").val()} ,
             success : function(re) {
             console.log(re);
-           if(re == true) {alert("수정 성공"); getnotice(0);}
+           if(re == true) {alert("수정 성공"); getnotice(0); $('#myModal2').modal('hide')}
            else { alert("수정 실패");}
            }
     });
@@ -125,7 +125,7 @@ $.ajax({
             data : {"bno" : bno } ,
             success : function(re) {
             console.log(re);
-           if(re == true) {alert("삭제 성공"); getnotice(0);}
+           if(re == true) {alert("삭제 성공"); getnotice(0); }
            else { alert("삭제 실패");}
            }
     });
