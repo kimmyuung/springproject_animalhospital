@@ -89,16 +89,17 @@ clusterer.clear(); // 클러스터 클리어
                                             j++;
                                         }
                                         clusterer.addMarker(marker);
+                                         console.log( clusterer );
 
-//                                    if(clusterer.getSize() == 0) {
-//                                       html +=
-//                                        '<div class="hospital-box" >'+
-//                                        '<div >주위에 병원이 없습니다.</div>' +
-//                                        '</div>';
-//                                         }
                                     }//if end
 
      } //for marker 찍기 end
+      if(j == 0) {
+       html +=
+       '<div class="hospital-box" >'+
+       '<div >주위에 병원이 없습니다.</div>' +
+       '</div>';
+       }
          console.log( clusterer );
          $("#sidebar").html( html );
 
