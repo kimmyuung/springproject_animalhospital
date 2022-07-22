@@ -100,9 +100,6 @@ clusterer.clear(); // 클러스터 클리어
 
      } //for marker 찍기 end
          console.log( clusterer );
-         kakao.maps.event.addListener( clusterer, 'clusterclick', function( cluster ) {
-         console.log( cluster.getSize() );
-         });
          $("#sidebar").html( html );
 
 

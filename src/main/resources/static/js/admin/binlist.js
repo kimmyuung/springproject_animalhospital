@@ -13,7 +13,7 @@ function list(){
             if(result.length == 0){
                 html +=
                     '<tr>'+
-                    '    <td colspan="5" text-center>현재 신청 내역이 없습니다.</td>'+
+                    '    <td colspan="5" class="listx">현재 신청 내역이 없습니다.</td>'+
                     '</tr>';
             }
             for(let i=0; i<result.length; i++){
