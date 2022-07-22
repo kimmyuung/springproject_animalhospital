@@ -30,10 +30,10 @@ $.ajax({
        html+=
               '<li onclick="itemview('+json.itemlist[i].sno+')">'+
                              '<div class="">';
-                   if( json.itemlist[i].simg != null ) {
+                   if( json.itemlist[i].bimg != null ) {
                       html +=
                         '<div id="imgwrap">'+
-                        '<img id="pimg" src="/upload/'+json.itemlist[i].simg+'">' +
+                        '<img id="pimg" src="/upload/'+json.itemlist[i].bimg+'">' +
                         '<div>';
                      }
                    html +=  '<div class="caption">' +
