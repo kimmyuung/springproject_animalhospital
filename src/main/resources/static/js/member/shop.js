@@ -19,7 +19,7 @@ $.ajax({
     let html = "";
     let html2 = '';
     console.log(json);
-
+    var reg = /(.*?)\.(jpg|jpeg|png|gif|bmp)$/;
     if(json.itemlist.length == 0) {
                                 html += '<div>' +
                                 '검색 결과가 존재하지 않습니다. ' +
@@ -30,10 +30,10 @@ $.ajax({
        html+=
               '<li onclick="itemview('+json.itemlist[i].sno+')">'+
                              '<div class="">';
-                   if( json.itemlist[i].simg != null ) {
+                   if( json.itemlist[i].bimg != null ) {
                       html +=
                         '<div id="imgwrap">'+
-                        '<img id="pimg" src="/upload/'+json.itemlist[i].simg+'"/>' +
+                        '<img id="pimg" src="/shopupload/'+json.itemlist[i].bimg+'">' +
                         '<div>';
                      }
                    html +=  '<div class="caption">' +
@@ -95,10 +95,9 @@ if($("#stitle").val() == "") {alert("상품 제목을 입력해주세요"); retu
 if($("#scontent").val() == "") {alert("상품에 대한 설명을 입력해주세요"); return;}
 let check = /^[0-9]+$/;
 
-alert( $("#price").val() );
 
 if (! check.test($("#price").val() ) ) {   alert("가격은 숫자만 입력해야 합니다."); return;}
-
+if($("#simg").val() == "") {alert("상품을 보여 줄 수 있는 사진을 올려주세요"); return;}
 
 let form = $("#saveform")[0]; // [0] : 폼내 입력 데이터 //
     //[0]을 안하면 데이터 + 설정값까지 같이 보내지게 됨

@@ -151,14 +151,8 @@ public class MemberController {
 
     @GetMapping("/getmid")
     @ResponseBody
-    public void getmid(HttpServletRequest request, HttpServletResponse response){
-        try {
-            OauthDto oauthDto = (OauthDto)request.getSession().getAttribute("login");
-            String mid = oauthDto.getMid();
-            response.getWriter().println(mid);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public String getmid(){
+       return memberService.authenticationget();
     }
     @PutMapping("/isread") //5.
     @ResponseBody

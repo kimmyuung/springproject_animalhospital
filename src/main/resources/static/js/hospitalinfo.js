@@ -349,9 +349,9 @@ function getreviewstarlist(hname,hdate){
                let rk = parseFloat(parseInt(kind)/parseInt(totalcount));
                let rf = parseFloat(parseInt(fac)/parseInt(totalcount));
                let rp = parseFloat(parseInt(price)/parseInt(totalcount));
-               let rk =	0;
-               let rf =	0;
-               let rp =	0;
+               let rrk =	0;
+               let rrf =	0;
+               let rrp =	0;
                  if(isNaN(rrk)==true){
                     rk=0;
                      }else{

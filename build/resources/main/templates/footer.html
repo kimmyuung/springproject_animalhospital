@@ -19,16 +19,20 @@
   </div>
   <div class="footer_div">
     <a href="https://github.com/kimmyuung/springproject_animalhospital"><span>깃 허브 저장소 접속</span></a>
+
   </div>
   <div class="footer_div icon">
     <a href="https://github.com/kimmyuung"><span><i class="fab fa-github"></i>김명호</span></a> <span> | </span>
     <a href="https://github.com/junhui4005"><span><i class="fab fa-github"></i>박준희</span></a> <span> | </span>
     <a href="https://github.com/DOEKYONG"><span><i class="fab fa-github"></i>신덕용</span></a> <span> | </span>
     <a href="https://github.com/jin7639"><span><i class="fab fa-github"></i>유희진</span></a>
+
+  </div>
+  <div>
+    <a sec:authorize="isAuthenticated()" > <button class="btn btn-danger" onclick="mdelete()">회원탈퇴</button> </a>
   </div>
 
-
 </div>
-
+<script src="/js/footer.js"></script>
 </body>
 </html>
