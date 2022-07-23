@@ -167,8 +167,10 @@ public class ItemService {
         object.put("price" , shopEntity.getPrice());
         object.put("status" , shopEntity.isItemstatus());
         JSONArray jsonArray = new JSONArray();
-        for(  ShopImgEntity temp : shopEntity.getShopimgEntities() ) { //  룸별로 이미지 여러개
-            jsonArray.put( temp.getSimg());
+        if(shopEntity.getShopimgEntities().size() != 0) {
+            for (ShopImgEntity temp : shopEntity.getShopimgEntities()) { //  룸별로 이미지 여러개
+                jsonArray.put(temp.getSimg());
+            }
         }
         // 3. jsonarray를 json객체 포함
         object.put("bimglist" , jsonArray) ;

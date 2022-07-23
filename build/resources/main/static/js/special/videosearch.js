@@ -1,6 +1,7 @@
 
 start()
 function start(){
+
    $.ajax({
     url : '/videosearch',
     data : {"search" : "강아지 키우기"},
@@ -26,13 +27,8 @@ function start(){
 }
 function video() {
 let search = $("#searchbox").val();
-let searchtext = $("#searchtext").val();
 
-if(search == "") {
-alert("검색어를 입력해주세요"); return;
-}
-
-if(searchtext == "") {
+if(search == "") { alert("검색어를 입력해주세요"); return; }
 
     $.ajax({
     url : '/videosearch',
@@ -52,31 +48,12 @@ if(searchtext == "") {
                                       '</div>';
                                        }
 
-  $("#videobox").html(html2);
+                                $("#videobox").html(html2);
                     }
 
     });
-}else {
-    $.ajax({
-        url : '/videosearch',
-        data : {"search" : searchtext},
-        success : function(json) {
-        console.log(json);
-        let html = '';
-        for(let i=0; i<json.items.length; i++) {
-        html +=  '<div class="col-md-6">' +
-                   '<iframe id="ytplayer" type="text/html" width="640" height="360"' +
-                  'src="https://www.youtube.com/embed/'+json.items[i].id.videoId+'rel=0&modestbranding=1"' +
-                  '></iframe>' +
-               '</div>';
-                }
-
-             $("#videobox").append(html);
-            }
-        });
-    }
-
 }
+
 
 $("#searchbox").on("change", function(){
     if($("#searchbox option:selected").val() == "직접 입력" )
