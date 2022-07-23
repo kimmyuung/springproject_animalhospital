@@ -60,9 +60,9 @@ public class ItemService {
                         UUID uuid = UUID.randomUUID();
 
                         uuidfile = uuid.toString() + "_" + file.getOriginalFilename().replaceAll("_", "-");
-                        String dir = "C:\\Users\\504\\git\\springproject_animalhospital\\src\\main\\resources\\static\\shopupload\\";
-                      //  String dir = "C:\\Users\\82104\\git\\springproject_-animalhospital\\src\\main\\resources\\static\\upload\\"; // my notebook
-
+                        //  String dir = "C:\\Users\\504\\git\\springproject_animalhospital\\src\\main\\resources\\static\\shopupload\\";
+                        //   String dir = "C:\\Users\\82104\\git\\springproject_-animalhospital\\src\\main\\resources\\static\\upload\\"; // my notebook
+                        String dir = "/home/ec2-user/app/springproject_animalhospital/build/resources/main/static/upload/";
                         String filepath = dir + uuidfile;
 
                         try {
@@ -199,8 +199,8 @@ public class ItemService {
         Optional<ShopEntity> optional = shopRepository.findById(shopDto.getSno());
         System.out.println(shopDto.toString());
        // String dir = "C:\\Users\\82104\\git\\springproject_-animalhospital\\src\\main\\resources\\static\\upload\\"; // my notebook
-        String dir = "C:\\Users\\504\\git\\springproject_-animalhospital\\src\\main\\resources\\static\\shopupload\\";
-        // 배포용 String dir = "/home/ec2-user/app/springproject_-animalhospital/build/resources/main/static/upload/";
+       // String dir = "C:\\Users\\504\\git\\springproject_-animalhospital\\src\\main\\resources\\static\\shopupload\\";
+        String dir = "/home/ec2-user/app/springproject_animalhospital/build/resources/main/static/upload/";
         if(optional.isPresent()) {
             ShopEntity shopEntity = optional.get(); // 새로운 내용을 인수로 보내야 함
             if(shopEntity.getShopimgEntities().size() != 0) {

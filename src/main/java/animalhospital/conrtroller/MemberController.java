@@ -130,6 +130,7 @@ public class MemberController {
     @ResponseBody
     public void gettomsglist(HttpServletResponse response, @RequestParam("type") int type){
         try {
+            System.out.println("컨트롤러"+ type);
             response.setContentType("application/json");
             response.setCharacterEncoding("UTF-8");
             response.getWriter().print(memberService.gettomsglist(type));

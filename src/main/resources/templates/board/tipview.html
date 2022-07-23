@@ -87,18 +87,22 @@
                 </div>
               </div>
               <div>
+                <div class="filebox">
+                  <input class="upload-name" value="첨부파일" placeholder="첨부파일">
+                  <label for="bimg">파일찾기</label>
                 <input type="file" id="bimg" name="bimg" multiple>
+                </div>
               </div>
             </div>
             <div class="col-md-6">
               <div>
-                <input type="text" placeholder="제목을 입력하세요" id="btitle" name="btitle">
+                <input type="text" class="inputtxt" placeholder="제목을 입력하세요" id="btitle" name="btitle">
               </div>
               <div>
-                <textarea placeholder="내용을 입력하세요" name="bcontent"  id="bcontent" ></textarea>
+                <textarea class="inputtxt" rows="18"  placeholder="내용을 입력하세요" name="bcontent"  id="bcontent" ></textarea>
               </div>
               <div>
-                <button type="button" onclick="tipupdate()">등록하기</button>
+                <button class="mypetadd"  type="button" onclick="tipupdate()">등록하기</button>
               </div>
             </div>
           </div>

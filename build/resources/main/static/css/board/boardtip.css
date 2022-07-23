@@ -88,3 +88,52 @@ padding:10px;
             border-radius: 5px;
             padding: 10px 20px 10px 20px;
 }
+
+.filebox label {
+    display: inline-block;
+    padding: 10px 20px;
+    color: #fff;
+    vertical-align: middle;
+    background-color: #999999;
+    cursor: pointer;
+    height: 40px;
+    width:23%;
+}
+
+.filebox input[type="file"] {
+    position: absolute;
+    width: 0;
+    height: 0;
+    padding: 0;
+    overflow: hidden;
+    border: 0;
+}
+
+.filebox{
+    width: 500px;
+}
+
+.filebox .upload-name {
+    display: inline-block;
+    height: 40px;
+    padding: 0 10px;
+    vertical-align: middle;
+    border: 1px solid #dddddd;
+    width: 75%;
+    color: #999999;
+}
+
+.inputtxt{
+    width: 100%;
+}
+
+
+.mypetadd{
+    background-color:white;
+     color:#749e2e;
+      border: solid 2px #64d15f;
+      border-radius: 20px;
+      font-size: 12px;
+      padding: 10px 30px 10px 30px;
+      float: right;
+}

@@ -1,10 +1,9 @@
-gettomsglist(1);
-let type = 1;
+
 $("#v-pills-home-tab").click(function(){
-    gettomsglist(1); type = 1;
+    gettomsglist(1);
 });
 $("#v-pills-profile-tab").click(function(){
-    gettomsglist(2); type = 2;
+    gettomsglist(2);
 });
 let today = new Date();
 
@@ -67,6 +66,7 @@ function getfrommsglist(type){
         url: '/member/getfrommsglist',
         data :{"type" : type},
         success: function(object){
+        console.log(object);
             msg = object;
             let html =
                     '<tr>'+
@@ -178,11 +178,8 @@ function msgdelete(){
 }
 
 $(document).ready(function(){
-
-alert(type);
+gettomsglist(1);
      $("#answer").click(function(){
-        type = this.type;
-        alert(type);
         let msg = $("#msginput").val();
         mid = mid.replace(/\n|\r|\s*/g, "");
         let to = fromid;
@@ -190,7 +187,7 @@ alert(type);
             "from" : mid,
             "to" : to ,
             "msg" : msg,
-            "type" : this.type
+            "type" : 2
         }
         console.log(jsonmsg);
         send(jsonmsg);

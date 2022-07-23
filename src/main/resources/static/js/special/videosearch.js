@@ -1,5 +1,4 @@
-
-start()
+start();
 function start(){
 
    $.ajax({

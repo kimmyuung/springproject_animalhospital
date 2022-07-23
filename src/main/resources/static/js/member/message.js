@@ -3,6 +3,16 @@ $(document).ready(function(){
     let mid = "";
     let hospital = "";
 
+    $.ajax({
+                url: '/member/getinfo',
+                async: false,
+                success: function(result){
+                    mid= result.mid;
+                    hospital = result.hospital;
+                    console.log(result);
+                }
+            });
+
      $("#sendmsg").click(function(){
 
         $.ajax({
@@ -31,14 +41,7 @@ $(document).ready(function(){
         alert("전송 완료")
     });
 
-     $.ajax({
-            url: '/member/getinfo',
-            success: function(result){
-                mid= result.mid;
-                hospital = result.hospital;
-                console.log(result);
-            }
-        });
+
 
    // 1. 웹소켓 객체 생성
    let msgwebsocket = new WebSocket("ws://ec2-43-200-181-29.ap-northeast-2.compute.amazonaws.com/ws/message/"+mid);

@@ -97,6 +97,7 @@ public class SecurityConfig {
                 .ignoringAntMatchers("/board/mypetupdate")
                 .ignoringAntMatchers("/member/requestsave")
                 .ignoringAntMatchers("/member/msgdelete")
+                .ignoringAntMatchers("/member/gettomsglist")
                 .ignoringAntMatchers("/")
                 .and()
                 .exceptionHandling()
