@@ -54,12 +54,6 @@ if(search == "") { alert("검색어를 입력해주세요"); return; }
 }
 
 
-$("#searchbox").on("change", function(){
-    if($("#searchbox option:selected").val() == "직접 입력" )
-    { $("#searchtext").css("display", "block"); }
-    else{$("#searchtext").css("display", "none");}
-});
-
 function enter() {
     if(e.keyCode == 13){
      video();

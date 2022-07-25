@@ -1,7 +1,5 @@
 package animalhospital.service;
 
-import animalhospital.domain.board.BoardEntity;
-import animalhospital.domain.board.BoardimgEntity;
 import animalhospital.domain.member.MemberEntity;
 import animalhospital.domain.member.MemberRepository;
 import animalhospital.domain.shop.*;
@@ -14,10 +12,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -167,8 +161,10 @@ public class ItemService {
         object.put("price" , shopEntity.getPrice());
         object.put("status" , shopEntity.isItemstatus());
         JSONArray jsonArray = new JSONArray();
-        for(  ShopImgEntity temp : shopEntity.getShopimgEntities() ) { //  룸별로 이미지 여러개
-            jsonArray.put( temp.getSimg());
+        if(shopEntity.getShopimgEntities().size() != 0) {
+            for (ShopImgEntity temp : shopEntity.getShopimgEntities()) { //  룸별로 이미지 여러개
+                jsonArray.put(temp.getSimg());
+            }
         }
         // 3. jsonarray를 json객체 포함
         object.put("bimglist" , jsonArray) ;
