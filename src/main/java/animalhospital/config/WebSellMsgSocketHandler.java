@@ -1,6 +1,5 @@
 package animalhospital.config;
 
-import animalhospital.service.MemberService;
 import animalhospital.service.MessageService;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
