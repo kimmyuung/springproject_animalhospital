@@ -49,6 +49,7 @@ public class MessageService {
                 .msg(msg)
                 .fromentity(fromentity)
                 .toentity(toentity)
+                .msgtype(1)
                 .build();
         messageRepository.save(message);
 

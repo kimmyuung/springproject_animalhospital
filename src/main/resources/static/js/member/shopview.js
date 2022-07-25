@@ -11,8 +11,7 @@ success : function(re) {
     seller = re.mid;
     console.log(re);
     let html = '';
-   html +=
-       '<div id ="img_wrap"> <img id="viewimg" src="/shopupload/'+re.bimglist+'/"></div>';
+   html += '<div id ="img_wrap"> <img id="viewimg" src="/shopupload/'+re.bimglist+'"></div>';
         html += '<div class="user_wrap"><span><i class="fa-solid fa-shield-cat"></i></span><span>'+re.mid+'</span> </div>';
         html += '<div class="title"><span>상품 이름 </span><span>'+re.btitle+'</span></div>';
           if(! re.status) {
@@ -188,7 +187,7 @@ idcheck(sno);
                    }
             });
 
-            let msgwebsocket = new WebSocket("ws://ec2-43-200-181-29.ap-northeast-2.compute.amazonaws.com/ws/message/"+mid);
+            let msgwebsocket = new WebSocket("ws://ec2-43-200-181-29.ap-northeast-2.compute.amazonaws.com/ws/seller/"+mid);
 
             msgwebsocket.onopen = onOpen;
             msgwebsocket.onclose = onClose;

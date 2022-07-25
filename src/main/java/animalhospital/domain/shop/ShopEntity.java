@@ -29,7 +29,7 @@ public class ShopEntity extends BaseTime {
     @OneToMany( mappedBy = "shopEntity" , cascade = CascadeType.ALL )
     private List<ShopImgEntity> shopimgEntities;
 
-    @ManyToOne(fetch=FetchType.LAZY)
+    @ManyToOne(fetch=FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "mnoitem" )
     private MemberEntity member;
 

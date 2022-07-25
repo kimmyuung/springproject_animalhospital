@@ -55,7 +55,26 @@ public class BoardService {
 
     @Transactional
     public boolean save(BoardDto boardDto) {
-        String mid = memberService.authenticationget();
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Object principal = authentication.getPrincipal();
+        String mid = null;
+        if( principal instanceof UserDetails){
+            mid = ((UserDetails) principal).getUsername();
+        }else if( principal instanceof DefaultOAuth2User){
+            Map<String , Object>  map =  ((DefaultOAuth2User) principal).getAttributes();
+            if( map.get("response") != null ){
+                Map< String , Object> map2  = (Map<String, Object>) map.get("response"); // 네이버
+                mid = map2.get("email").toString().split("@")[0];
+            }else if(map.get("kakao_account") != null){
+                Map< String , Object> map2  = (Map<String, Object>) map.get("kakao_account"); // 카카오
+                mid = map2.get("email").toString().split("@")[0];
+            }else if(map.get("kakao_account") == null && map.get("response") == null ) { // 구글, 깃허브
+                mid = map.get("email").toString().split("@")[0];
+            }
+        }else{
+            return false;
+        }
         if( mid != null  ) {
             Optional<MemberEntity> optionalMember = memberRepository.findBymid(mid);
             if (optionalMember.isPresent()) { // null 아니면
@@ -69,7 +88,8 @@ public class BoardService {
 
                         uuidfile = uuid.toString() + "_" + file.getOriginalFilename().replaceAll("_", "-");
                         String dir = "/home/ec2-user/app/springproject_animalhospital/build/resources/main/static/upload/";
-                        //String dir = "C:\\Users\\504\\springproject_animalhospital\\src\\main\\resources\\static\\upload\\";
+                     //   String dir = "C:\\Users\\504\\springproject_animalhospital\\src\\main\\resources\\static\\upload\\";
+
                         String filepath = dir + uuidfile;
 
                         try {
@@ -105,24 +125,24 @@ public class BoardService {
     public boolean noticesave(String btitle, String bcontent) {
         MemberEntity memberEntity = memberRepository.findBymid("admin").get();
         BoardEntity boardEntity = BoardEntity.builder()
-                        .cno(1)
-                                .bcontent(bcontent)
-                                        .btitle(btitle)
-                                             .memberEntity(memberEntity)
-                                                        .build();
+                .cno(1)
+                .bcontent(bcontent)
+                .btitle(btitle)
+                .memberEntity(memberEntity)
+                .build();
         boardRepository.save(boardEntity);
         return true;
     }
 
     @Transactional
     public boolean noticeupdate(int bno, String btitle, String bcontent) {
-                        MemberEntity memberEntity = memberRepository.findBymid("admin").get();
-                        Optional<BoardEntity> optional = boardRepository.findById(bno);
-                        if(optional.isPresent()) {
-                            BoardEntity boardEntity = optional.get();
-                            boardEntity.setBtitle(btitle);
-                            boardEntity.setBcontent(bcontent);
-                            return true;
+        MemberEntity memberEntity = memberRepository.findBymid("admin").get();
+        Optional<BoardEntity> optional = boardRepository.findById(bno);
+        if(optional.isPresent()) {
+            BoardEntity boardEntity = optional.get();
+            boardEntity.setBtitle(btitle);
+            boardEntity.setBcontent(bcontent);
+            return true;
         }
         return false;
     }
@@ -135,15 +155,15 @@ public class BoardService {
             BoardEntity boardEntity = optional.get(); boardRepository.delete(boardEntity); return true;
         }
         return false;
-        }
+    }
 
     public Map< String , List<Map<String , String >>> boardlist(int page ) // 인수
     {
 
-        System.out.println( "페이지 :"+ page );
+
 
         Page<BoardEntity> boardEntitylist = null ;
-        Pageable pageable = PageRequest.of( page , 5 , Sort.by( Sort.Direction.DESC , "bno")    );
+        Pageable pageable = PageRequest.of( page , 12 , Sort.by( Sort.Direction.DESC , "bno")    );
 
         int cno=2;
         List<  Map<String , String >  > Maplist = new ArrayList<>();
@@ -203,9 +223,7 @@ public class BoardService {
             Map<String, String> map = new HashMap<>();
             map.put("bno", entity.getBno()+"" );
             map.put("btitle", entity.getBtitle());
-            if(entity.getBoardimgEntities().size() != 0) {
-                map.put("bimg", entity.getBoardimgEntities().get(0).getBimg());
-            }
+            map.put("bimg", entity.getBoardimgEntities().get(0).getBimg());
             map.put( "startbtn" , startbtn+"" );
             map.put("mid", entity.getMemberEntity().getMid());
             map.put("bdate",  entity.getCreatedate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
@@ -235,15 +253,15 @@ public class BoardService {
         Page<BoardEntity> boardEntities = boardRepository.findByblist(cno, pageable);
         JSONArray jsonArray = new JSONArray();
 
-            for (BoardEntity entity : boardEntities ) {
-                JSONObject object = new JSONObject();
-                object.put("bno", entity.getBno());
-                object.put("btitle", entity.getBtitle());
-                object.put("bcontent", entity.getBcontent());
-                object.put("bindate", entity.getCreatedate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss")));
-                object.put("mid", entity.getMemberEntity().getMid());
-                jsonArray.put(object);
-            }
+        for (BoardEntity entity : boardEntities ) {
+            JSONObject object = new JSONObject();
+            object.put("bno", entity.getBno());
+            object.put("btitle", entity.getBtitle());
+            object.put("bcontent", entity.getBtitle());
+            object.put("bindate", entity.getCreatedate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss")));
+            object.put("mid", entity.getMemberEntity().getMid());
+            jsonArray.put(object);
+        }
 
         // 페이지에 표시할 총 버튼 개수
         int btncount = 5;
@@ -257,7 +275,6 @@ public class BoardService {
         jo.put("endbtn", endbtn);
         jo.put("data", jsonArray);
         jo.put("totalpage", boardEntities.getTotalPages()); // 전체 페이지 수
-        jo.put("username", memberService.authenticationget());
         return jo;
     }
 
@@ -280,6 +297,7 @@ public class BoardService {
         object.put("bno" ,boardEntity.getBno());
         object.put("btitle" , boardEntity.getBtitle());
         object.put("bcontent" , boardEntity.getBcontent());
+        object.put("modifiedate" , boardEntity.getModifiedate());
         object.put("mid" , boardEntity.getMemberEntity().getMid());
         object.put("same" , same);
 
@@ -302,53 +320,6 @@ public class BoardService {
             return true;
         }else{
             return false;
-        }
-    }
-
-    public void 크롤링() {
-        String inflearnUrl = "https://search.daum.net/search?nil_suggest=btn&w=tot&DA=SBC&q=%EB%82%A8%EC%96%91%EC%A3%BC%EC%8B%9C+%ED%99%94%EB%8F%84%EB%8F%99%EB%AC%BC%EB%B3%91%EC%9B%90";
-
-        Connection conn = Jsoup.connect(inflearnUrl);
-        try {
-            Document document = conn.get();
-            Elements title = document.getElementsByClass("inner_tit").first().select("b");
-            Elements score = document.getElementsByClass("f_eb");
-
-            String title2 = title.text().replaceAll(" ","");
-            String score2 = score.first().text();
-            String link = score.attr("href");
-
-//            System.out.println(title2);
-//            System.out.println(score2);
-//            System.out.println(link);
-
-//            Elements imageUrlElements = document.getElementsByClass("total_area");
-//            Elements e = document.getElementsByClass("total_wrap api_ani_send");
-//           // Elements imageUrlElements2 = document.getElementsByClass("dsc_wrap");
-//           // System.out.println(document);
-//            Elements a = imageUrlElements.first().getElementsByTag("a");
-//
-//            for (Element element : e) {
-//                //System.out.println(element.getElementsByIndexEquals(1).get(5).text());
-//               // System.out.println(element.getElementsByIndexEquals(2).text().length());
-//
-//
-//
-//                if(element.getElementsByIndexEquals(1).get(5).text().contains("동물병원")) {
-//                    System.out.println(element.getElementsByIndexEquals(1).get(5).text());
-//                    System.out.println(", "+element.getElementsByIndexEquals(2).text());
-//                    System.out.println(","+element.getElementsByTag("a"));
-//
-//                }
-//
-//            }
-//            for (Element element : imageUrlElements2) {
-//                System.out.println(element);
-//
-//            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 
@@ -375,6 +346,7 @@ public class BoardService {
         return  null;
     }
 
+
     @Transactional
     public boolean replysave(int bno, String reply) {
 
@@ -394,7 +366,6 @@ public class BoardService {
                 replyRepository.save(replyEntity);
                 return true;
             } else { // 로그인이 안되어 있는경우
-
                 return false;
             }
         }
@@ -456,8 +427,8 @@ public class BoardService {
     }
 
     public boolean rereplysave(int bno, int rindex, String reply) {
-
-        String mid = memberService.authenticationget();
+        System.out.println(rindex);
+      String mid = memberService.authenticationget();
         if( mid != null  ) {
             Optional<MemberEntity> optionalMember = memberRepository.findBymid(mid);
             if (optionalMember.isPresent()) { // null 아니면
@@ -512,13 +483,9 @@ public class BoardService {
     public JSONObject getboard(int bno) { // 개별조회
         // 조회수 증가처리
         String ip = request.getRemoteAddr(); // 사용자의 ip 가져오기
-
-
         Optional<BoardEntity> Optional = boardRepository.findById(bno);
         BoardEntity entitiy = Optional.get();
-
         // ip와 bno를 합쳐서 세션(서버내 저장소) 부여
-
         Object com = request.getSession().getAttribute(ip+bno);
         if(com == null) {
             request.getSession().setAttribute(ip+bno, 1);
@@ -526,7 +493,6 @@ public class BoardService {
             // 조회수 증가
             entitiy.setBview(entitiy.getBview()+1);
         }
-
         JSONObject jo = new JSONObject();
         jo.put("bno", entitiy.getBno());
         jo.put("btitle", entitiy.getBtitle() );
@@ -540,53 +506,53 @@ public class BoardService {
     }
     */
 
-   @Transactional
-   public boolean bupdate(BoardDto boardDto) {
+    @Transactional
+    public boolean bupdate(BoardDto boardDto) {
 
-       Optional<BoardEntity> optional
-               =  boardRepository.findById( boardDto.getBno() );
-       BoardEntity boardEntity =  optional.get();
+        Optional<BoardEntity> optional
+                =  boardRepository.findById( boardDto.getBno() );
+        BoardEntity boardEntity =  optional.get();
+        boardEntity.setCreatedate(boardEntity.getCreatedate());
+        boardEntity.setBtitle(boardDto.getBtitle());
+        boardEntity.setBcontent(boardDto.getBcontent());
+        if( boardDto.getBimg()!=null){
+            List<BoardimgEntity> boardimgEntityList = boardimgRespository.getboardimgEntities(boardDto.getBno());
+            for(BoardimgEntity boardimgEntity: boardimgEntityList){
+                boardimgRespository.delete(boardimgEntity);
+            }
 
-       boardEntity.setBtitle(boardDto.getBtitle());
-       boardEntity.setBcontent(boardDto.getBcontent());
-       if( boardDto.getBimg()!=null){
-           List<BoardimgEntity> boardimgEntityList = boardimgRespository.getboardimgEntities(boardDto.getBno());
-           for(BoardimgEntity boardimgEntity: boardimgEntityList){
-               boardimgRespository.delete(boardimgEntity);
-           }
+            String uuidfile = null;
+            if (boardDto.getBimg().size() != 0) {
+                for (MultipartFile file : boardDto.getBimg()) {
+                    UUID uuid = UUID.randomUUID();
 
-           String uuidfile = null;
-           if (boardDto.getBimg().size() != 0) {
-               for (MultipartFile file : boardDto.getBimg()) {
-                   UUID uuid = UUID.randomUUID();
+                    uuidfile = uuid.toString() + "_" + file.getOriginalFilename().replaceAll("_", "-");
+                  //  String dir = "C:\\Users\\504\\springproject_animalhospital\\src\\main\\resources\\static\\upload\\";
+                    String dir = "/home/ec2-user/app/springproject_animalhospital/build/resources/main/static/upload/";
+                    String filepath = dir + uuidfile;
 
-                   uuidfile = uuid.toString() + "_" + file.getOriginalFilename().replaceAll("_", "-");
-                   //String dir = "C:\\Users\\504\\springproject_animalhospital\\src\\main\\resources\\static\\upload\\";
-                   String dir = "/home/ec2-user/app/springproject_animalhospital/build/resources/main/static/upload/";
+                    try {
+                        file.transferTo(new File(filepath));
 
-                   String filepath = dir + uuidfile;
+                        BoardimgEntity boardimgEntity = BoardimgEntity.builder()
+                                .bimg(uuidfile)
+                                .boardEntity(boardEntity)
+                                .build();
 
-                   try {
-                       file.transferTo(new File(filepath));
+                        boardimgRespository.save(boardimgEntity);
 
-                       BoardimgEntity boardimgEntity = BoardimgEntity.builder()
-                               .bimg(uuidfile)
-                               .boardEntity(boardEntity)
-                               .build();
+                        boardEntity.getBoardimgEntities().add(boardimgEntity);
 
-                       boardimgRespository.save(boardimgEntity);
+                    } catch (Exception e) {
+                        System.out.println("파일저장실패 : " + e);
+                    }
+                }
 
-                       boardEntity.getBoardimgEntities().add(boardimgEntity);
+            }
+        }
 
-                   } catch (Exception e) {
-                       System.out.println("파일저장실패 : " + e);
-                   }
-               }
+        return true;
+    }
 
-           }
-       }
-
-       return true;
-   }
 
 }

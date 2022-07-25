@@ -20,10 +20,10 @@ public class ShopLikeEntity {
     @GeneratedValue( strategy = GenerationType.IDENTITY )
     private int shopLikeno; // 좋아하는 상품 식별 번호
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private ShopEntity shoplike;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private MemberEntity memberlike;
 
     public ShopLikeEntity(ShopEntity shoplike, MemberEntity memberlike) {

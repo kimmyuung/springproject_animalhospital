@@ -4,8 +4,8 @@ function save(){
             alert("이미지를 하나 이상 등록해주세요");
         }else if($("#btitle").val()==""){
                      alert("제목을 입력해주세요");
-          }else{
-     let form = $("#saveform")[0];
+        }else{
+        let form = $("#saveform")[0];
         let formdata = new FormData( form);
         $.ajax({
             url: "/board/write",
@@ -16,7 +16,6 @@ function save(){
             success: function( re ){
                 if(re){
                      location.href ="list"
-
                 }else{
                     alert("로그인 후 이용해주세요!")
                 }
@@ -343,7 +342,7 @@ function getreply(){
                                 '</div>'+
                                 '<div class="row"><div class="col-md-8">'+result[i].rcontent+'</div>'+
                                 '<div id="repltbtn" class="col-md-4 d-flex justify-content-end replyupdate">'+
-                                    '<button  class="replyupdatebtn" type="button" onclick="rereply('+result[i].rno+')">답글</button>'+
+                                    '<button  class="replyupdatebtn" type="button" onclick="rereplyinput('+result[i].rno+')">답글</button>'+
                                 '</div></div>'+
                                 '<div  class="rereplytable" id="'+result[i].rno+'"></div>'+
                             '</div>';
