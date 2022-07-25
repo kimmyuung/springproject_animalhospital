@@ -1,9 +1,9 @@
-function tipsave() {
+function tipsave() { // 유효성 처리 왜뺀건지 물어봐야할듯?
     if($("#bimg").val()==""){
-            alert("이미지를 하나 이상 등록해주세요");
-        }else if($("#btitle").val()==""){
-                     alert("제목을 입력해주세요");
-          }else{
+     alert("이미지를 하나 이상 등록해주세요");
+    }else if($("#btitle").val()==""){
+     alert("제목을 입력해주세요");
+    }else{
     let form = $("#saveform")[0];
         let formdata = new FormData( form);
         $.ajax({
@@ -21,7 +21,7 @@ function tipsave() {
                 }
             }
         });
-           }
+    }
 }
 
 

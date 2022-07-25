@@ -1,6 +1,7 @@
 package animalhospital.config;
 
 import animalhospital.service.MemberService;
+import animalhospital.service.MessageService;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -17,7 +18,7 @@ public class WebSellMsgSocketHandler extends TextWebSocketHandler {
     private Map<WebSocketSession, String> list = new HashMap<>();
 
     @Autowired
-    private MemberService memberService;
+    private MessageService messageService;
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
@@ -33,7 +34,7 @@ public class WebSellMsgSocketHandler extends TextWebSocketHandler {
         try {
             String json = message.getPayload();
             JSONObject object = new JSONObject(json);
-            memberService.messagesend(object);
+            messageService.messagesend(object);
             for (WebSocketSession socketSession : list.keySet()) {
                 if (list.get(socketSession).equals(object.get("to"))) {
                     socketSession.sendMessage(message);
