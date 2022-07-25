@@ -1,10 +1,5 @@
-gettomsglist(1);
-$("#v-pills-home-tab").click(function(){
-    gettomsglist(1);
-});
-$("#v-pills-profile-tab").click(function(){
-    gettomsglist(2);
-});
+
+
 let today = new Date();
 
 let year = today.getFullYear()+"";
@@ -177,6 +172,15 @@ function msgdelete(){
 }
 
 $(document).ready(function(){
+let type = 1;
+gettomsglist(1);
+
+$("#v-pills-home-tab").click(function(){
+    gettomsglist(1);
+});
+$("#v-pills-profile-tab").click(function(){
+    gettomsglist(2);
+});
 
      $("#answer").click(function(){
         let msg = $("#msginput").val();
@@ -186,7 +190,7 @@ $(document).ready(function(){
             "from" : mid,
             "to" : to ,
             "msg" : msg,
-            "type" : 2
+            "type" : this.type
         }
         console.log(jsonmsg);
         send(jsonmsg);
