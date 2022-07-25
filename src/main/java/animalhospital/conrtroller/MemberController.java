@@ -2,14 +2,12 @@ package animalhospital.conrtroller;
 
 import animalhospital.dto.RequestDto;
 import animalhospital.dto.ShopDto;
-import animalhospital.dto.OauthDto;
 import animalhospital.service.ItemService;
 import animalhospital.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Map;
@@ -130,6 +128,7 @@ public class MemberController {
     @ResponseBody
     public void gettomsglist(HttpServletResponse response, @RequestParam("type") int type){
         try {
+            System.out.println("컨트롤러"+ type);
             response.setContentType("application/json");
             response.setCharacterEncoding("UTF-8");
             response.getWriter().print(memberService.gettomsglist(type));

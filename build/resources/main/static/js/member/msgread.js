@@ -1,4 +1,4 @@
-gettomsglist(1);
+
 $("#v-pills-home-tab").click(function(){
     gettomsglist(1);
 });
@@ -66,6 +66,7 @@ function getfrommsglist(type){
         url: '/member/getfrommsglist',
         data :{"type" : type},
         success: function(object){
+        console.log(object);
             msg = object;
             let html =
                     '<tr>'+
@@ -177,7 +178,7 @@ function msgdelete(){
 }
 
 $(document).ready(function(){
-
+gettomsglist(1);
      $("#answer").click(function(){
         let msg = $("#msginput").val();
         mid = mid.replace(/\n|\r|\s*/g, "");

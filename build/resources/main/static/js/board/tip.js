@@ -1,5 +1,9 @@
 function tipsave() {
-
+    if($("#bimg").val()==""){
+            alert("이미지를 하나 이상 등록해주세요");
+        }else if($("#btitle").val()==""){
+                     alert("제목을 입력해주세요");
+          }else{
     let form = $("#saveform")[0];
         let formdata = new FormData( form);
         $.ajax({
@@ -10,13 +14,14 @@ function tipsave() {
             processData: false ,
             success: function( re ){
                 if(re){
-                     location.href ="list"
+                     location.href ="tiplist"
 
                 }else{
                     alert("로그인 후 이용해주세요!")
                 }
             }
         });
+           }
 }
 
 

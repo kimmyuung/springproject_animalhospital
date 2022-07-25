@@ -413,6 +413,7 @@ public class MemberService implements OAuth2UserService<OAuth2UserRequest ,OAuth
         String from = (String) object.get("from");
         String to = (String) object.get("to");
         String msg = (String) object.get("msg");
+        int type = (int) object.get("type");
 
         MemberEntity fromentity = null;
         Optional<MemberEntity> optionalMember1 = memberRepository.findBymid(from);
@@ -434,7 +435,7 @@ public class MemberService implements OAuth2UserService<OAuth2UserRequest ,OAuth
                 .msg(msg)
                 .fromentity(fromentity)
                 .toentity(toentity)
-                .msgtype(2)
+                .msgtype(type)
                 .build();
 
         messageRepository.save(messageEntity);

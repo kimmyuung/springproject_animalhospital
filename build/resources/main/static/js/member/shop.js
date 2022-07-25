@@ -33,7 +33,7 @@ $.ajax({
                    if( json.itemlist[i].bimg != null ) {
                       html +=
                         '<div id="imgwrap">'+
-                        '<img id="pimg" src="/shopupload/'+json.itemlist[i].bimg+'">' +
+                        '<img id="pimg" src="/upload/'+json.itemlist[i].bimg+'">' +
                         '<div>';
                      }
                    html +=  '<div class="caption">' +
