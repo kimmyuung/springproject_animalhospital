@@ -198,7 +198,7 @@ $("#v-pills-profile-tab").click(function(){
         $(".btn-close").trigger("click");
     });
 
-    let msgwebsocket = new WebSocket("ws://ec2-43-200-181-29.ap-northeast-2.compute.amazonaws.com/ws/message/"+mid);
+    let msgwebsocket = new WebSocket("ws://ec2-43-200-181-29.ap-northeast-2.compute.amazonaws.com/ws/answer/"+mid);
 
 
    msgwebsocket.onopen = onOpen;
