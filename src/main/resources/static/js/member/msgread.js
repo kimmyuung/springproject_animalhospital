@@ -1,9 +1,10 @@
+let type;
 gettomsglist(1);
 $("#v-pills-home-tab").click(function(){
-    gettomsglist(1);
+    gettomsglist(1); type = 1;
 });
 $("#v-pills-profile-tab").click(function(){
-    gettomsglist(2);
+    gettomsglist(2); type = 2;
 });
 let today = new Date();
 
@@ -66,6 +67,7 @@ function getfrommsglist(type){
         url: '/member/getfrommsglist',
         data :{"type" : type},
         success: function(object){
+            console.log(object);
             msg = object;
             let html =
                     '<tr>'+
@@ -158,6 +160,7 @@ function oncheckbox(){
     }
     console.log(deletelist);
 }
+
 
 function msgdelete(){
     $.ajax({
