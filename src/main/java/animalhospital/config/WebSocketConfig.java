@@ -17,9 +17,12 @@ public class WebSocketConfig implements WebSocketConfigurer {
     @Autowired
     private AnswerWebSocketHandler answerWebSocketHandler;
 
+    @Autowired
+    private WebSellMsgSocketHandler webSellMsgSocketHandler;
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
         registry.addHandler(webSocketHandler ,"ws/message/*" ).setAllowedOrigins("*")
-                .addHandler(answerWebSocketHandler,"ws/answer/*").setAllowedOrigins("*");
+                .addHandler(answerWebSocketHandler,"ws/answer/*").setAllowedOrigins("*")
+                .addHandler(webSellMsgSocketHandler, "ws/seller/*").setAllowedOrigins("*");
     }
 }
