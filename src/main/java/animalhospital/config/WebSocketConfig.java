@@ -21,6 +21,7 @@ public class WebSocketConfig implements WebSocketConfigurer {
     @Autowired
     private WebMsgSocketHandler webMsgSocketHandler;
 
+
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
         registry.addHandler(webSocketHandler ,"ws/message/*" ).setAllowedOrigins("*")
