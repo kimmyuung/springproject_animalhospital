@@ -1,10 +1,5 @@
 
-$("#v-pills-home-tab").click(function(){
-    gettomsglist(1);
-});
-$("#v-pills-profile-tab").click(function(){
-    gettomsglist(2);
-});
+
 let today = new Date();
 
 let year = today.getFullYear()+"";
@@ -66,7 +61,6 @@ function getfrommsglist(type){
         url: '/member/getfrommsglist',
         data :{"type" : type},
         success: function(object){
-        console.log(object);
             msg = object;
             let html =
                     '<tr>'+
@@ -178,7 +172,16 @@ function msgdelete(){
 }
 
 $(document).ready(function(){
+let type = 1;
 gettomsglist(1);
+
+$("#v-pills-home-tab").click(function(){
+    gettomsglist(1);
+});
+$("#v-pills-profile-tab").click(function(){
+    gettomsglist(2);
+});
+
      $("#answer").click(function(){
         let msg = $("#msginput").val();
         mid = mid.replace(/\n|\r|\s*/g, "");
@@ -187,7 +190,7 @@ gettomsglist(1);
             "from" : mid,
             "to" : to ,
             "msg" : msg,
-            "type" : 2
+            "type" : this.type
         }
         console.log(jsonmsg);
         send(jsonmsg);
@@ -195,7 +198,7 @@ gettomsglist(1);
         $(".btn-close").trigger("click");
     });
 
-    let msgwebsocket = new WebSocket("ws://ec2-43-200-181-29.ap-northeast-2.compute.amazonaws.com/ws/message/"+mid);
+    let msgwebsocket = new WebSocket("ws://ec2-43-200-181-29.ap-northeast-2.compute.amazonaws.com/ws/answer/"+mid);
 
 
    msgwebsocket.onopen = onOpen;
