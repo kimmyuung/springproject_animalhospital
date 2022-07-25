@@ -34,11 +34,9 @@ var clusterer = new kakao.maps.MarkerClusterer({
     });
 
 kakao.maps.event.addListener(map, 'idle', function() {
-
 let j =0;
 let html ="";
 clusterer.clear(); // 클러스터 클리어
-
 
         // 지도 영역정보를 얻어옵니다
         var bounds = map.getBounds();
@@ -62,16 +60,16 @@ clusterer.clear(); // 클러스터 클리어
                        map : map
                           });
 
-
-
-
                      // 마커에 클릭 이벤트를 등록한다 (우클릭 : rightclick)
                     kakao.maps.event.addListener(marker, 'click', function() {
 
                                        $.ajax({
                                                 url: "/map/view",
                                                 method: "GET",
-                                                data: {"hname":list[i].name , "hdate": list[i].opendate, "hcity" : list[i].city, "haddress" : list[i].addr, "htel" : list[i].tel , "lat" : list[i].lat , "logt" : list[i].logt},
+                                                data: {"hname":list[i].name , "hdate": list[i].opendate,
+                                                "hcity" : list[i].city,
+                                                "haddress" : list[i].addr, "htel" : list[i].tel ,
+                                                "lat" : list[i].lat , "logt" : list[i].logt},
                                                 success: function(re){
                                                      alert(re);
                                                      location.href = "/map/infopage";

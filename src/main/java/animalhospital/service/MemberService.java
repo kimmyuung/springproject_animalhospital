@@ -348,7 +348,6 @@ public class MemberService implements OAuth2UserService<OAuth2UserRequest ,OAuth
         JSONArray jsonArray = new JSONArray();
         for(MessageEntity msg : list){
             JSONObject object = new JSONObject();
-
             object.put("msgno", msg.getMsgno());
             object.put("msg", msg.getMsg());
             object.put("from", msg.getFromentity().getMid());
@@ -378,13 +377,12 @@ public class MemberService implements OAuth2UserService<OAuth2UserRequest ,OAuth
         for(MessageEntity msg : list){
             System.out.println(msg);
             JSONObject object = new JSONObject();
-
             object.put("msgno", msg.getMsgno());
             object.put("msg", msg.getMsg());
             object.put("to", msg.getToentity().getMid());
             object.put("from", msg.getFromentity().getMid());
             object.put("date", msg.getCreatedate());
-            object.put("isread" , msg.isIsread() ); ///////// msg.is <<????
+            object.put("isread" , msg.isIsread() ); ///////// 읽었는지에 대한 여부
             jsonArray.put(object);
         }
         return jsonArray;
