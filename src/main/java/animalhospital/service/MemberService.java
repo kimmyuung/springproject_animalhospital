@@ -207,10 +207,11 @@ public class MemberService implements OAuth2UserService<OAuth2UserRequest ,OAuth
     @Transactional
     public int  requestsave(RequestDto requestDto) {
         String mid = authenticationget();
-        if( mid != null  ) {
-            Optional<MemberEntity> optionalMember = memberRepository.findBymid(mid);
-            if (optionalMember.isPresent()) {
-                int mno = optionalMember.get().getMno();
+        Optional<MemberEntity> optionalMember = memberRepository.findBymid(mid);
+        if( optionalMember.isPresent()) {
+            int mno = optionalMember.get().getMno();
+            Optional<RequestEntity> optionalRequest = requestRepository.findbymno(mno);
+            if (!optionalRequest.isPresent()) {
                 RequestEntity requestEntity = requestDto.toentity();
                 requestEntity.setMno(mno);
                 requestEntity.setHospital(requestEntity.getHospital());
@@ -218,9 +219,10 @@ public class MemberService implements OAuth2UserService<OAuth2UserRequest ,OAuth
                 UUID uuid = UUID.randomUUID();
                 MultipartFile file = requestDto.getBinimg();
                 uuidfile = uuid.toString() + "_" + file.getOriginalFilename().replaceAll("_", "-");
-                String dir = "/home/ec2-user/app/springproject_animalhospital/build/resources/main/static/upload/";
+//                String dir = "/home/ec2-user/app/springproject_animalhospital/build/resources/main/static/upload/";
 
-                //String dir = "C:\\Users\\504\\Desktop\\springproject_animalhospital\\src\\main\\resources\\static\\upload\\";
+//                String dir = "C:\\Users\\504\\Desktop\\springproject_animalhospital\\src\\main\\resources\\static\\upload\\";
+                String dir = "C:\\Users\\504\\Desktop\\springproject_animalhospital\\src\\main\\resources\\static\\upload\\";
                 String filepath = dir + uuidfile;
                 try {
 
