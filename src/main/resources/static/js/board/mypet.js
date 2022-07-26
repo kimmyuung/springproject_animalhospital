@@ -244,6 +244,7 @@ function bdelete(bno){
                  data : { "bno" : bno } ,
                  success: function( board ){
                     alert("삭제완료");
+                         location.href = "/board/mypetlist";
                  }
         });
 }
