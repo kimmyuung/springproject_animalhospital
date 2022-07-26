@@ -12,7 +12,7 @@ success : function(re) {
     console.log(re);
     let html = '';
    html +=
-       '<div id ="img_wrap"> <img id="viewimg" src="/shopupload/'+re.bimglist+'/"></div>';
+       '<div id ="img_wrap"> <img id="viewimg" src="/shopupload/'+re.bimglist+'"></div>';
         html += '<div class="user_wrap"><span><i class="fa-solid fa-shield-cat"></i></span><span>'+re.mid+'</span> </div>';
         html += '<div class="title"><span>상품 이름 </span><span>'+re.btitle+'</span></div>';
           if(! re.status) {
