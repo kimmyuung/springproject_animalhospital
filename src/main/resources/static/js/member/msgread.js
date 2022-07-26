@@ -10,7 +10,9 @@ let date = today.getDate()+"";
 let gettoday = year + '-' + month + '-' + date;
 console.log(gettoday);
 let msg;
+
 function gettomsglist(type){
+alert(type);
     $.ajax({
         url: '/member/gettomsglist',
         data :{"type" : type},
@@ -56,6 +58,7 @@ function gettomsglist(type){
 }
 
 function getfrommsglist(type){
+alert(type);
     $.ajax({
         url: '/member/getfrommsglist',
         data :{"type" : type},
@@ -173,7 +176,8 @@ function msgdelete(){
 }
 let type;
 $(document).ready(function(){
-gettomsglist(1);
+if(typeof type == 'undefined' ) {type = 1;}
+gettomsglist(type);
 
 $("#v-pills-home-tab").click(function(){
     gettomsglist(1); type = 1;

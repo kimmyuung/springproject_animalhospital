@@ -204,13 +204,15 @@ public class MemberService implements OAuth2UserService<OAuth2UserRequest ,OAuth
 
     @Autowired
     RequestRepository requestRepository;
+
     @Transactional
     public int  requestsave(RequestDto requestDto) {
         String mid = authenticationget();
-        if( mid != null  ) {
-            Optional<MemberEntity> optionalMember = memberRepository.findBymid(mid);
-            if (optionalMember.isPresent()) {
-                int mno = optionalMember.get().getMno();
+        Optional<MemberEntity> optionalMember = memberRepository.findBymid(mid);
+        if( optionalMember.isPresent()) {
+            int mno = optionalMember.get().getMno();
+            Optional<RequestEntity> optionalRequest = requestRepository.findbymno(mno);
+            if (!optionalRequest.isPresent()) {
                 RequestEntity requestEntity = requestDto.toentity();
                 requestEntity.setMno(mno);
                 requestEntity.setHospital(requestEntity.getHospital());
@@ -219,8 +221,8 @@ public class MemberService implements OAuth2UserService<OAuth2UserRequest ,OAuth
                 MultipartFile file = requestDto.getBinimg();
                 uuidfile = uuid.toString() + "_" + file.getOriginalFilename().replaceAll("_", "-");
                 String dir = "/home/ec2-user/app/springproject_animalhospital/build/resources/main/static/upload/";
+//              String dir = "C:\\Users\\504\\Desktop\\springproject_animalhospital\\src\\main\\resources\\static\\upload\\";
 
-                //String dir = "C:\\Users\\504\\Desktop\\springproject_animalhospital\\src\\main\\resources\\static\\upload\\";
                 String filepath = dir + uuidfile;
                 try {
 
@@ -238,7 +240,6 @@ public class MemberService implements OAuth2UserService<OAuth2UserRequest ,OAuth
         }
         return 3;
     }
-
     public JSONArray getbinlist() {
         JSONArray jsonArray = new JSONArray();
         List<RequestEntity> entities = requestRepository.findBybinlist();
@@ -295,12 +296,22 @@ public class MemberService implements OAuth2UserService<OAuth2UserRequest ,OAuth
 
         if(optionalMember1.isPresent()){
             fromentity = optionalMember1.get();
-        }else {
+        }else { // 보내는 회원이 존재하지 않음
+            return false;
+        }
+        int tomno = 0;
+        String tomid = null;
+        // 요청을 보내는 병원을 찾기 위해서
+        Optional<RequestEntity> hospital = requestRepository.findbyhospital(to);
+        if(hospital.isPresent()) {
+            tomno = Integer.parseInt(requestRepository.findByhospital(to));
+            tomid = String.valueOf(memberRepository.findbymno(tomno));
+        }
+        else {
             return false;
         }
 
-        int tomno = Integer.parseInt(requestRepository.findByhospital(to));
-        String tomid = String.valueOf(memberRepository.findbymno(tomno));
+
         MemberEntity toentity = null;
         if(tomid != null) {
             Optional<MemberEntity> optionalMember2 = memberRepository.findBymid(tomid);
