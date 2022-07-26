@@ -12,12 +12,12 @@ function gettip(){
                          if( i == 0 ){  // 첫번째 이미지만 active 속성 추가
                             imgtag +=
                                          '<div class="carousel-item active">'+
-                                             '<img src="/upload/'+board.bimglist[i]+'" class="d-block w-100" alt="...">'+
+                                             '<img src="/upload/'+board.bimglist[i]+'" class="d-block w-100 tipimgh" alt="...">'+
                                         '</div>';
                          }else{
                             imgtag +=
                                      '<div class="carousel-item">'+
-                                         '<img src="/upload/'+board.bimglist[i]+'" class="d-block w-100" alt="...">'+
+                                         '<img src="/upload/'+board.bimglist[i]+'" class="d-block w-100 tipimgh" alt="...">'+
                                     '</div>';
                          }
 
@@ -47,6 +47,7 @@ function bdelete(bno){
                  data : { "bno" : bno } ,
                  success: function( board ){
                     alert("삭제완료");
+                      location.href = "/board/tiplist";
                  }
         });
 }
@@ -199,6 +200,7 @@ let bno = $("#bno").val();
     });
 }
 function replyupdate(rno) {
+let bno = $("#bno").val();
     $.ajax({
         url: '/board/replyupdate',
         data : { "rno": rno },
@@ -229,4 +231,3 @@ let bno = $("#bno").val();
   $('#bimg').on('change', function() {
         imagesPreview(this, 'div.preview');
     });
-});

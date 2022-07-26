@@ -244,10 +244,12 @@ public class MemberService implements OAuth2UserService<OAuth2UserRequest ,OAuth
         List<RequestEntity> entities = requestRepository.findBybinlist();
         System.out.println(entities);
         for (RequestEntity entity : entities ){
+            String mid = memberRepository.findbymno(entity.getMno());
             JSONObject object = new JSONObject();
             object.put("hno", entity.getHno());
             object.put("hospital", entity.getHospital());
             object.put("mno", entity.getMno());
+            object.put("mid",mid);
             object.put("binimg", entity.getBinimg());
             jsonArray.put(object);
         }
@@ -348,7 +350,6 @@ public class MemberService implements OAuth2UserService<OAuth2UserRequest ,OAuth
         JSONArray jsonArray = new JSONArray();
         for(MessageEntity msg : list){
             JSONObject object = new JSONObject();
-
             object.put("msgno", msg.getMsgno());
             object.put("msg", msg.getMsg());
             object.put("from", msg.getFromentity().getMid());
@@ -378,13 +379,12 @@ public class MemberService implements OAuth2UserService<OAuth2UserRequest ,OAuth
         for(MessageEntity msg : list){
             System.out.println(msg);
             JSONObject object = new JSONObject();
-
             object.put("msgno", msg.getMsgno());
             object.put("msg", msg.getMsg());
             object.put("to", msg.getToentity().getMid());
             object.put("from", msg.getFromentity().getMid());
             object.put("date", msg.getCreatedate());
-            object.put("isread" , msg.isIsread() ); ///////// msg.is <<????
+            object.put("isread" , msg.isIsread() ); ///////// 읽었는지에 대한 여부
             jsonArray.put(object);
         }
         return jsonArray;
@@ -415,6 +415,7 @@ public class MemberService implements OAuth2UserService<OAuth2UserRequest ,OAuth
         String from = (String) object.get("from");
         String to = (String) object.get("to");
         String msg = (String) object.get("msg");
+        int type = (int) object.get("type");
 
         MemberEntity fromentity = null;
         Optional<MemberEntity> optionalMember1 = memberRepository.findBymid(from);
@@ -436,7 +437,7 @@ public class MemberService implements OAuth2UserService<OAuth2UserRequest ,OAuth
                 .msg(msg)
                 .fromentity(fromentity)
                 .toentity(toentity)
-                .msgtype(2)
+                .msgtype(type)
                 .build();
 
         messageRepository.save(messageEntity);

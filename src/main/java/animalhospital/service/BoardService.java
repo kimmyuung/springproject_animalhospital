@@ -50,6 +50,8 @@ public class BoardService {
     @Autowired
     private ReplyRepository replyRepository;
 
+    @Autowired
+    private MemberService memberService;
 
     @Transactional
     public boolean save(BoardDto boardDto) {
@@ -86,6 +88,7 @@ public class BoardService {
 
                         uuidfile = uuid.toString() + "_" + file.getOriginalFilename().replaceAll("_", "-");
                         String dir = "/home/ec2-user/app/springproject_animalhospital/build/resources/main/static/upload/";
+                     //   String dir = "C:\\Users\\504\\springproject_animalhospital\\src\\main\\resources\\static\\upload\\";
 
                         String filepath = dir + uuidfile;
 
@@ -98,7 +101,7 @@ public class BoardService {
                                     .build();
 
                             boardimgRespository.save(boardimgEntity);
-                            System.out.println(boardimgEntity);
+
                             boardEntity.getBoardimgEntities().add(boardimgEntity);
 
                         } catch (Exception e) {
@@ -156,7 +159,8 @@ public class BoardService {
 
     public Map< String , List<Map<String , String >>> boardlist(int page ) // 인수
     {
-        System.out.println( "페이지 :"+ page );
+
+
 
         Page<BoardEntity> boardEntitylist = null ;
         Pageable pageable = PageRequest.of( page , 12 , Sort.by( Sort.Direction.DESC , "bno")    );
@@ -174,17 +178,16 @@ public class BoardService {
 
 
         for( BoardEntity entity : boardEntitylist ){
-            System.out.println(entity);
             // 3. map 객체 생성
             Map<String, String> map = new HashMap<>();
             map.put("bno", entity.getBno()+"" );
             map.put("btitle", entity.getBtitle());
             map.put("bimg", entity.getBoardimgEntities().get(0).getBimg());
-            map.put("startbtn" , startbtn+"" );
+            map.put( "startbtn" , startbtn+"" );
             map.put("mid", entity.getMemberEntity().getMid());
             map.put("bdate",  entity.getCreatedate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
-            map.put("endhtn" , endhtn+"" );
-            map.put("totalpages" , boardEntitylist.getTotalPages()+"" );
+            map.put( "endhtn" , endhtn+"" );
+            map.put( "totalpages" , boardEntitylist.getTotalPages()+"" );
             // 4. 리스트 넣기
             Maplist.add(map);
         }
@@ -232,6 +235,7 @@ public class BoardService {
         Map< String , List<  Map<String , String >  > > object = new HashMap<>();
 
         object.put( "blists" , Maplist );
+
         return  object;
     }
 
@@ -287,7 +291,6 @@ public class BoardService {
         }else{
             same =  "false";
         }
-
         // 2.  해당 엔티티 -> json 객체 변환
         JSONObject object = new JSONObject();
         // 1. json에 엔티티 필드 값 넣기
@@ -303,10 +306,8 @@ public class BoardService {
             jsonArray.put( boardimgEntity.getBimg());
         }
         // 3. jsonarray를 json객체 포함
-        System.out.println(jsonArray);
         object.put("bimglist" , jsonArray) ;
         // 3. 반한
-
         return object;
     }
 
@@ -319,53 +320,6 @@ public class BoardService {
             return true;
         }else{
             return false;
-        }
-    }
-
-    public void 크롤링() {
-        String inflearnUrl = "https://search.daum.net/search?nil_suggest=btn&w=tot&DA=SBC&q=%EB%82%A8%EC%96%91%EC%A3%BC%EC%8B%9C+%ED%99%94%EB%8F%84%EB%8F%99%EB%AC%BC%EB%B3%91%EC%9B%90";
-
-        Connection conn = Jsoup.connect(inflearnUrl);
-        try {
-            Document document = conn.get();
-            Elements title = document.getElementsByClass("inner_tit").first().select("b");
-            Elements score = document.getElementsByClass("f_eb");
-
-            String title2 = title.text().replaceAll(" ","");
-            String score2 = score.first().text();
-            String link = score.attr("href");
-
-//            System.out.println(title2);
-//            System.out.println(score2);
-//            System.out.println(link);
-
-//            Elements imageUrlElements = document.getElementsByClass("total_area");
-//            Elements e = document.getElementsByClass("total_wrap api_ani_send");
-//           // Elements imageUrlElements2 = document.getElementsByClass("dsc_wrap");
-//           // System.out.println(document);
-//            Elements a = imageUrlElements.first().getElementsByTag("a");
-//
-//            for (Element element : e) {
-//                //System.out.println(element.getElementsByIndexEquals(1).get(5).text());
-//               // System.out.println(element.getElementsByIndexEquals(2).text().length());
-//
-//
-//
-//                if(element.getElementsByIndexEquals(1).get(5).text().contains("동물병원")) {
-//                    System.out.println(element.getElementsByIndexEquals(1).get(5).text());
-//                    System.out.println(", "+element.getElementsByIndexEquals(2).text());
-//                    System.out.println(","+element.getElementsByTag("a"));
-//
-//                }
-//
-//            }
-//            for (Element element : imageUrlElements2) {
-//                System.out.println(element);
-//
-//            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 
@@ -392,28 +346,12 @@ public class BoardService {
         return  null;
     }
 
+
     @Transactional
     public boolean replysave(int bno, String reply) {
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Object principal = authentication.getPrincipal();
-        String mid = null;
-        if( principal instanceof UserDetails){
-            mid = ((UserDetails) principal).getUsername();
-        }else if( principal instanceof DefaultOAuth2User){
-            Map<String , Object>  map =  ((DefaultOAuth2User) principal).getAttributes();
-            if( map.get("response") != null ){
-                Map< String , Object> map2  = (Map<String, Object>) map.get("response"); // 네이버
-                mid = map2.get("email").toString().split("@")[0];
-            }else if(map.get("kakao_account") != null){
-                Map< String , Object> map2  = (Map<String, Object>) map.get("kakao_account"); // 카카오
-                mid = map2.get("email").toString().split("@")[0];
-            }else if(map.get("kakao_account") == null && map.get("response") == null ) { // 구글, 깃허브
-                mid = map.get("email").toString().split("@")[0];
-            }
-        }else{
-            return false;
-        }
+        String mid = memberService.authenticationget();
+
         if( mid != null  ) {
             Optional<MemberEntity> optionalMember = memberRepository.findBymid(mid);
             if (optionalMember.isPresent()) { // null 아니면
@@ -428,7 +366,6 @@ public class BoardService {
                 replyRepository.save(replyEntity);
                 return true;
             } else { // 로그인이 안되어 있는경우
-
                 return false;
             }
         }
@@ -491,25 +428,7 @@ public class BoardService {
 
     public boolean rereplysave(int bno, int rindex, String reply) {
         System.out.println(rindex);
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Object principal = authentication.getPrincipal();
-        String mid = null;
-        if( principal instanceof UserDetails){
-            mid = ((UserDetails) principal).getUsername();
-        }else if( principal instanceof DefaultOAuth2User){
-            Map<String , Object>  map =  ((DefaultOAuth2User) principal).getAttributes();
-            if( map.get("response") != null ){
-                Map< String , Object> map2  = (Map<String, Object>) map.get("response"); // 네이버
-                mid = map2.get("email").toString().split("@")[0];
-            }else if(map.get("kakao_account") != null){
-                Map< String , Object> map2  = (Map<String, Object>) map.get("kakao_account"); // 카카오
-                mid = map2.get("email").toString().split("@")[0];
-            }else if(map.get("kakao_account") == null && map.get("response") == null ) { // 구글, 깃허브
-                mid = map.get("email").toString().split("@")[0];
-            }
-        }else{
-            return false;
-        }
+      String mid = memberService.authenticationget();
         if( mid != null  ) {
             Optional<MemberEntity> optionalMember = memberRepository.findBymid(mid);
             if (optionalMember.isPresent()) { // null 아니면
@@ -608,6 +527,7 @@ public class BoardService {
                     UUID uuid = UUID.randomUUID();
 
                     uuidfile = uuid.toString() + "_" + file.getOriginalFilename().replaceAll("_", "-");
+                  //  String dir = "C:\\Users\\504\\springproject_animalhospital\\src\\main\\resources\\static\\upload\\";
                     String dir = "/home/ec2-user/app/springproject_animalhospital/build/resources/main/static/upload/";
                     String filepath = dir + uuidfile;
 

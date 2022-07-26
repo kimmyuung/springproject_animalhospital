@@ -284,7 +284,6 @@ function file2(){
 }
 
 function addreview(){
-        alert(document.getElementById('rcontent').value);
         if(document.getElementById('rcontent').value==""){
             alert("내용을 입력해주세요");
             return false;
@@ -314,7 +313,6 @@ function addreview(){
                contentType: false,
                processData: false ,
                success: function(re){
-                alert(re);
                 location.reload();
              }
            });
@@ -346,9 +344,9 @@ function getreviewstarlist(hname,hdate){
              fac+= parseInt( reviewlist.data[i].rfac);
               price+= parseInt( reviewlist.data[i].rprice);
               }
-               let rk = parseFloat(parseInt(kind)/parseInt(totalcount));
-               let rf = parseFloat(parseInt(fac)/parseInt(totalcount));
-               let rp = parseFloat(parseInt(price)/parseInt(totalcount));
+               let rrk = parseFloat(parseInt(kind)/parseInt(totalcount));
+               let rrf = parseFloat(parseInt(fac)/parseInt(totalcount));
+               let rrp = parseFloat(parseInt(price)/parseInt(totalcount));
                let rk =	0;
                let rf =	0;
                let rp =	0;
@@ -382,7 +380,6 @@ function getreviewstarlist(hname,hdate){
                               '<img class="star1" src="/img/star1.png">';
                              }
                              else if(1.5<rk&&rk<=2.5){
-                             alert(rk);
                                 kindavg = '<img class="star1" src="/img/star2.png">'+
                               '<img class="star1" src="/img/star2.png">'+
                               '<img class="star1" src="/img/star1.png">'+
@@ -643,7 +640,7 @@ function getreviewlist(page,hname,hdate){
 
                                                              '<div class="u_content">'+
                                                                '<div class="c1"> '+reviewlist.data[i].rcontent+'</div>'+
-                                                               '<div class="c2" style="margin-top:20px">날짜 들어갈공간</div>'+
+                                                               '<div class="c2" style="margin-top:20px"></div>'+
                                                              '</div>'+
                                                          '</div>'+
                                                      '  </div>'
@@ -666,7 +663,7 @@ function getreviewlist(page,hname,hdate){
                                                                 '</div>'+
                                                                 '<div class="u_content">'+
                                                                   '<div class="c1"> '+reviewlist.data[i].rcontent+'</div>'+
-                                                                  '<div class="c2" style="margin-top:20px">날짜 들어갈공간</div>'+
+                                                                  '<div class="c2" style="margin-top:20px"></div>'+
                                                                 '</div>'+
                                                             '</div>'+
                                                         '  </div>'
@@ -689,7 +686,7 @@ function getreviewlist(page,hname,hdate){
                                                                  '</div>'+
                                                                  '<div class="u_content">'+
                                                                    '<div class="c1"> '+reviewlist.data[i].rcontent+'</div>'+
-                                                                   '<div class="c2" style="margin-top:20px">날짜 들어갈공간</div>'+
+                                                                   '<div class="c2" style="margin-top:20px"></div>'+
                                                                  '</div>'+
                                                              '</div>'+
                                                          '  </div>'
@@ -713,7 +710,7 @@ function getreviewlist(page,hname,hdate){
                                                               '</div>'+
                                                               '<div class="u_content">'+
                                                                 '<div class="c1"> '+reviewlist.data[i].rcontent+'</div>'+
-                                                                '<div class="c2" style="margin-top:20px">날짜 들어갈공간</div>'+
+                                                                '<div class="c2" style="margin-top:20px"></div>'+
                                                               '</div>'+
                                                           '</div>'+
                                                       '  </div>'
@@ -845,20 +842,17 @@ function updatereview(rno){
                    contentType: false,
                    processData: false ,
                    success: function(re){
-                    alert(re);
                     location.reload();
                  }
                });
 }
 
 function rdelete(rno){
-alert(rno);
      $.ajax({
              url : "/map/rdelete" ,
              method : "Delete",
              data : { "rno" : rno } ,
              success: function( re ){
-                alert(re);
                  location.reload();
              }
     });

@@ -34,8 +34,8 @@ public class BoardController {
     @GetMapping("/tipview/{bno}")
     public String tipview( @PathVariable("bno") int bno){
         request.getSession().setAttribute("bno", bno);
-        System.out.println(bno);
-        return "board/tipview";}
+        return "board/tipview";
+    }
 
 
     @PostMapping("/write")
@@ -43,9 +43,7 @@ public class BoardController {
     public boolean write_save( BoardDto boardDto ){
         boardDto.setCno(2);
         boardDto.setBcontent(boardDto.getBcontent().replace("\r\n", "<br>"));
-        System.out.println("컨트롤러"+boardDto);
         boolean result = boardService.save( boardDto );
-
         return result;
     }
     @PostMapping("/tipwrite")
@@ -54,7 +52,8 @@ public class BoardController {
         boardDto.setCno(3);
         boardDto.setBcontent(boardDto.getBcontent().replace("\r\n", "<br>"));
         boolean result = boardService.save( boardDto );
-        return  result;
+
+        return result;
     }
 
     @PutMapping("/tipupdate")

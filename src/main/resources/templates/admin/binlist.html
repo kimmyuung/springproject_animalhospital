@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <title>Title</title>
@@ -30,30 +30,30 @@
 </head>
 
 <body>
-  <div th:replace="header.html :: header"></div>
-    <div class="bgc">
-      <h1>병원 등록 신청 목록</h1>
-    </div>
-      <div class="container">
-        <table id="binlisttable" class="table">
+<div th:replace="header.html :: header"></div>
+<div class="bgc">
+  <h1>병원 등록 신청 목록</h1>
+</div>
+<div class="container">
+  <table id="binlisttable" class="table">
 
-        </table>
+  </table>
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
+      <div class="modal-body">
 
-
-  <!-- Modal -->
-  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-
-        </div>
       </div>
     </div>
   </div>
+</div>
 
 <div th:replace="footer.html :: footer"></div>
 <script  src="http://code.jquery.com/jquery-latest.min.js"></script>

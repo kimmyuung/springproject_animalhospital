@@ -4,8 +4,8 @@ function save(){
             alert("이미지를 하나 이상 등록해주세요");
         }else if($("#btitle").val()==""){
                      alert("제목을 입력해주세요");
-          }else{
-     let form = $("#saveform")[0];
+        }else{
+        let form = $("#saveform")[0];
         let formdata = new FormData( form);
         $.ajax({
             url: "/board/write",
@@ -16,7 +16,6 @@ function save(){
             success: function( re ){
                 if(re){
                      location.href ="list"
-
                 }else{
                     alert("로그인 후 이용해주세요!")
                 }
@@ -192,13 +191,11 @@ function bview(bno){
 }
 
 function bupdate(bno){
-alert(bno);
     $.ajax({
             url : "/board/getboard" ,
             method : "GET",
             data: {"bno":bno},
             success: function( board ){
-            console.log(board);
                 let imgtag = "";
                 console.log( board );
                 for( let i = 0 ; i<board.bimglist.length ; i++ ){
@@ -230,9 +227,10 @@ function mypetupdate(){
                 contentType: false,
                 processData: false ,
                 success: function( re ){
-                    if(re){
+                if(re){
                     location.reload();
-                    }else{
+                    }
+                    else{
                         alert("로그인 후 이용해주세요!")
                     }
                 }
@@ -245,37 +243,26 @@ function bdelete(bno){
                  data : { "bno" : bno } ,
                  success: function( board ){
                     alert("삭제완료");
+                    location.href = "/board/list";
                  }
         });
 }
 
 
 $(function() {
-    // Multiple images preview in browser
-    var imagesPreview = function(input, placeToInsertImagePreview) {
-
-        if (input.files) {
-            var filesAmount = input.files.length;
-//               $(".preview").html("");
-            for (i = 0; i < 1; i++) {
-                var reader = new FileReader();
-
-                reader.onload = function(event) {
-                  $($("#img_preview")).attr('src', event.target.result).appendTo(placeToInsertImagePreview);
-//                    $($.parseHTML('<img>')).attr('src', event.target.result).appendTo(placeToInsertImagePreview);
-                     $($.parseHTML('<img>')).attr('style', 'width:80%');
-                }
-
-                reader.readAsDataURL(input.files[i]);
-            }
-        }
-
-    };
-
-    $('#bimg').on('change', function() {
-        imagesPreview(this, 'div.preview');
+    $("#bimg").on('change', function(){
+    readURL2(this);
     });
 });
+function readURL2(input) {
+    if (input.files && input.files[0]) {
+        var reader = new FileReader();
+        reader.onload = function (e) {
+        $('#img_preview').attr('src', e.target.result);
+        }
+        reader.readAsDataURL(input.files[0]);
+    }
+}
 
 
 $(function() {
@@ -343,7 +330,7 @@ function getreply(){
                                 '</div>'+
                                 '<div class="row"><div class="col-md-8">'+result[i].rcontent+'</div>'+
                                 '<div id="repltbtn" class="col-md-4 d-flex justify-content-end replyupdate">'+
-                                    '<button  class="replyupdatebtn" type="button" onclick="rereply('+result[i].rno+')">답글</button>'+
+                                    '<button  class="replyupdatebtn" type="button" onclick="rereplyinput('+result[i].rno+')">답글</button>'+
                                 '</div></div>'+
                                 '<div  class="rereplytable" id="'+result[i].rno+'"></div>'+
                             '</div>';
