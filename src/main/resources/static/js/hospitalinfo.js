@@ -284,7 +284,6 @@ function file2(){
 }
 
 function addreview(){
-        alert(document.getElementById('rcontent').value);
         if(document.getElementById('rcontent').value==""){
             alert("내용을 입력해주세요");
             return false;
@@ -314,7 +313,6 @@ function addreview(){
                contentType: false,
                processData: false ,
                success: function(re){
-                alert(re);
                 location.reload();
              }
            });
@@ -643,7 +641,7 @@ function getreviewlist(page,hname,hdate){
 
                                                              '<div class="u_content">'+
                                                                '<div class="c1"> '+reviewlist.data[i].rcontent+'</div>'+
-                                                               '<div class="c2" style="margin-top:20px">날짜 들어갈공간</div>'+
+                                                               '<div class="c2" style="margin-top:20px"></div>'+
                                                              '</div>'+
                                                          '</div>'+
                                                      '  </div>'
@@ -666,7 +664,7 @@ function getreviewlist(page,hname,hdate){
                                                                 '</div>'+
                                                                 '<div class="u_content">'+
                                                                   '<div class="c1"> '+reviewlist.data[i].rcontent+'</div>'+
-                                                                  '<div class="c2" style="margin-top:20px">날짜 들어갈공간</div>'+
+                                                                  '<div class="c2" style="margin-top:20px"></div>'+
                                                                 '</div>'+
                                                             '</div>'+
                                                         '  </div>'
@@ -689,7 +687,7 @@ function getreviewlist(page,hname,hdate){
                                                                  '</div>'+
                                                                  '<div class="u_content">'+
                                                                    '<div class="c1"> '+reviewlist.data[i].rcontent+'</div>'+
-                                                                   '<div class="c2" style="margin-top:20px">날짜 들어갈공간</div>'+
+                                                                   '<div class="c2" style="margin-top:20px"></div>'+
                                                                  '</div>'+
                                                              '</div>'+
                                                          '  </div>'
@@ -713,7 +711,7 @@ function getreviewlist(page,hname,hdate){
                                                               '</div>'+
                                                               '<div class="u_content">'+
                                                                 '<div class="c1"> '+reviewlist.data[i].rcontent+'</div>'+
-                                                                '<div class="c2" style="margin-top:20px">날짜 들어갈공간</div>'+
+                                                                '<div class="c2" style="margin-top:20px"></div>'+
                                                               '</div>'+
                                                           '</div>'+
                                                       '  </div>'
@@ -845,20 +843,17 @@ function updatereview(rno){
                    contentType: false,
                    processData: false ,
                    success: function(re){
-                    alert(re);
                     location.reload();
                  }
                });
 }
 
 function rdelete(rno){
-alert(rno);
      $.ajax({
              url : "/map/rdelete" ,
              method : "Delete",
              data : { "rno" : rno } ,
              success: function( re ){
-                alert(re);
                  location.reload();
              }
     });

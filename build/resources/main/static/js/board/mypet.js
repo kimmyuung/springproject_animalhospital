@@ -191,13 +191,11 @@ function bview(bno){
 }
 
 function bupdate(bno){
-alert(bno);
     $.ajax({
             url : "/board/getboard" ,
             method : "GET",
             data: {"bno":bno},
             success: function( board ){
-            console.log(board);
                 let imgtag = "";
                 console.log( board );
                 for( let i = 0 ; i<board.bimglist.length ; i++ ){
