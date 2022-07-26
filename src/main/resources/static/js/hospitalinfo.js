@@ -380,7 +380,6 @@ function getreviewstarlist(hname,hdate){
                               '<img class="star1" src="/img/star1.png">';
                              }
                              else if(1.5<rk&&rk<=2.5){
-                             alert(rk);
                                 kindavg = '<img class="star1" src="/img/star2.png">'+
                               '<img class="star1" src="/img/star2.png">'+
                               '<img class="star1" src="/img/star1.png">'+
