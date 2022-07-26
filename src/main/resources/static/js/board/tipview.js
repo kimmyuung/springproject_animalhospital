@@ -98,32 +98,19 @@ function tipupdate(){
             });
 }
 $(function() {
-    // Multiple images preview in browser
-    var imagesPreview = function(input, placeToInsertImagePreview) {
-
-        if (input.files) {
-            var filesAmount = input.files.length;
-//               $(".preview").html("");
-        console.log(filesAmount);
-            for (i = 0; i < filesAmount; i++) {
-                var reader = new FileReader();
-
-                reader.onload = function(event) {
-                  $($("#img_preview")).attr('src', event.target.result).appendTo(placeToInsertImagePreview);
-//
-                     $($.parseHTML('<img>')).attr('style', 'width:80%');
-                }
-
-                reader.readAsDataURL(input.files[i]);
-            }
-        }
-    };
-
-    $('#bimg').on('change', function() {
-        imagesPreview(this, 'div.preview');
+    $("#bimg").on('change', function(){
+    readURL(this);
     });
 });
-
+function readURL(input) {
+    if (input.files && input.files[0]) {
+        var reader = new FileReader();
+        reader.onload = function (e) {
+        $('#img_preview').attr('src', e.target.result);
+        }
+        reader.readAsDataURL(input.files[0]);
+    }
+}
 
 function replysave(){
     let bno = $("#bno").val();
@@ -227,7 +214,3 @@ let bno = $("#bno").val();
         });
 }
 
-
-  $('#bimg').on('change', function() {
-        imagesPreview(this, 'div.preview');
-    });

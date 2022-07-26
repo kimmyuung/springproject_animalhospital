@@ -191,13 +191,11 @@ function bview(bno){
 }
 
 function bupdate(bno){
-alert(bno);
     $.ajax({
             url : "/board/getboard" ,
             method : "GET",
             data: {"bno":bno},
             success: function( board ){
-            console.log(board);
                 let imgtag = "";
                 console.log( board );
                 for( let i = 0 ; i<board.bimglist.length ; i++ ){
@@ -229,8 +227,10 @@ function mypetupdate(){
                 contentType: false,
                 processData: false ,
                 success: function( re ){
+                if(re){
                     location.reload();
-                    }else{
+                    }
+                    else{
                         alert("로그인 후 이용해주세요!")
                     }
                 }
@@ -250,31 +250,19 @@ function bdelete(bno){
 
 
 $(function() {
-    // Multiple images preview in browser
-    var imagesPreview = function(input, placeToInsertImagePreview) {
-
-        if (input.files) {
-            var filesAmount = input.files.length;
-//               $(".preview").html("");
-            for (i = 0; i < 1; i++) {
-                var reader = new FileReader();
-
-                reader.onload = function(event) {
-                  $($("#img_preview")).attr('src', event.target.result).appendTo(placeToInsertImagePreview);
-//                    $($.parseHTML('<img>')).attr('src', event.target.result).appendTo(placeToInsertImagePreview);
-                     $($.parseHTML('<img>')).attr('style', 'width:80%');
-                }
-
-                reader.readAsDataURL(input.files[i]);
-            }
-        }
-
-    };
-
-    $('#bimg').on('change', function() {
-        imagesPreview(this, 'div.preview');
+    $("#bimg").on('change', function(){
+    readURL2(this);
     });
 });
+function readURL2(input) {
+    if (input.files && input.files[0]) {
+        var reader = new FileReader();
+        reader.onload = function (e) {
+        $('#img_preview').attr('src', e.target.result);
+        }
+        reader.readAsDataURL(input.files[0]);
+    }
+}
 
 
 $(function() {
