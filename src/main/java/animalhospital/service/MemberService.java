@@ -283,6 +283,7 @@ public class MemberService implements OAuth2UserService<OAuth2UserRequest ,OAuth
     @Transactional
     public boolean messagesend(JSONObject object){
         System.out.println("messagesend : " + object);
+
         String from = (String) object.get("from");
         String to = (String) object.get("to");
         String msg = (String) object.get("msg");
@@ -307,8 +308,7 @@ public class MemberService implements OAuth2UserService<OAuth2UserRequest ,OAuth
             } else {
                 return false; // 해당 되는 병원이 없음
             }
-        }
-        else if(tomid == null) {
+        }else if(tomid == null) {
             Optional<MemberEntity> optionalMember2 = memberRepository.findBymid(to);
             if(optionalMember2.isPresent()) {
                 toentity = optionalMember2.get();
