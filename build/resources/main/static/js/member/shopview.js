@@ -81,6 +81,7 @@ function itemdelete() {
 
 if(confirm("정말 상품을 삭제하시겠습니까?")) {
 
+alert(sno+"번 상품을 삭제합니다");
 $.ajax({
             url : '/member/deleteitem',
             type: "DELETE",

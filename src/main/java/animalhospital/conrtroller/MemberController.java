@@ -140,6 +140,7 @@ public class MemberController {
     @GetMapping("/getfrommsglist")
     public void getfrommsglist(HttpServletResponse response, @RequestParam("type") int type){
         try {
+            System.out.println("컨트롤러"+ type);
             response.setContentType("application/json");
             response.setCharacterEncoding("UTF-8");
             response.getWriter().print(memberService.getfrommsglist(type));
