@@ -229,7 +229,6 @@ function mypetupdate(){
                 contentType: false,
                 processData: false ,
                 success: function( re ){
-                    if(re){
                     location.reload();
                     }else{
                         alert("로그인 후 이용해주세요!")
@@ -244,6 +243,7 @@ function bdelete(bno){
                  data : { "bno" : bno } ,
                  success: function( board ){
                     alert("삭제완료");
+                    location.href = "/board/list";
                  }
         });
 }

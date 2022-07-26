@@ -11,7 +11,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Getter
 @Setter
-@ToString( exclude="shopEntity" )@Builder
+@Builder
 public class ShopImgEntity {
     @Id
     @GeneratedValue( strategy = GenerationType.IDENTITY )

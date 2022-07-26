@@ -12,12 +12,12 @@ function gettip(){
                          if( i == 0 ){  // 첫번째 이미지만 active 속성 추가
                             imgtag +=
                                          '<div class="carousel-item active">'+
-                                             '<img src="/upload/'+board.bimglist[i]+'" class="d-block w-100" alt="...">'+
+                                             '<img src="/upload/'+board.bimglist[i]+'" class="d-block w-100 tipimgh" alt="...">'+
                                         '</div>';
                          }else{
                             imgtag +=
                                      '<div class="carousel-item">'+
-                                         '<img src="/upload/'+board.bimglist[i]+'" class="d-block w-100" alt="...">'+
+                                         '<img src="/upload/'+board.bimglist[i]+'" class="d-block w-100 tipimgh" alt="...">'+
                                     '</div>';
                          }
 
@@ -47,6 +47,7 @@ function bdelete(bno){
                  data : { "bno" : bno } ,
                  success: function( board ){
                     alert("삭제완료");
+                      location.href = "/board/tiplist";
                  }
         });
 }
@@ -123,6 +124,7 @@ $(function() {
     });
 });
 
+
 function replysave(){
     let bno = $("#bno").val();
     let reply = $("#reply").val();
@@ -179,8 +181,10 @@ function getreply(bnum){
                 }else{
                     getrereply(result[i].rindex);
                 }
+
             }
              $('#replytable').html(replyhtml);
+
         }
     });
 }
@@ -222,68 +226,8 @@ let bno = $("#bno").val();
             }
         });
 }
-function rereplyinput(rno){
-        let html = $("#"+rno).html();
-        html =
-            '<input type="text" id="reply"">'+
-            '<button type="button" onclick="rereply('+rno+')">답글</button>';
-        $("#"+rno).html(html);
-}
 
-function rereply(rno){
-    let bno = $("#bno").val();
-    let reply = $("#reply").val();
-    let rindex = rno;
-    $.ajax({
-        url:"/board/rereply",
-        method : "POST",
-        data : {"reply": reply, "bno": bno, "rindex":rindex},
-        success : function(result){
-            if(result){
-                $('#reply').val('');
-                getreply();
-            }else{
-                alert("로그인 후 이용해주세요!")
-            }
-        }
 
+  $('#bimg').on('change', function() {
+        imagesPreview(this, 'div.preview');
     });
-}
-function getrereply(rno){
-  let bno = $("#bno").val();
-    let rindex = rno;
-    let rereplyhtml = "";
-    $.ajax({
-        url: "/board/getrereply" ,
-        data : { "rindex" : rindex , "bno": bno } ,
-        success : function(result){
-            console.log(result);
-            for(let i = 0; i <result.length; i++){
-                if(result[i].same == true){
-                    rereplyhtml +=
-                        '<div>'+
-                            '<div class="row">'+
-                                '<div class="col-md-6">'+result[i].mid+'</div>'+
-                                '<div class="col-md-6 d-flex justify-content-end">'+result[i].createdate+'</div>'+
-                            '</div>'+
-                            '<div>'+result[i].rcontent+'</div>'+
-                            '<div id="repltbtn">'+
-                                '<button type="button" onclick="replyupdate('+result[i].rno+')">수정</button><button type="button" onclick="replydelete('+result[i].rno+')">삭제</button>'+
-                            '</div>'+
-                        '</div>';
-                }else{
-                    rereplyhtml +=
-                        '<div>'+
-                            '<div class="row">'+
-                                '<div class="col-md-6">'+result[i].mid+'</div>'+
-                                '<div class="col-md-6 d-flex justify-content-end">'+result[i].createdate+'</div>'+
-                            '</div>'+
-                            '<div>'+result[i].rcontent+'</div>'+
-                        '</div>';
-                }
-            }
-            console.log(rereplyhtml);
-            $("#"+ rindex).html(rereplyhtml);
-        }
-    });
-}

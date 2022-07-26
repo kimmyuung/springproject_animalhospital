@@ -8,7 +8,7 @@ import javax.persistence.*;
 @Getter
 @Setter
 @NoArgsConstructor@AllArgsConstructor
-@Builder@ToString
+@Builder
 @Entity
 @Table(name="review")
 public class ReviewEntity extends BaseTime{
