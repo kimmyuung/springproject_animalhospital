@@ -71,7 +71,6 @@ clusterer.clear(); // 클러스터 클리어
                                                 "haddress" : list[i].addr, "htel" : list[i].tel ,
                                                 "lat" : list[i].lat , "logt" : list[i].logt},
                                                 success: function(re){
-                                                     alert(re);
                                                      location.href = "/map/infopage";
                                                 }
                                             });
