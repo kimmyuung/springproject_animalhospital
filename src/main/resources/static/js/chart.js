@@ -221,7 +221,7 @@ series.events.on("datavalidated", function () {
   var toTime =
     series.dataItems[series.dataItems.length - 1].get("valueX") +
     am5.time.getDuration("day", 1);
-  var fromTime = series.dataItems[series.dataItems.length - leng].get("valueX");
+  var fromTime = series.dataItems[series.dataItems.length - 10].get("valueX");
 
   xAxis.zoomToValues(fromTime, toTime);
 });
