@@ -175,17 +175,28 @@ public class ItemService {
 
     @Transactional
     public boolean itemdelete( int sno ){
-        ShopEntity shopEntity =  shopRepository.findById( sno ).get();
-        if( shopEntity != null ){
+        System.out.println(sno+"번 상품 삭제 시작");
+        Optional<ShopEntity> optional = shopRepository.findById(sno);
+        if(optional.isPresent()) {
+            ShopEntity shopEntity = optional.get();
+            String dir = "/home/ec2-user/app/springproject_animalhospital/build/resources/main/static/upload/";
             // 해당 엔티티를 삭제
-            for(ShopImgEntity temp : shopEntity.getShopimgEntities()){
-                shopImgRepository.delete( temp );
+            if(shopEntity.getShopimgEntities().size() != 0) {
+                for (ShopImgEntity temp : shopEntity.getShopimgEntities()) {
+                    try{
+                        File oldfile = new File(dir + temp.getSimg());
+                        if(oldfile.exists()) {
+                            oldfile.delete();
+                            shopEntity.setShopimgEntities(null);
+                            shopImgRepository.deleteById(temp.getSimgno());
+                        }
+                    }catch(Exception e){e.printStackTrace();}
+                }
             }
-            shopRepository.delete( shopEntity );
+            shopRepository.delete(shopEntity);
             return true;
-        }else{
-            return false;
         }
+        return false;
     }
 
     @Transactional
