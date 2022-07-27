@@ -6,8 +6,13 @@
 # 2. 프로젝트목적
 *  집근처 가장 가까운 동물병원을 보다 간편하게 찾을 수 있도록 한다.
 
-# 3. 개발일정
-노션 참조
+# 3. 개발일정 : 2022-06-24 ~ 2022-07-22
+
+<img width="385" alt="캡처" src="https://user-images.githubusercontent.com/100548259/181215927-aed2c4b0-b756-48b5-adec-7bb3027287bb.PNG">
+<img width="312" alt="캡처2" src="https://user-images.githubusercontent.com/100548259/181216065-865b5bab-df55-46fb-8c6a-6361af5e31bb.PNG">
+
+
+상세보기 : 노션 참조
 https://petalite-trapezoid-898.notion.site/Spring-Project-538b46e47c024b6599f43767bf8a3bd9
  
  # 4. 역할분담
