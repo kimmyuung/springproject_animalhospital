@@ -27,6 +27,9 @@ https://petalite-trapezoid-898.notion.site/Spring-Project-538b46e47c024b6599f437
 
  
  # 6. DB 설계
-![image](https://user-images.githubusercontent.com/100547902/175894830-74671c1c-6280-45df-84ff-f6c8f9ca26d8.png)
+![image](https://user-images.githubusercontent.com/100548259/181215462-8bb9a711-273b-4f83-868d-ed3c5ed0cba4.png)
 
-  
+ 
+ #7. 컨트롤러 설계
+ ![image](https://user-images.githubusercontent.com/100548259/181215415-b0e05d40-39d9-4a27-b511-c3552625637f.png)
+
